@@ -1,12 +1,10 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Customer;
+import com.example.backendexam2023.Model.Machine;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -23,5 +21,18 @@ public class CustomerController {
     public Customer createCustomer(@RequestBody Customer customer) {
         return customerService.addCustomer(customer);
     }
+
+    @GetMapping("/{id}")
+    public Customer getCustomerById(@PathVariable Long id){
+        return customerService.getCustomerById(id);
+    }
+
+    @DeleteMapping
+    public void deleteCustomerById(@PathVariable Long id){
+        customerService.deleteCustomer(id);
+    }
+
+
+
 
 }
