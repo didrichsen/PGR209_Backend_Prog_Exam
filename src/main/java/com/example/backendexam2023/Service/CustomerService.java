@@ -23,10 +23,17 @@ public class CustomerService {
         return customerRepository.findById(id).orElse(null);
     }
 
-    public void deleteCustomer(Long id){
-        customerRepository.deleteById(id);
-    }
+    public boolean deleteCustomer(Long id){
 
+        Customer customer = getCustomerById(id);
+
+        if(!customer.getOrders().isEmpty()) return false;
+
+        customerRepository.deleteById(id);
+
+        return true;
+
+    }
 
 
 }

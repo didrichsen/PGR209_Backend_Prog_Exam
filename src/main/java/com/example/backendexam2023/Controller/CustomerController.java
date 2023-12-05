@@ -4,6 +4,8 @@ import com.example.backendexam2023.Model.Customer;
 import com.example.backendexam2023.Model.Machine;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +29,17 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
-    @DeleteMapping
-    public void deleteCustomerById(@PathVariable Long id){
-        customerService.deleteCustomer(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCustomerById(@PathVariable Long id){
+
+        boolean isDeleted = customerService.deleteCustomer(id);
+
+        if(!isDeleted){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer has active orders. Cannot delete.");
+        }
+
+        return ResponseEntity.ok("Customer deleted successfully.");
+
     }
 
 
