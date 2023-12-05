@@ -23,4 +23,9 @@ public class Part {
     @Column(name = "part_name")
     private String partName;
 
+    public Part(String partName){
+        this.partName = partName;
+    }
+
+
 }

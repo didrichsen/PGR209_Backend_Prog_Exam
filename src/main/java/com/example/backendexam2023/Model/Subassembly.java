@@ -27,8 +27,12 @@ public class Subassembly {
 
     @Column(name = "part")
     @OneToMany
-    @JoinColumn(name="part_id")
+    @JoinColumn(name="subassembly_id")
     private List<Part> parts = new ArrayList<>();
+
+    public Subassembly(String subassemblyName){
+        this.subassemblyName = subassemblyName;
+    }
 
 
 

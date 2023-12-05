@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +26,13 @@ public class Machine {
     @Column(name = "machine_name")
     private String machineName;
 
-
     @OneToMany
     @JoinColumn(name = "subassembly_id")
     private List<Subassembly> subassemblies = new ArrayList<>();
+
+    public Machine(String machineName){
+        this.machineName = machineName;
+    }
 
 
 

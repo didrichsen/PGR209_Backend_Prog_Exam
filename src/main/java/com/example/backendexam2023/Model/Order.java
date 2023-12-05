@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @ToString
+@Table(name = "customer_order")
 public class Order {
 
     @Id
@@ -28,7 +29,10 @@ public class Order {
     @JsonIgnoreProperties("orders")
     private Customer customer;
 
+
+
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="order_id")
     private List<Machine> machines = new ArrayList<>();
 
 
