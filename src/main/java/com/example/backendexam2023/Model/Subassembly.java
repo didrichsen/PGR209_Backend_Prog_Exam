@@ -25,8 +25,7 @@ public class Subassembly {
     @Column(name = "subassembly_name")
     private String subassemblyName;
 
-    @Column(name = "part")
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="subassembly_id")
     private List<Part> parts = new ArrayList<>();
 
