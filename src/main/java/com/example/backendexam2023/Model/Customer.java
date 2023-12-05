@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Model;
 
+import com.example.backendexam2023.Model.Order.Order;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
@@ -32,7 +33,7 @@ public class Customer {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties("customer")
-    @JoinColumn(name="customer_id")
+    @JoinColumn(name="customer_id") //without this, customer dosent know about
     private List<Order> orders = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)

@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Machine;
+import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class MachineController {
     }
 
     @PostMapping
-    public Machine createMachine(@RequestBody Machine machine){
-        return machineService.createMachine(machine);
+    public Machine createMachine(@RequestBody MachineRequest machineRequest){
+        return machineService.createMachine(machineRequest);
     }
 
     @GetMapping("/{id}")

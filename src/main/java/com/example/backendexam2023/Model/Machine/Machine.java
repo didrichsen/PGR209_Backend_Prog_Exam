@@ -1,12 +1,13 @@
-package com.example.backendexam2023.Model;
+package com.example.backendexam2023.Model.Machine;
 
+import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +28,12 @@ public class Machine {
     private String machineName;
 
     @OneToMany
-    @JoinColumn(name = "subassembly_id")
+    @JoinColumn(name = "machine_id")
     private List<Subassembly> subassemblies = new ArrayList<>();
 
     public Machine(String machineName){
         this.machineName = machineName;
     }
-
 
 
 }

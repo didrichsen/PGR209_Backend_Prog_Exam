@@ -1,22 +1,43 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Machine;
+import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Model.Machine.MachineRequest;
+import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MachineService {
 
     private final MachineRepository machineRepository;
+    private final SubassemblyService subassemblyService;
 
     @Autowired
-    public MachineService(MachineRepository machineRepository){
+    public MachineService(MachineRepository machineRepository, SubassemblyService subassemblyService){
         this.machineRepository = machineRepository;
+        this.subassemblyService = subassemblyService;
+
     }
 
-    public Machine createMachine(Machine machine){
+    public Machine createMachine(MachineRequest machineRequest){
+        Machine machine = new Machine(machineRequest.getMachineName());
+
+        List<Subassembly> subassemblies = new ArrayList<>();
+
+        for(Long partId : machineRequest.getSubassemblyIds()){
+            Subassembly subassembly = subassemblyService.getSubassembly(partId);
+            subassemblies.add(subassembly);
+        }
+
+        machine.setSubassemblies(subassemblies);
+
         return machineRepository.save(machine);
+
     }
 
     public Machine getMachineById(Long id){

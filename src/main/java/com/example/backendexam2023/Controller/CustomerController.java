@@ -1,7 +1,6 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Customer;
-import com.example.backendexam2023.Model.Machine;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,10 +38,7 @@ public class CustomerController {
         }
 
         return ResponseEntity.ok("Customer deleted successfully.");
-
     }
-
-
 
 
 }

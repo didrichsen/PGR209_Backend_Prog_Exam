@@ -1,5 +1,6 @@
-package com.example.backendexam2023.Model;
+package com.example.backendexam2023.Model.Subassembly;
 
+import com.example.backendexam2023.Model.Part;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,9 @@ public class Subassembly {
     @Column(name = "subassembly_name")
     private String subassemblyName;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="subassembly_id")
-    private List<Part> parts = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "subassembly_id")
+    private List<Part> parts;
 
     public Subassembly(String subassemblyName){
         this.subassemblyName = subassemblyName;

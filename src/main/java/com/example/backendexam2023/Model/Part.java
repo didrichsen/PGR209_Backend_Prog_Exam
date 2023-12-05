@@ -13,7 +13,6 @@ import lombok.ToString;
 @ToString
 public class Part {
 
-
     @Id
     @GeneratedValue(generator = "part_generator")
     @SequenceGenerator(name = "part_generator", sequenceName = "part_seq", initialValue = 1, allocationSize = 1)
@@ -26,6 +25,5 @@ public class Part {
     public Part(String partName){
         this.partName = partName;
     }
-
 
 }

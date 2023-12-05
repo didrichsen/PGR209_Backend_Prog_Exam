@@ -1,14 +1,17 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Machine;
-import com.example.backendexam2023.Model.Subassembly;
-import com.example.backendexam2023.Service.MachineService;
+import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
+import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-@Service
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/subassembly")
 public class SubassemblyController {
 
     private final SubassemblyService subassemblyService;
@@ -19,8 +22,8 @@ public class SubassemblyController {
     }
 
     @PostMapping
-    public Subassembly createSubassembly(@RequestBody Subassembly subassembly){
-        return subassemblyService.createSubassembly(subassembly);
+    public Subassembly createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
+        return subassemblyService.createSubassembly(subassemblyRequest);
     }
 
     @GetMapping("/{id}")

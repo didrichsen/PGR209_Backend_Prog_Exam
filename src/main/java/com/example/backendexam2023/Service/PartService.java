@@ -27,7 +27,7 @@ public class PartService {
     public Part getPartById(Long id){
         return partRepository.findById(id).orElse(null);
     }
-    public void deletePart(Long id){
+    public void deletePartById(Long id){
         partRepository.deleteById(id);
     }
     public Part updatePart(Part part){

@@ -1,5 +1,7 @@
-package com.example.backendexam2023.Model;
+package com.example.backendexam2023.Model.Order;
 
+import com.example.backendexam2023.Model.Customer;
+import com.example.backendexam2023.Model.Machine.Machine;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,11 +31,8 @@ public class Order {
     @JsonIgnoreProperties("orders")
     private Customer customer;
 
-
-
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id")
     private List<Machine> machines = new ArrayList<>();
-
 
 }
