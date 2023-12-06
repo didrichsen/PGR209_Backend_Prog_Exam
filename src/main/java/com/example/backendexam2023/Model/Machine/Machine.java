@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +28,16 @@ public class Machine {
     @Column(name = "machine_name")
     private String machineName;
 
+    @Column(name = "price")
+    private Integer price;
+
     @OneToMany
     @JoinColumn(name = "machine_id")
     private List<Subassembly> subassemblies = new ArrayList<>();
 
-    public Machine(String machineName){
+    public Machine(String machineName, Integer price){
         this.machineName = machineName;
+        this.price = price;
     }
 
 

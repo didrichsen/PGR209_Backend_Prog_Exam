@@ -22,11 +22,13 @@ public class OrderController {
     public void deleteOrder(@PathVariable Long id){
         orderService.deleteOrder(id);
     }
-
+/*
     @PostMapping("")
     public Order createOrder(@RequestBody OrderRequest orderRequest){
         return orderService.createOrder(orderRequest);
     }
+
+ */
 
 
 

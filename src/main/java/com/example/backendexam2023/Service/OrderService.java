@@ -26,7 +26,7 @@ public class OrderService {
         this.machineService = machineService;
         this.customerService = customerService;
     }
-
+/*
     public Order createOrder(OrderRequest orderRequest){
         Order order = new Order();
         Customer customer = customerService.getCustomerById(orderRequest.getCustomerId());
@@ -43,6 +43,8 @@ public class OrderService {
 
         return orderRepository.save(order);
     }
+
+ */
 
     //Insert pagination later
     public List<Order> getAllOrders(){

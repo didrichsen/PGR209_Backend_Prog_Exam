@@ -25,7 +25,7 @@ public class MachineService {
     }
 
     public Machine createMachine(MachineRequest machineRequest){
-        Machine machine = new Machine(machineRequest.getMachineName());
+        Machine machine = new Machine(machineRequest.getMachineName(), machineRequest.getPrice());
 
         List<Subassembly> subassemblies = new ArrayList<>();
 
