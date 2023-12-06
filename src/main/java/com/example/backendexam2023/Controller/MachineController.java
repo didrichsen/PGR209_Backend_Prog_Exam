@@ -28,7 +28,7 @@ public class MachineController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteVet(@PathVariable Long id){
+    public void deleteMachine(@PathVariable Long id){
         machineService.deleteMachine(id);
     }
 

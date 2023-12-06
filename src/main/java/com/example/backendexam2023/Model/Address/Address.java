@@ -1,5 +1,6 @@
-package com.example.backendexam2023.Model;
+package com.example.backendexam2023.Model.Address;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,10 +24,13 @@ public class Address {
     @Column(name = "address_id")
     private Long addressId = 0L;
 
-    private String address;
+    private String streetAddress;
 
-    public Address(String address) {
-        this.address = address;
+    private int zipCode;
+
+    public Address(String address, int zip) {
+        this.streetAddress = address;
+        zipCode = zip;
     }
 
     @ManyToMany(mappedBy = "addresses", cascade = CascadeType.ALL)

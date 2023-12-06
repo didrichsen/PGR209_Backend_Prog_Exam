@@ -1,24 +1,24 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Address;
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/address")
-public class AddressContoller {
+public class AddressController {
 
     private final AddressService addressService;
 
     @Autowired
-    public AddressContoller(AddressService addressService){
+    public AddressController(AddressService addressService) {
         this.addressService = addressService;
     }
-
     @GetMapping
     public List<Address> getAllAddresses(){
         return addressService.getAllAddresses();
@@ -27,6 +27,23 @@ public class AddressContoller {
     public Address createAddress(@RequestBody Address address){
         return addressService.createAddress(address);
     }
+
+
+    /*
+    @PostMapping("/{addressId}/addCustomer/{customerId}")
+    public ResponseEntity<Address> addCustomerToAddress(
+            @PathVariable Long addressId,
+            @PathVariable Long customerId) {
+        try{
+            Address address = addressService.addCustomerToAddress(addressId, customerId);
+            return new ResponseEntity<>(address, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+     */
+
     @DeleteMapping("/{id}")
     public void deleteAddress(@PathVariable Long id){
         addressService.deleteAddress(id);

@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Repository;
 
-import com.example.backendexam2023.Model.Customer;
+import com.example.backendexam2023.Model.Customer.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
