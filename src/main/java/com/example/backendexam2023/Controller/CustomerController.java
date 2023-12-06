@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {
@@ -45,6 +47,11 @@ public class CustomerController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/getAll")
+    public List<Customer> getAllCustomers(){
+        return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerService {
 
@@ -25,6 +27,10 @@ public class CustomerService {
 
     public Customer getCustomerById(Long id){
         return customerRepository.findById(id).orElse(null);
+    }
+
+    public List<Customer> getAllCustomers(){
+        return customerRepository.findAll();
     }
 
     public Customer addAddressToCustomer(Long customerId, Long addressId){

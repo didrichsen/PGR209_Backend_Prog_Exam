@@ -1,7 +1,6 @@
 package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Model.Address.Address;
-import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
