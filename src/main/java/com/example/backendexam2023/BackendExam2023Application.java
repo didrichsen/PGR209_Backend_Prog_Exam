@@ -20,6 +20,11 @@ import java.util.List;
 
 //TODOS
 //Make sure that customer has address before connected to order. Or something. Check when making order that customer has valid address.
+//Create faker names and addresses, and more orders.
+//Create update for all
+//Delete for all
+//Get with pagination
+//Tests
 
 
 
