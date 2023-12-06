@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Model.Order;
 
-import com.example.backendexam2023.Model.Customer;
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

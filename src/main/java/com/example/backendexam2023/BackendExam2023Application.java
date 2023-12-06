@@ -1,5 +1,5 @@
 package com.example.backendexam2023;
-import com.example.backendexam2023.Model.Customer;
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.OrderBatch.OrderBatch;
@@ -130,6 +130,7 @@ public class BackendExam2023Application {
             dogRobot.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine2 = machineRepository.save(dogRobot);
 
+
             //Creating customers
             Customer customer = customerRepository.save(new Customer("Simen Didrichsen", "simen@simen.no"));
             Customer customer2 = customerRepository.save(new Customer("Arian Mathai", "arian@arian.no"));
@@ -161,20 +162,6 @@ public class BackendExam2023Application {
             OrderBatchRequest orderBatchRequest2 = new OrderBatchRequest();
             orderBatchRequest2.getOrderIds().add(newOrder.getOrderId());
             orderBatchService.createOrderBatch(orderBatchRequest2);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         };
