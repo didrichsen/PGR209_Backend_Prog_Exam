@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Model.Address.AddressRequest;
 import com.example.backendexam2023.Repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ public class AddressService {
         this.addressRepository = addressRepository;
     }
 
-    public Address createAddress(Address address){
+    public Address createAddress(AddressRequest addressRequest){
+        Address address = new Address(addressRequest.getStreetAddress(), addressRequest.getZipCode());
         List<Address> addresses = addressRepository.findAll();
         for(Address a : addresses){
             if (a.getStreetAddress().equals(address.getStreetAddress()) && a.getZipCode() == address.getZipCode()){
+
+                // if address already exists we return the id of that address to the customer, so they can add customer to the existing address
                 throw new RuntimeException("Address already exists with id: " + a.getAddressId());
             }
         }

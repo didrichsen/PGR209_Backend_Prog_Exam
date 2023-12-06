@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Model.Address.AddressRequest;
 import com.example.backendexam2023.Service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,9 @@ public class AddressController {
         return addressService.getAllAddresses();
     }
     @PostMapping
-    public ResponseEntity<?> createAddress(@RequestBody Address address){
+    public ResponseEntity<?> createAddress(@RequestBody AddressRequest addressRequest){
         try{
-            Address address1 = addressService.createAddress(address);
+            Address address1 = addressService.createAddress(addressRequest);
             return new ResponseEntity<>(address1, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

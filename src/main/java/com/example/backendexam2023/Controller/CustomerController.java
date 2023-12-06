@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Model.Customer.CustomerRequest;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class CustomerController {
     }
 
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return customerService.addCustomer(customer);
+    public Customer createCustomer(@RequestBody CustomerRequest customerRequest) {
+        return customerService.addCustomer(customerRequest);
     }
 
     @PostMapping("/{customerId}/addAddress/{addressId}")
@@ -30,7 +31,7 @@ public class CustomerController {
             @PathVariable Long customerId,
             @PathVariable Long addressId) {
         try {
-            Customer customer = customerService.addAddressToCustomer(customerId, addressId);
+            CustomerRequest customer = customerService.addAddressToCustomer(customerId, addressId);
             return new ResponseEntity<>(customer, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,7 +43,7 @@ public class CustomerController {
             @PathVariable Long addressId
     ){
         try{
-            Customer customer = customerService.deleteAddressFromCustomer(customerId, addressId);
+            CustomerRequest customer = customerService.deleteAddressFromCustomer(customerId, addressId);
             return new ResponseEntity<>(customer, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,7 +51,7 @@ public class CustomerController {
     }
 
     @GetMapping("/getAll")
-    public List<Customer> getAllCustomers(){
+    public List<CustomerRequest> getAllCustomers(){
         return customerService.getAllCustomers();
     }
 
