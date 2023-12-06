@@ -1,8 +1,8 @@
 package com.example.backendexam2023.Model.Order;
-
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.OrderBatch.OrderBatch;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,6 +33,7 @@ public class Order {
     @JoinColumn(name = "machine_id")
     private Machine machine;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_batch_id")
     private OrderBatch orderBatch;

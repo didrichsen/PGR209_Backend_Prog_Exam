@@ -161,7 +161,9 @@ public class BackendExam2023Application {
 
             OrderBatchRequest orderBatchRequest2 = new OrderBatchRequest();
             orderBatchRequest2.getOrderIds().add(newOrder.getOrderId());
-            orderBatchService.createOrderBatch(orderBatchRequest2);
+            OrderBatch orderBatch = orderBatchService.createOrderBatch(orderBatchRequest2);
+
+            System.out.println(orderBatch.getOrderBatchId());
 
 
         };

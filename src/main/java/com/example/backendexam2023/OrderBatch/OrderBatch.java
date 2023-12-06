@@ -1,6 +1,7 @@
 package com.example.backendexam2023.OrderBatch;
 
 import com.example.backendexam2023.Model.Order.Order;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

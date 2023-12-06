@@ -46,4 +46,9 @@ public class OrderBatchService {
         return orderBatchRepository.save(orderBatch);
     }
 
+    public OrderBatch getOrderBatchById(Long id){
+        return orderBatchRepository.findById(id).orElse(null);
+    };
+
+
 }

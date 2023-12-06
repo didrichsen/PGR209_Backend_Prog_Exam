@@ -11,7 +11,6 @@ import java.util.List;
 public class MachineRequest {
 
         private String machineName;
-
         private Integer price;
         private List<Long> subassemblyIds;
 
