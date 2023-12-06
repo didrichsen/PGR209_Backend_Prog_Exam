@@ -24,8 +24,13 @@ public class AddressController {
         return addressService.getAllAddresses();
     }
     @PostMapping
-    public Address createAddress(@RequestBody Address address){
-        return addressService.createAddress(address);
+    public ResponseEntity<?> createAddress(@RequestBody Address address){
+        try{
+            Address address1 = addressService.createAddress(address);
+            return new ResponseEntity<>(address1, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

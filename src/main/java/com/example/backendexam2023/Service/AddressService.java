@@ -20,6 +20,12 @@ public class AddressService {
     }
 
     public Address createAddress(Address address){
+        List<Address> addresses = addressRepository.findAll();
+        for(Address a : addresses){
+            if (a.getStreetAddress().equals(address.getStreetAddress()) && a.getZipCode() == address.getZipCode()){
+                throw new RuntimeException("Address already exists with id: " + a.getAddressId());
+            }
+        }
         return addressRepository.save(address);
     }
 
