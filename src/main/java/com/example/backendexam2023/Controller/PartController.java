@@ -1,8 +1,11 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +27,12 @@ public class PartController {
     }
 
     @GetMapping("/{id}")
-    public Part getPartById(@PathVariable Long id){
-        return partService.getPartById(id);
+    public ResponseEntity<Part> getPartById(@PathVariable Long id){
+        Part part = partService.getPartById(id);
+
+        if(part == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(part,HttpStatus.OK);
     }
 
     @PostMapping

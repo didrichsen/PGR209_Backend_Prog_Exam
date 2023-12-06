@@ -28,6 +28,10 @@ public class OrderBatchService {
         this.orderService = orderService;
     }
 
+    public OrderBatch getOrderBatchById(Long id){
+        return orderBatchRepository.findById(id).orElse(null);
+    };
+
     public OrderBatch createOrderBatch(OrderBatchRequest orderBatchRequest) {
         OrderBatch orderBatch = new OrderBatch(LocalDateTime.now());
         List<Order> orders = new ArrayList<>();
@@ -46,9 +50,7 @@ public class OrderBatchService {
         return orderBatchRepository.save(orderBatch);
     }
 
-    public OrderBatch getOrderBatchById(Long id){
-        return orderBatchRepository.findById(id).orElse(null);
-    };
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,21 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id){
+        Customer customer = customerService.getCustomerById(id);
+
+        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
     @PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {
         return customerService.addCustomer(customer);
     }
 
-    @PostMapping("/{customerId}/addAddress/{addressId}")
+    @PostMapping("/{customerId}/add-address/{addressId}")
     public ResponseEntity<?> addAddressToCustomer(
             @PathVariable Long customerId,
             @PathVariable Long addressId) {
@@ -36,7 +46,7 @@ public class CustomerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping("/{customerId}/removeAddress/{addressId}")
+    @DeleteMapping("/{customerId}/remove-addresses/{addressId}")
     public ResponseEntity<?> deleteAddressFromCustomer(
             @PathVariable Long customerId,
             @PathVariable Long addressId
@@ -49,15 +59,12 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get-all")
     public List<Customer> getAllCustomers(){
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable Long id){
-        return customerService.getCustomerById(id);
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCustomerById(@PathVariable Long id){

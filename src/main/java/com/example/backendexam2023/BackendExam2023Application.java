@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODOS
+//Make sure that customer has address before connected to order. Or something. Check when making order that customer has valid address.
+
+
 
 @SpringBootApplication
 public class BackendExam2023Application {

@@ -22,6 +22,10 @@ public class SubassemblyService {
         this.subassemblyRepository = subassemblyRepository;
         this.partService = partService;
     }
+    
+    public Subassembly getSubassemblyById(Long id){
+        return subassemblyRepository.findById(id).orElse(null);
+    }
 
     public Subassembly createSubassembly(SubassemblyRequest subassemblyRequest){
 
@@ -37,10 +41,6 @@ public class SubassemblyService {
         subassembly.setParts(parts);
 
         return subassemblyRepository.save(subassembly);
-    }
-
-    public Subassembly getSubassembly(Long id){
-        return subassemblyRepository.findById(id).orElse(null);
     }
 
     public void deleteSubassembly(Long id){

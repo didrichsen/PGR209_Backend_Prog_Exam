@@ -28,12 +28,13 @@ public class OrderController {
     public ResponseEntity<Order> getOrderById(@PathVariable Long id){
         Order order = orderService.getOrderById(id);
 
-        if (order == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        if (order == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+
+
+
 /*
     @PostMapping("")
     public Order createOrder(@RequestBody OrderRequest orderRequest){

@@ -11,13 +11,16 @@ import java.util.List;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-    //private final CustomerService customerService;
 
     @Autowired
     public AddressService(AddressRepository addressRepository) {
         this.addressRepository = addressRepository;
     }
 
+    public Address getAddressById(Long id){
+        return addressRepository.findById(id).orElse(null);
+    }
+    
     public Address createAddress(Address address){
         List<Address> addresses = addressRepository.findAll();
         for(Address a : addresses){
@@ -31,25 +34,7 @@ public class AddressService {
     public List<Address> getAllAddresses(){
         return addressRepository.findAll();
     }
-    public Address getAddressById(Long id){
-        return addressRepository.findById(id).orElse(null);
-    }
-/*
-    public Address addCustomerToAddress(Long addressId, Long customerId){
-        Address address = addressRepository.findById(addressId).orElse(null);
-        Customer customer = customerService.getCustomerById(customerId);
-
-        if (address != null && customer != null){
-            address.getCustomers().add(customer);
-            return addressRepository.save(address);
-        }
-        else {
-            throw new RuntimeException("Could not add customer to address");
-        }
-
-    }
-
- */
+    
     public void deleteAddress(Long id){
         addressRepository.deleteById(id);
     }

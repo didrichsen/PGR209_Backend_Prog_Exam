@@ -5,6 +5,8 @@ import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +23,22 @@ public class SubassemblyController {
         this.subassemblyService = subassemblyService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Subassembly> getSubassemblyById(@PathVariable Long id){
+        Subassembly subassembly = subassemblyService.getSubassemblyById(id);
+
+        if(subassembly == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(subassembly,HttpStatus.OK);
+
+    }
+
     @PostMapping
     public Subassembly createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
         return subassemblyService.createSubassembly(subassemblyRequest);
     }
 
-    @GetMapping("/{id}")
-    public Subassembly getSubassemblyById(@PathVariable Long id){
-        return subassemblyService.getSubassembly(id);
-    }
+
 
     @DeleteMapping("/{id}")
     public void deleteSubassembly(@PathVariable Long id){

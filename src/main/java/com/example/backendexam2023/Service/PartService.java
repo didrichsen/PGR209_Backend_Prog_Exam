@@ -17,6 +17,10 @@ public class PartService {
         this.partRepository = partRepository;
     }
 
+    public Part getPartById(Long id){
+        return partRepository.findById(id).orElse(null);
+    }
+
     public Part createPart(Part part){
         return partRepository.save(part);
     }
@@ -24,9 +28,7 @@ public class PartService {
     public List<Part> getAllParts(){
         return partRepository.findAll();
     }
-    public Part getPartById(Long id){
-        return partRepository.findById(id).orElse(null);
-    }
+    
     public void deletePartById(Long id){
         partRepository.deleteById(id);
     }

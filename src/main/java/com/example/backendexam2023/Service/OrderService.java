@@ -26,6 +26,10 @@ public class OrderService {
         this.machineService = machineService;
         this.customerService = customerService;
     }
+
+    public Order getOrderById(Long id){
+        return orderRepository.findById(id).orElse(null);
+    }
 /*
     public Order createOrder(OrderRequest orderRequest){
         Order order = new Order();
@@ -50,9 +54,7 @@ public class OrderService {
     public List<Order> getAllOrders(){
         return orderRepository.findAll();
     }
-    public Order getOrderById(Long id){
-        return orderRepository.findById(id).orElse(null);
-    }
+
 
     /*
     public void deleteOrder(Long id){

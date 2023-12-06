@@ -25,11 +25,10 @@ public class OrderBatchController {
     public ResponseEntity<OrderBatch> getOrderBatchById(@PathVariable Long id) {
         OrderBatch orderBatch = orderBatchService.getOrderBatchById(id);
 
-        if (orderBatch == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        if (orderBatch == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(orderBatch, HttpStatus.OK);
+
     }
 
 }

@@ -21,12 +21,12 @@ public class CustomerService {
         this.addressService = addressService;
     }
 
-    public Customer addCustomer(Customer customer){
-        return customerRepository.save(customer);
-    }
-
     public Customer getCustomerById(Long id){
         return customerRepository.findById(id).orElse(null);
+    }
+
+    public Customer addCustomer(Customer customer){
+        return customerRepository.save(customer);
     }
 
     public List<Customer> getAllCustomers(){

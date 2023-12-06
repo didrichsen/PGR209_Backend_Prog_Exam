@@ -24,13 +24,17 @@ public class MachineService {
 
     }
 
+    public Machine getMachineById(Long id){
+        return machineRepository.findById(id).orElse(null);
+    }
+
     public Machine createMachine(MachineRequest machineRequest){
         Machine machine = new Machine(machineRequest.getMachineName(), machineRequest.getPrice());
 
         List<Subassembly> subassemblies = new ArrayList<>();
 
         for(Long partId : machineRequest.getSubassemblyIds()){
-            Subassembly subassembly = subassemblyService.getSubassembly(partId);
+            Subassembly subassembly = subassemblyService.getSubassemblyById(partId);
             subassemblies.add(subassembly);
         }
 
@@ -40,9 +44,7 @@ public class MachineService {
 
     }
 
-    public Machine getMachineById(Long id){
-        return machineRepository.findById(id).orElse(null);
-    }
+    
 
     public void deleteMachine(Long id){
         machineRepository.deleteById(id);
