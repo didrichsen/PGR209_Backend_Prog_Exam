@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order-batch")
+@RequestMapping("/api/order")
 public class OrderController {
 
     private final OrderService orderService;
