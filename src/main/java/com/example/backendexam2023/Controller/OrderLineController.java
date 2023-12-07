@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Service.OrderLineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,15 @@ public class OrderLineController {
     @GetMapping("/page/{pageNumber}")
     public List<OrderLine> getOrderLinesByPage(@PathVariable int pageNumber) {
         return orderLineService.getOrderLinesPageable(pageNumber);
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateOrderLine(@PathVariable Long id, @RequestBody OrderLine newOrderLine){
+        try{
+            return new ResponseEntity<>(orderLineService.updateOrderLine(id, newOrderLine), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

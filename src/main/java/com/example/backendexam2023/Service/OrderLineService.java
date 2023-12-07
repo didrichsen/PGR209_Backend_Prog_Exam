@@ -88,8 +88,14 @@ public class OrderLineService {
 
     }
 
-    public OrderLine updateOrderLine(OrderLine orderLine){
-        return orderLineRepository.save(orderLine);
+    public OrderLine updateOrderLine(Long orderLineId, OrderLine newOrderLine){
+        OrderLine orderLineToUpdate = getOrderLineById(orderLineId);
+
+        if (orderLineToUpdate == null) throw new RuntimeException("Could not find orderLine with id " + orderLineId);
+        if (newOrderLine.getOrder() != null) orderLineToUpdate.setOrder(newOrderLine.getOrder());
+        if (newOrderLine.getMachine() != null) orderLineToUpdate.setMachine(newOrderLine.getMachine());
+
+        return orderLineRepository.save(orderLineToUpdate);
     }
 
 }
