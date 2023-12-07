@@ -8,7 +8,7 @@ import lombok.Setter;
 public class AddressRequest {
 
     private String streetAddress;
-    private int zipCode;
+    private Integer zipCode;
 
 
 }

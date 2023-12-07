@@ -27,9 +27,9 @@ public class Address {
 
     private String streetAddress;
 
-    private int zipCode;
+    private Integer zipCode;
 
-    public Address(String address, int zip) {
+    public Address(String address, Integer zip) {
         this.streetAddress = address;
         zipCode = zip;
     }
@@ -37,4 +37,5 @@ public class Address {
     @ManyToMany(mappedBy = "addresses", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
+
 }

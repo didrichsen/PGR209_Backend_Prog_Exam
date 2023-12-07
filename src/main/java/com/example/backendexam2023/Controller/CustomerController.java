@@ -32,8 +32,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return customerService.addCustomer(customer);
+    public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
+        try{
+            Customer customer1 = customerService.addCustomer(customer);
+            return new ResponseEntity<>(customer, HttpStatus.CREATED);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/{customerId}/add-address/{addressId}")
@@ -68,9 +74,6 @@ public class CustomerController {
     public List<Customer> getCustomersByPage(@PathVariable int pageNumber) {
         return customerService.getCustomersPageable(pageNumber);
     }
-
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCustomerById(@PathVariable Long id){
 
@@ -81,6 +84,15 @@ public class CustomerController {
         }
 
         return ResponseEntity.ok("Customer deleted successfully.");
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody Customer newCustomer){
+        try{
+            return new ResponseEntity<>(customerService.updateCustomer(id, newCustomer), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

@@ -37,13 +37,27 @@ public class MachineController {
     }
 
     @PostMapping
-    public Machine createMachine(@RequestBody MachineRequest machineRequest){
-        return machineService.createMachine(machineRequest);
+    public ResponseEntity<Machine> createMachine(@RequestBody MachineRequest machineRequest){
+        try{
+            return new ResponseEntity<>(machineService.createMachine(machineRequest),HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     public void deleteMachine(@PathVariable Long id){
         machineService.deleteMachine(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateMachine(@PathVariable Long id, @RequestBody Machine newMachine){
+        try{
+            return new ResponseEntity<>(machineService.updateMachine(id, newMachine), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

@@ -21,40 +21,57 @@ public class AddressController {
         this.addressService = addressService;
     }
 
+    //Decided to go for optional to return a more detailed description than only status code.
     @GetMapping("/{id}")
-    public ResponseEntity<Address> getAddressById(@PathVariable Long id){
+    public ResponseEntity<?> getAddressById(@PathVariable Long id){
 
         Address address = addressService.getAddressById(id);
 
-        if (address == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (address == null) return new ResponseEntity<>("Couldn't find any address with corresponding id.",HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(address, HttpStatus.OK);
 
     }
 
-    @GetMapping
-    public List<Address> getAllAddresses(){
-        return addressService.getAllAddresses();
-    }
+    //Returns an empty array if page doesn't exist.
     @GetMapping("/page/{pageNumber}")
     public List<Address> getAddressesByPage(@PathVariable int pageNumber) {
         return addressService.getAddressesPageable(pageNumber);
     }
+
+
+    //Returns optional since we either return an address or an exception message.
     @PostMapping
     public ResponseEntity<?> createAddress(@RequestBody Address address){
         try{
             Address address1 = addressService.createAddress(address);
-            return new ResponseEntity<>(address1, HttpStatus.OK);
+            return new ResponseEntity<>(address1, HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    // If address has active customer or doesn't exist, we return av message to the client.
     @DeleteMapping("/{id}")
-    public void deleteAddress(@PathVariable Long id){
-        addressService.deleteAddress(id);
+    public ResponseEntity<String> deleteAddress(@PathVariable Long id){
+        boolean isDeleted = addressService.deleteAddress(id);
+
+        if(isDeleted){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>("Address either has active customer or dosen't exist.",HttpStatus.BAD_REQUEST);
     }
 
-
+    //Takes in id of existing address and new address. Old address is updated and saved to DB.
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody Address newAddress){
+        try{
+            return new ResponseEntity<>(addressService.updateAddress(id, newAddress), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

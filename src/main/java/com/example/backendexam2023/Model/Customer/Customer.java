@@ -34,7 +34,7 @@ public class Customer {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties("customer")
-    @JoinColumn(name="customer_id") //without this, customer dosent know about
+    @JoinColumn(name="customer_id")
     private List<Order> orders = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)

@@ -23,12 +23,14 @@ public class PartService {
     }
 
     public Part createPart(Part part){
+        if (part.getPartName() == null) throw new RuntimeException();
         return partRepository.save(part);
     }
 
     public List<Part> getAllParts(){
         return partRepository.findAll();
     }
+    
     public List<Part> getPartsPageable(int pageNumber) {
         return partRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }

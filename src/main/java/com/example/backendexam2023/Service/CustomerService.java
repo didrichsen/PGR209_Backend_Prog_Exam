@@ -27,6 +27,12 @@ public class CustomerService {
     }
 
     public Customer addCustomer(Customer customer){
+        List<Customer> customers = customerRepository.findAll();
+        for (Customer c : customers){
+            if (c.getEmail().equals(customer.getEmail())){
+                throw new RuntimeException("Customer already exists!");
+            }
+        }
         return customerRepository.save(customer);
     }
 
@@ -73,6 +79,15 @@ public class CustomerService {
 
         return true;
 
+    }
+    public Customer updateCustomer(Long customerId, Customer newCustomer){
+        Customer customerToUpdate = getCustomerById(customerId);
+
+        if (customerToUpdate == null) throw new RuntimeException("Could not find customer with id " + customerId);
+
+        if (newCustomer.getCustomerName() != null) customerToUpdate.setCustomerName(newCustomer.getCustomerName());
+        if (newCustomer.getEmail() != null) customerToUpdate.setEmail(newCustomer.getEmail());
+        return customerRepository.save(customerToUpdate);
     }
 
 

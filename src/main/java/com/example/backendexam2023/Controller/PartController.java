@@ -38,9 +38,17 @@ public class PartController {
         return new ResponseEntity<>(part,HttpStatus.OK);
     }
 
+    //Return Bad Request if the part is not correct formated.
     @PostMapping
-    public Part createPart(@RequestBody Part part){
-        return partService.createPart(part);
+    public ResponseEntity<Part> createPart(@RequestBody Part part){
+        try{
+
+            return new ResponseEntity<>(partService.createPart(part),HttpStatus.CREATED);
+
+        } catch (Exception e){
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
     @DeleteMapping("/{id}")
     public void deletePart(@PathVariable Long id){

@@ -32,19 +32,35 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public List<Address> getAllAddresses(){
-        return addressRepository.findAll();
-    }
 
     public List<Address> getAddressesPageable(int pageNumber) {
         return addressRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
     
-    public void deleteAddress(Long id){
+    public boolean deleteAddress(Long id){
+
+        Address address = getAddressById(id);
+
+        if(address == null){
+            return false;
+        }
+
+        if(!address.getCustomers().isEmpty()){
+            return false;
+        }
         addressRepository.deleteById(id);
+        return true;
     }
-    public Address updateAddress(Address address){
-        return addressRepository.save(address);
+
+    public Address updateAddress(Long addressId, Address newAddress){
+        Address addressToUpdate = getAddressById(addressId);
+
+        if(addressToUpdate == null) throw new RuntimeException("Couldn't find address with id " + addressId);
+
+        if (newAddress.getStreetAddress() != null) addressToUpdate.setStreetAddress(newAddress.getStreetAddress());
+        if (newAddress.getZipCode() != null) addressToUpdate.setZipCode(newAddress.getZipCode());
+        return addressRepository.save(addressToUpdate);
     }
+
 
 }

@@ -39,6 +39,10 @@ public class MachineService {
 
         List<Subassembly> subassemblies = new ArrayList<>();
 
+        if(machineRequest.getSubassemblyIds().isEmpty()){
+            throw new RuntimeException();
+        }
+
         for(Long partId : machineRequest.getSubassemblyIds()){
             Subassembly subassembly = subassemblyService.getSubassemblyById(partId);
             subassemblies.add(subassembly);
@@ -50,10 +54,17 @@ public class MachineService {
 
     }
 
-    
-
     public void deleteMachine(Long id){
         machineRepository.deleteById(id);
+    }
+    public Machine updateMachine(Long machineId, Machine newMachine){
+        Machine machineToUpdate = getMachineById(machineId);
+
+        if (machineToUpdate == null) throw new RuntimeException("Could not find machine with id " + machineId);
+
+        if (newMachine.getMachineName() != null) machineToUpdate.setMachineName(newMachine.getMachineName());
+        if (newMachine.getPrice() != null) machineToUpdate.setPrice(newMachine.getPrice());
+        return machineRepository.save(machineToUpdate);
     }
 
     
