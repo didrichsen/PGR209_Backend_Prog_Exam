@@ -1,4 +1,5 @@
 package com.example.backendexam2023;
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
@@ -9,6 +10,7 @@ import com.example.backendexam2023.OrderBatch.OrderBatchRequest;
 import com.example.backendexam2023.Repository.*;
 import com.example.backendexam2023.Service.MachineService;
 import com.example.backendexam2023.Service.OrderBatchService;
+import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,11 +47,23 @@ public class BackendExam2023Application {
             OrderRepository orderRepository,
             OrderBatchRepository orderBatchRepository,
             OrderBatchService orderBatchService,
-            MachineService machineService
+            MachineService machineService,
+            AddressRepository addressRepository
     ) {
-
+        Faker faker = new Faker();
         return args -> {
 
+
+            for (int i = 0; i < 100; i++) {
+                Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
+                Address a = addressRepository.save(new Address(faker.address().streetAddress(), 12 + i + (i+1)));
+                c.getAddresses().add(a);
+                a.getCustomers().add(c);
+                addressRepository.save(a);
+                customerRepository.save(c);
+            }
+
+/*
             //Parts for human robot
             Part rightHand = partRepository.save(new Part("Right Hand"));
             Part leftHand = partRepository.save(new Part("Left Hand"));
@@ -166,7 +180,7 @@ public class BackendExam2023Application {
             Machine machineFromDB3 = machineService.getMachineById(5L);
             Machine machineFromDB4 = machineService.getMachineById(6L);
 
- */
+
 
             savedMachine3.getSubassemblies().forEach(subassembly -> System.out.println(subassembly.getSubassemblyName()));
 
@@ -207,6 +221,11 @@ public class BackendExam2023Application {
 
 
         };
-    }
 
+
+
+    }
+    */
+        };
+    }
 }
