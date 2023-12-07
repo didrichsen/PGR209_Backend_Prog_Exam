@@ -2,13 +2,10 @@ package com.example.backendexam2023;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.Model.Order.Order;
-import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.*;
-import com.example.backendexam2023.Service.MachineService;
 import com.example.backendexam2023.Service.OrderService;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
@@ -26,8 +23,6 @@ import java.util.List;
 //Delete for all
 //Get with pagination
 //Tests
-
-
 
 @SpringBootApplication
 public class BackendExam2023Application {
@@ -55,7 +50,7 @@ public class BackendExam2023Application {
                    Address address = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
 
                 for (int j = 0; j < 1; j++){
-                    OrderLine orderLine = orderLineRepo.save(new OrderLine());
+
                     Machine machine = machineRepository.save(new Machine( faker.commerce().productName(), 100 + i));
                     for (int l = 0; l < 2; l++){
                         Subassembly subassembly = subassemblyRepository.save(new Subassembly("subassembly" + l + j + i));
@@ -66,17 +61,38 @@ public class BackendExam2023Application {
                         subassemblyRepository.save(subassembly);
                         machine.getSubassemblies().add(subassembly);
                     }
+                    if(i % 2 == 0){
 
-                    machineRepository.save(machine);
-                    orderLine.setMachine(machine);
-                    OrderLine orderLine1 = orderLineRepo.save(orderLine);
-                    List<OrderLine> orderLines = new ArrayList<>();
-                    orderLines.add(orderLine1);
-                    customer.getAddresses().add(address);
-                    customerRepository.save(customer);
-                    orderService.createOrder(orderLines, customer);
+                        for(int m = 0; m < 2; m++){
+                            createOrder(machineRepository, customerRepository, orderLineRepo, orderService, customer, address, machine);
+                        }
+
+                    }else if (i % 3 == 0){
+                        for(int m = 0; m < 4; m++){
+                            createOrder(machineRepository, customerRepository, orderLineRepo, orderService, customer, address, machine);
+                        }
+                    }
+
+                    else {
+                        createOrder(machineRepository, customerRepository, orderLineRepo, orderService, customer, address, machine);
+                    }
                 }
             }
         };
     }
+
+    private static void createOrder(MachineRepository machineRepository, CustomerRepository customerRepository, OrderLineRepository orderLineRepo, OrderService orderService, Customer customer, Address address, Machine machine) {
+        OrderLine orderLine = orderLineRepo.save(new OrderLine());
+        machineRepository.save(machine);
+        orderLine.setMachine(machine);
+        OrderLine orderLine1 = orderLineRepo.save(orderLine);
+        List<OrderLine> orderLines = new ArrayList<>();
+        orderLines.add(orderLine1);
+        customer.getAddresses().add(address);
+        customerRepository.save(customer);
+        orderService.createOrder(orderLines, customer);
+    }
+
+
+
 }
