@@ -54,14 +54,30 @@ public class BackendExam2023Application {
         return args -> {
 
 
-            for (int i = 0; i < 100; i++) {
-                Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
-                Address a = addressRepository.save(new Address(faker.address().streetAddress(), 12 + i + (i+1)));
-                c.getAddresses().add(a);
-                a.getCustomers().add(c);
-                addressRepository.save(a);
-                customerRepository.save(c);
+           // for (int i = 0; i < 50; i++) {
+             //   Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
+               // Address a = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
+            for(int i = 0; i < 50; i ++){
+
+                for (int j = 0; j < 1; j++){
+                    Machine machine = machineRepository.save(new Machine( faker.commerce().productName(), 100));
+                    for (int l = 0; l < 2; l++){
+                        Subassembly subassembly = subassemblyRepository.save(new Subassembly("subassembly" + l + j + i));
+                        //machine.getSubassemblies().add(subassembly);
+                        for(int k = 0; k < 3; k++){
+                            Part part = partRepository.save(new Part(faker.commerce().material()));
+                            //subassembly.getParts().add(part);
+                        }
+                        //subassemblyRepository.save(subassembly);
+                    }
+                    //machineRepository.save(machine);
+                }
             }
+
+
+              //  c.getAddresses().add(a);
+               // customerRepository.save(c);
+            //}
 
 /*
             //Parts for human robot
