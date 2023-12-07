@@ -1,11 +1,13 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.example.backendexam2023.OrderBatch.OrderBatchRequest;
 import com.example.backendexam2023.Repository.OrderBatchRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,6 +33,10 @@ public class OrderBatchService {
     public OrderBatch getOrderBatchById(Long id){
         return orderBatchRepository.findById(id).orElse(null);
     };
+
+    public List<OrderBatch> getOrderBatchesPageable(int pageNumber) {
+        return orderBatchRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
+    }
 
     public OrderBatch createOrderBatch(OrderBatchRequest orderBatchRequest) {
         OrderBatch orderBatch = new OrderBatch(LocalDateTime.now());

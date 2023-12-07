@@ -1,11 +1,14 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.example.backendexam2023.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -31,6 +34,10 @@ public class OrderController {
         if (order == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+    @GetMapping("/page/{pageNumber}")
+    public List<Order> getOrdersByPage(@PathVariable int pageNumber) {
+        return orderService.getOrdersPageable(pageNumber);
     }
 
 

@@ -3,6 +3,7 @@ package com.example.backendexam2023.Service;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,10 @@ public class AddressService {
 
     public List<Address> getAllAddresses(){
         return addressRepository.findAll();
+    }
+
+    public List<Address> getAddressesPageable(int pageNumber) {
+        return addressRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
     
     public void deleteAddress(Long id){

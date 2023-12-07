@@ -36,6 +36,10 @@ public class AddressController {
     public List<Address> getAllAddresses(){
         return addressService.getAllAddresses();
     }
+    @GetMapping("/page/{pageNumber}")
+    public List<Address> getAddressesByPage(@PathVariable int pageNumber) {
+        return addressService.getAddressesPageable(pageNumber);
+    }
     @PostMapping
     public ResponseEntity<?> createAddress(@RequestBody Address address){
         try{

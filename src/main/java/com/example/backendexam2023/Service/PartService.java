@@ -1,8 +1,10 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Repository.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,9 @@ public class PartService {
 
     public List<Part> getAllParts(){
         return partRepository.findAll();
+    }
+    public List<Part> getPartsPageable(int pageNumber) {
+        return partRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
     
     public void deletePartById(Long id){

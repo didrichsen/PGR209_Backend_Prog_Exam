@@ -5,8 +5,10 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
+import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.example.backendexam2023.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -53,6 +55,10 @@ public class OrderService {
     //Insert pagination later
     public List<Order> getAllOrders(){
         return orderRepository.findAll();
+    }
+
+    public List<Order> getOrdersPageable(int pageNumber) {
+        return orderRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
 

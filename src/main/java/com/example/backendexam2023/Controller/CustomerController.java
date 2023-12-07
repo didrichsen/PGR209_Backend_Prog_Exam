@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Service.CustomerService;
@@ -62,6 +63,10 @@ public class CustomerController {
     @GetMapping("/get-all")
     public List<Customer> getAllCustomers(){
         return customerService.getAllCustomers();
+    }
+    @GetMapping("/page/{pageNumber}")
+    public List<Customer> getCustomersByPage(@PathVariable int pageNumber) {
+        return customerService.getCustomersPageable(pageNumber);
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.OrderBatch.OrderBatch;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/machine")
@@ -28,6 +31,11 @@ public class MachineController {
 
         return new ResponseEntity<>(machine, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public List<Machine> getMachinesByPage(@PathVariable int pageNumber) {
+        return machineService.getMachinesPageable(pageNumber);
     }
 
     @PostMapping

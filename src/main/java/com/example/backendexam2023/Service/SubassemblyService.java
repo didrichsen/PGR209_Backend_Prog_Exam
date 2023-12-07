@@ -6,6 +6,7 @@ import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class SubassemblyService {
     
     public Subassembly getSubassemblyById(Long id){
         return subassemblyRepository.findById(id).orElse(null);
+    }
+
+    public List<Subassembly> getSubassembliesPageable(int pageNumber) {
+        return subassemblyRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
     public Subassembly createSubassembly(SubassemblyRequest subassemblyRequest){

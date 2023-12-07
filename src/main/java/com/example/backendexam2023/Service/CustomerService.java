@@ -5,6 +5,7 @@ import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class CustomerService {
 
     public List<Customer> getAllCustomers(){
         return customerRepository.findAll();
+    }
+    public List<Customer> getCustomersPageable(int pageNumber) {
+        return customerRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
     public Customer addAddressToCustomer(Long customerId, Long addressId){

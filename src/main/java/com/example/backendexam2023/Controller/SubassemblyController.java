@@ -32,6 +32,10 @@ public class SubassemblyController {
         return new ResponseEntity<>(subassembly,HttpStatus.OK);
 
     }
+    @GetMapping("/page/{pageNumber}")
+    public List<Subassembly> getSubassembliesByPage(@PathVariable int pageNumber) {
+        return subassemblyService.getSubassembliesPageable(pageNumber);
+    }
 
     @PostMapping
     public Subassembly createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){

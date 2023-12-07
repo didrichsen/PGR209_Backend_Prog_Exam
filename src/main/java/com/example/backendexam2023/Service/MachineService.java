@@ -1,11 +1,13 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,10 @@ public class MachineService {
 
     public Machine getMachineById(Long id){
         return machineRepository.findById(id).orElse(null);
+    }
+
+    public List<Machine> getMachinesPageable(int pageNumber) {
+        return machineRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
     public Machine createMachine(MachineRequest machineRequest){
