@@ -145,20 +145,20 @@ public class BackendExam2023Application {
             Machine dogRobot2 = new Machine("DogniMate", 1399);
             dogRobot2.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine3 = machineRepository.save(dogRobot2);
-
+/*
             //Creating Dog robot
             Machine dogRobot3 = new Machine("DogniMate", 1399);
-            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            dogRobot3.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine4 = machineRepository.save(dogRobot3);
 
             //Creating Dog robot
             Machine dogRobot4 = new Machine("DogniMate", 1399);
-            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            dogRobot4.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine5 = machineRepository.save(dogRobot4);
 
             //Creating Dog robot
             Machine dogRobot5 = new Machine("DogniMate", 1399);
-            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            dogRobot5.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine6 = machineRepository.save(dogRobot5);
 
             Machine machineFromDB = machineService.getMachineById(3L);
@@ -166,7 +166,9 @@ public class BackendExam2023Application {
             Machine machineFromDB3 = machineService.getMachineById(5L);
             Machine machineFromDB4 = machineService.getMachineById(6L);
 
-            machineFromDB.getSubassemblies().forEach(subassembly -> System.out.println(subassembly.getSubassemblyName()));
+ */
+
+            savedMachine3.getSubassemblies().forEach(subassembly -> System.out.println(subassembly.getSubassemblyName()));
 
 
             //Creating customers
