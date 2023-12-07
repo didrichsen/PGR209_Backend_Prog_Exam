@@ -55,28 +55,35 @@ public class BackendExam2023Application {
 
 
            // for (int i = 0; i < 50; i++) {
-             //   Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
-               // Address a = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
+
             for(int i = 0; i < 50; i ++){
+                   Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
+                   Address a = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
 
                 for (int j = 0; j < 1; j++){
-                    Machine machine = machineRepository.save(new Machine( faker.commerce().productName(), 100));
+                    Order order = orderRepository.save(new Order());
+                    Machine machine = machineRepository.save(new Machine( faker.commerce().productName(), 100 + i));
                     for (int l = 0; l < 2; l++){
                         Subassembly subassembly = subassemblyRepository.save(new Subassembly("subassembly" + l + j + i));
-                        //machine.getSubassemblies().add(subassembly);
                         for(int k = 0; k < 3; k++){
                             Part part = partRepository.save(new Part(faker.commerce().material()));
-                            //subassembly.getParts().add(part);
+                            subassembly.getParts().add(part);
                         }
-                        //subassemblyRepository.save(subassembly);
+                        subassemblyRepository.save(subassembly);
+                        machine.getSubassemblies().add(subassembly);
                     }
-                    //machineRepository.save(machine);
+                    machineRepository.save(machine);
+                    order.setMachine(machine);
+                    order.setCustomer(c);
+                    orderRepository.save(order);
                 }
+
+                c.getAddresses().add(a);
+                customerRepository.save(c);
             }
 
 
-              //  c.getAddresses().add(a);
-               // customerRepository.save(c);
+
             //}
 
 /*
