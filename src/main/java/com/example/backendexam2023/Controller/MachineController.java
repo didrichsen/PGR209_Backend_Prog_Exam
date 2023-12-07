@@ -1,9 +1,7 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
-import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.example.backendexam2023.Service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,102 +1,56 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.*;
-import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
-import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.OrderBatch.OrderBatch;
 import com.example.backendexam2023.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Mac;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class OrderService {
 
-    private final OrderRepository orderRepository;
-    private final MachineService machineService;
 
-    private final CustomerService customerService;
+    private final OrderRepository orderRepository;
+    private final OrderLineService orderService;
+
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, MachineService machineService, CustomerService customerService){
-        this.orderRepository = orderRepository;
-        this.machineService = machineService;
-        this.customerService = customerService;
+    public OrderService(OrderRepository orderBatchRepository, OrderLineService orderService){
+        this.orderRepository = orderBatchRepository;
+        this.orderService = orderService;
     }
 
     public Order getOrderById(Long id){
         return orderRepository.findById(id).orElse(null);
-    }
-/*
-    public Order createOrder(OrderRequest orderRequest){
-        Order order = new Order();
-        Customer customer = customerService.getCustomerById(orderRequest.getCustomerId());
-
-        List<Machine> machines = new ArrayList<>();
-
-        for(Long machineId : orderRequest.getMachineIds()){
-            Machine machine = machineService.getMachineById(machineId);
-            machines.add(machine);
-        }
-
-        order.setMachines(machines);
-        order.setCustomer(customer);
-
-        return orderRepository.save(order);
-    }
-
- */
-
-    //Insert pagination later
-    public List<Order> getAllOrders(){
-        return orderRepository.findAll();
-    }
+    };
 
     public List<Order> getOrdersPageable(int pageNumber) {
         return orderRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
+    public Order createOrder(List<OrderLine> orderLines, Customer customer) {
+        Order order = new Order(LocalDateTime.now());
+        Integer totalPrice = 0;
 
-    /*
-    public void deleteOrder(Long id){
+        for(int i = 0; i < orderLines.size(); i++){
+            totalPrice += orderLines.get(i).getMachine().getPrice();
+        }
 
-        Order order = getOrderById(id);
+        order.getOrderLines().addAll(orderLines);
+        order.setTotalPrice(totalPrice);
+        order.setCustomer(customer);
 
-        List<Machine> machines = order.getMachines();
-
-        machines.forEach(machine ->{
-
-            List<Subassembly> subassemblies = machine.getSubassemblies();
-            subassemblies.forEach(subassembly -> {
-
-                List<Part> parts = subassembly.getParts();
-                parts.forEach(part -> partService.deletePartById(part.getPartId()));
-                subassemblyService.deleteSubassembly(subassembly.getSubassemblyId());
-            });
-
-            machineService.deleteMachine(machine.getMachineId());
-
-            });
-
-        orderRepository.deleteById(order.getOrderId());
-
-    }
-
-     */
-
-    public void deleteOrder(Long id){
-
-        orderRepository.deleteById(id);
-
-    }
-
-    public Order updateOrder(Order order){
         return orderRepository.save(order);
     }
+
+
+
 
 }

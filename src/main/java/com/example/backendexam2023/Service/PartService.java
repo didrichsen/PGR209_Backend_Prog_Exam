@@ -1,6 +1,5 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Repository.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;

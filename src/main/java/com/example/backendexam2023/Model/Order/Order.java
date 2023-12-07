@@ -1,14 +1,17 @@
 package com.example.backendexam2023.Model.Order;
+
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.OrderBatch.OrderBatch;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,24 +22,23 @@ import lombok.ToString;
 public class Order {
 
     @Id
-    @GeneratedValue(generator = "order_generator")
-    @SequenceGenerator(name = "order_generator", sequenceName = "order_seq", initialValue = 1, allocationSize = 1)
-    @Column(name="order_id")
-    private Long orderId = 0L;
+    @GeneratedValue(generator = "order_batch_generator")
+    @SequenceGenerator(name = "order_batch_generator", sequenceName = "order_batch_seq", initialValue = 1, allocationSize = 1)
+    @Column(name="order_batch_id")
+    private Long orderBatchId = 0L;
 
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    @JsonIgnoreProperties("orders")
-    private Customer customer;
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "machine_id")
-    private Machine machine;
+    @Column(name = "total_price")
+    private Integer totalPrice;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "order_batch_id")
-    private OrderBatch orderBatch;
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private List<OrderLine> orderLines = new ArrayList<>();
 
+    public Order(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
 }

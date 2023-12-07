@@ -1,4 +1,4 @@
-package com.example.backendexam2023.OrderBatch;
+package com.example.backendexam2023.Model.OrderLine;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderBatchRequest {
+public class OrderLineRequest {
+    private Long customerId;
     private List<Long> orderIds = new ArrayList<>();
 
 }

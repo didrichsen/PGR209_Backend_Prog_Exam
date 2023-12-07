@@ -1,8 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Part;
-import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

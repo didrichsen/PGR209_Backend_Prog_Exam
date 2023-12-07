@@ -1,6 +1,5 @@
 package com.example.backendexam2023.Model.Machine;
 
-import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
