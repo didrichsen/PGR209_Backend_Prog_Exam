@@ -22,16 +22,21 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(generator = "order_batch_generator")
-    @SequenceGenerator(name = "order_batch_generator", sequenceName = "order_batch_seq", initialValue = 1, allocationSize = 1)
-    @Column(name="order_batch_id")
-    private Long orderBatchId = 0L;
+    @GeneratedValue(generator = "order_generator")
+    @SequenceGenerator(name = "order_generator", sequenceName = "order_seq", initialValue = 1, allocationSize = 1)
+    @Column(name="order_id")
+    private Long orderId = 0L;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
     @Column(name = "total_price")
     private Integer totalPrice;
+
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    @JsonIgnoreProperties("orders")
+    private Customer customer;
 
     @OneToMany
     @JoinColumn(name = "order_id")

@@ -50,8 +50,9 @@ public class BackendExam2023Application {
         return args -> {
 
             for(int i = 0; i < 50; i ++){
-                   Customer c = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
-                   Address a = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
+
+                   Customer customer = customerRepository.save(new Customer(faker.name().fullName(), faker.internet().emailAddress()));
+                   Address address = addressRepository.save(new Address(faker.address().streetAddress(), 1200 + i));
 
                 for (int j = 0; j < 1; j++){
                     OrderLine orderLine = orderLineRepo.save(new OrderLine());
@@ -65,14 +66,16 @@ public class BackendExam2023Application {
                         subassemblyRepository.save(subassembly);
                         machine.getSubassemblies().add(subassembly);
                     }
-                    machineRepository.save(machine);
-                    order.setMachine(machine);
-                    order.setCustomer(c);
-                    orderRepository.save(order);
-                }
 
-                c.getAddresses().add(a);
-                customerRepository.save(c);
+                    machineRepository.save(machine);
+                    orderLine.setMachine(machine);
+                    OrderLine orderLine1 = orderLineRepo.save(orderLine);
+                    List<OrderLine> orderLines = new ArrayList<>();
+                    orderLines.add(orderLine1);
+                    customer.getAddresses().add(address);
+                    customerRepository.save(customer);
+                    orderService.createOrder(orderLines, customer);
+                }
             }
         };
     }
