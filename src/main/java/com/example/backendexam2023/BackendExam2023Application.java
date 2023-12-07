@@ -7,6 +7,7 @@ import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.OrderBatch.OrderBatchRequest;
 import com.example.backendexam2023.Repository.*;
+import com.example.backendexam2023.Service.MachineService;
 import com.example.backendexam2023.Service.OrderBatchService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -43,7 +44,8 @@ public class BackendExam2023Application {
             CustomerRepository customerRepository,
             OrderRepository orderRepository,
             OrderBatchRepository orderBatchRepository,
-            OrderBatchService orderBatchService
+            OrderBatchService orderBatchService,
+            MachineService machineService
     ) {
 
         return args -> {
@@ -138,6 +140,33 @@ public class BackendExam2023Application {
             Machine dogRobot = new Machine("DogniMate", 1399);
             dogRobot.getSubassemblies().addAll(dogSubassemblies);
             Machine savedMachine2 = machineRepository.save(dogRobot);
+
+            //Creating Dog robot
+            Machine dogRobot2 = new Machine("DogniMate", 1399);
+            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            Machine savedMachine3 = machineRepository.save(dogRobot2);
+
+            //Creating Dog robot
+            Machine dogRobot3 = new Machine("DogniMate", 1399);
+            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            Machine savedMachine4 = machineRepository.save(dogRobot3);
+
+            //Creating Dog robot
+            Machine dogRobot4 = new Machine("DogniMate", 1399);
+            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            Machine savedMachine5 = machineRepository.save(dogRobot4);
+
+            //Creating Dog robot
+            Machine dogRobot5 = new Machine("DogniMate", 1399);
+            dogRobot2.getSubassemblies().addAll(dogSubassemblies);
+            Machine savedMachine6 = machineRepository.save(dogRobot5);
+
+            Machine machineFromDB = machineService.getMachineById(3L);
+            Machine machineFromDB2 = machineService.getMachineById(4L);
+            Machine machineFromDB3 = machineService.getMachineById(5L);
+            Machine machineFromDB4 = machineService.getMachineById(6L);
+
+            machineFromDB.getSubassemblies().forEach(subassembly -> System.out.println(subassembly.getSubassemblyName()));
 
 
             //Creating customers
