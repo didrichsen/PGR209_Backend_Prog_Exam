@@ -1,4 +1,4 @@
-package com.example.backendexam2023.Model;
+package com.example.backendexam2023.Model.Part;
 
 import jakarta.persistence.*;
 import lombok.Getter;

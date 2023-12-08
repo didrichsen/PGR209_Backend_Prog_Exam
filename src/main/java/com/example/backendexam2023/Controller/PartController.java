@@ -2,7 +2,7 @@ package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Util.RensponseHelper;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.example.backendexam2023.Service;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Repository.MachineRepository;

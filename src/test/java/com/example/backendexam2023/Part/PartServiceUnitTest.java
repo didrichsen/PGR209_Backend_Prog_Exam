@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Part;
 
 import com.example.backendexam2023.Records.DeleteResult;
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;

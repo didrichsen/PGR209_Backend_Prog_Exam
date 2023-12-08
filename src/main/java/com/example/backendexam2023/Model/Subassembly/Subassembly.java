@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Model.Subassembly;
 
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Part.Part;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
