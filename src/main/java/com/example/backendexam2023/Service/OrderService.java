@@ -3,14 +3,12 @@ package com.example.backendexam2023.Service;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Order.Order;
-import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,13 +16,13 @@ public class OrderService {
 
 
     private final OrderRepository orderRepository;
-    private final OrderLineService orderService;
+    private final OrderLineService orderLineService;
 
 
     @Autowired
-    public OrderService(OrderRepository orderBatchRepository, OrderLineService orderService){
+    public OrderService(OrderRepository orderBatchRepository, OrderLineService orderLineService){
         this.orderRepository = orderBatchRepository;
-        this.orderService = orderService;
+        this.orderLineService = orderLineService;
     }
 
     public Order getOrderById(Long id){

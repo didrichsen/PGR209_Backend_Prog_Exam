@@ -25,7 +25,7 @@ public class CustomerDBUnitTest {
         }
 
         List<Customer> customers = customerRepository.findAll();
-        System.out.println("customers size: " + customers.size());
+
         assert customers.size() == 50;
         assert customers.get(0).getCustomerId() == 1L;
     }
