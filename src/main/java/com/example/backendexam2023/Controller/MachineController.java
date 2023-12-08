@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/machine")
@@ -32,7 +33,7 @@ public class MachineController {
         if(operationResult.success()){
             return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -69,7 +70,7 @@ public class MachineController {
             return new ResponseEntity<>(machineService.updateMachine(id, newMachine), HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -30,7 +31,7 @@ public class OrderController {
         if (operationResult.success()){
             return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

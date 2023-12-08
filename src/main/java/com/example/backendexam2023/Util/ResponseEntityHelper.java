@@ -5,11 +5,13 @@ import com.example.backendexam2023.Records.ErrorMessageWithIds;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 public class ResponseEntityHelper {
 
     public static ResponseEntity<Object> getResponseForDelete(DeleteResult deleteResult) {
         if(deleteResult.ids() == null){
-            return new ResponseEntity<>(deleteResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",deleteResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
 
         if(!deleteResult.ids().isEmpty()){

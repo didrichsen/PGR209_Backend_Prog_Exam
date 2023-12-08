@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -31,7 +32,7 @@ public class CustomerController {
             return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
         }
         else {
-            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -57,12 +58,12 @@ public class CustomerController {
             if(operationResult.success()){
                 return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()),HttpStatus.BAD_REQUEST);
             }
 
     }
 
-    @DeleteMapping("/{customerId}/remove-addresses/{addressId}")
+    @DeleteMapping("/{customerId}/remove/{addressId}")
     public ResponseEntity<Object> deleteAddressFromCustomer(@PathVariable Long customerId, @PathVariable Long addressId){
 
         OperationResult<Object> operationResult = customerService.deleteAddressFromCustomer(customerId,addressId);
@@ -70,7 +71,7 @@ public class CustomerController {
         if(operationResult.success()){
             return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()),HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -92,7 +93,7 @@ public class CustomerController {
         if(operationResult.success()){
             return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
 
     }
