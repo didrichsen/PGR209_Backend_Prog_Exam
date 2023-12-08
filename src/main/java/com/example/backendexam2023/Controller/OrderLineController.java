@@ -48,10 +48,12 @@ public class OrderLineController {
 
         return new ResponseEntity<>(orderLine, HttpStatus.OK);
     }
+
     @GetMapping("/page/{pageNumber}")
     public List<OrderLine> getOrderLinesByPage(@PathVariable int pageNumber) {
         return orderLineService.getOrderLinesPageable(pageNumber);
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateOrderLine(@PathVariable Long id, @RequestBody OrderLine newOrderLine){
         try{

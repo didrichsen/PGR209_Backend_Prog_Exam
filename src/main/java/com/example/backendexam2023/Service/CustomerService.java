@@ -96,7 +96,6 @@ public class CustomerService {
             return new DeleteResult(false, null, "Couldn't find customer with id " + id);
         }
 
-
         if(!customer.getOrders().isEmpty()){
             List<Long> orderIds = new ArrayList<>();
 
@@ -105,12 +104,10 @@ public class CustomerService {
             }
 
             return new DeleteResult(false, orderIds, "Customer has active orders.");
-
         }
 
         customerRepository.deleteById(id);
         return new DeleteResult(false,null, "Customer successfully deleted.");
-
     }
     public OperationResult<Object> updateCustomer(Long customerId, Customer newCustomer){
 
