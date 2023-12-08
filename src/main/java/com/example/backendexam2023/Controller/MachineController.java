@@ -4,7 +4,7 @@ import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
-import com.example.backendexam2023.Util.ResponseEntityHelper;
+import com.example.backendexam2023.Util.RensponseHelper;
 import com.example.backendexam2023.Service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,7 +60,7 @@ public class MachineController {
 
         DeleteResult deleteResult = machineService.deleteMachineById(id);
 
-        return ResponseEntityHelper.getResponseForDelete(deleteResult);
+        return RensponseHelper.getResponseForDelete(deleteResult);
 
     }
 

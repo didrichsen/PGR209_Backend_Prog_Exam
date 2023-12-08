@@ -3,7 +3,7 @@ package com.example.backendexam2023.Controller;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part;
-import com.example.backendexam2023.Util.ResponseEntityHelper;
+import com.example.backendexam2023.Util.RensponseHelper;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,10 +37,6 @@ public class PartController {
 
     }
 
-    @GetMapping
-    public List<Part> getAllParts(){
-        return partService.getAllParts();
-    }
     @GetMapping("/page/{pageNumber}")
     public List<Part> getPartsByPage(@PathVariable int pageNumber) {
         return partService.getPartsPageable(pageNumber);
@@ -62,7 +58,7 @@ public class PartController {
 
         DeleteResult deleteResult = partService.deletePartById(id);
 
-        return ResponseEntityHelper.getResponseForDelete(deleteResult);
+        return RensponseHelper.getResponseForDelete(deleteResult);
 
     }
 

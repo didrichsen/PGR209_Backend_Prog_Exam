@@ -107,6 +107,7 @@ public class MachineService {
 
         if (newMachine.getMachineName() != null) machineToUpdate.setMachineName(newMachine.getMachineName());
         if (newMachine.getPrice() != null) machineToUpdate.setPrice(newMachine.getPrice());
+
         return machineRepository.save(machineToUpdate);
     }
 

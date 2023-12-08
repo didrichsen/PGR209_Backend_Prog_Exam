@@ -1,5 +1,7 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Repository.AddressRepository;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +31,6 @@ public class AddressService {
         List<Address> addresses = addressRepository.findAll();
         for(Address a : addresses){
             if (Objects.equals(a.getStreetAddress(),address.getStreetAddress()) && Objects.equals(a.getZipCode(),address.getZipCode())){
-                System.out.println("Within here");
                 return new OperationResult<>(false,"Address already exists with id " + a.getAddressId(), null);
             }
         }
@@ -39,30 +41,40 @@ public class AddressService {
     public List<Address> getAddressesPageable(int pageNumber) {
         return addressRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
-    
-    public boolean deleteAddress(Long id){
 
-        Address address = getAddressById(id);
+    public DeleteResult deleteAddress(Long id){
+
+        Address address = addressRepository.findById(id).orElse(null);
 
         if(address == null){
-            return false;
+            return new DeleteResult(false, null, "Couldn't find address with id " + id);
         }
 
         if(!address.getCustomers().isEmpty()){
-            return false;
+            List<Long> customerIds = new ArrayList<>();
+            for (Customer customer: address.getCustomers()) {
+                customerIds.add(customer.getCustomerId());
+            }
+            return new DeleteResult(false,customerIds,"Address has active customers.");
         }
+
         addressRepository.deleteById(id);
-        return true;
+        return new DeleteResult(true,null, null);
+
     }
 
-    public Address updateAddress(Long addressId, Address newAddress){
+    public OperationResult<Object> updateAddress(Long addressId, Address newAddress){
+
         Address addressToUpdate = getAddressById(addressId);
 
-        if(addressToUpdate == null) throw new RuntimeException("Couldn't find address with id " + addressId);
+        if(addressToUpdate == null){
+            return new OperationResult<>(false,"Couldn't find customer with id " + addressId, null);
+        }
 
-        if (newAddress.getStreetAddress() != null) addressToUpdate.setStreetAddress(newAddress.getStreetAddress());
+        if (newAddress.getCustomers() != null) addressToUpdate.getCustomers().addAll(newAddress.getCustomers());
         if (newAddress.getZipCode() != null) addressToUpdate.setZipCode(newAddress.getZipCode());
-        return addressRepository.save(addressToUpdate);
+
+        return new OperationResult<>(true, null,addressRepository.save(addressToUpdate));
     }
 
 

@@ -1,14 +1,16 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Service.AddressService;
+import com.example.backendexam2023.Util.RensponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/address")
@@ -29,7 +31,7 @@ public class AddressController {
         if(operationResult.success()) {
             return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -42,7 +44,6 @@ public class AddressController {
         if (address == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(address, HttpStatus.OK);
-
     }
 
     //Returns an empty array if page doesn't exist.
@@ -57,25 +58,24 @@ public class AddressController {
 
     // If address has active customer or doesn't exist, we return av message to the client.
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAddress(@PathVariable Long id){
-        boolean isDeleted = addressService.deleteAddress(id);
+    public ResponseEntity<Object> deleteAddress(@PathVariable Long id){
 
-        if(isDeleted){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        DeleteResult deleteResult = addressService.deleteAddress(id);
 
-        return new ResponseEntity<>("Address either has active customer or dosen't exist.",HttpStatus.BAD_REQUEST);
+        return RensponseHelper.getResponseForDelete(deleteResult);
     }
 
-
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody Address newAddress){
-        try{
-            return new ResponseEntity<>(addressService.updateAddress(id, newAddress), HttpStatus.OK);
+    public ResponseEntity<Object> updateAddress(@PathVariable Long id, @RequestBody Address newAddress){
+
+        OperationResult<Object> operationResult = addressService.updateAddress(id, newAddress);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+
     }
 
 }
