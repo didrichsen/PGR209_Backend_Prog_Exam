@@ -1,7 +1,6 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Address.Address;
-import com.example.backendexam2023.Model.DeleteResult;
+import com.example.backendexam2023.DeleteResult;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
@@ -48,7 +47,7 @@ public class PartService {
 
         boolean isInUse = false;
 
-        Part partToDelete = getPartById(id);
+        Part partToDelete = partRepository.findById(id).orElse(null);
 
         if(partToDelete == null){
             return new DeleteResult(false, Collections.emptyList());

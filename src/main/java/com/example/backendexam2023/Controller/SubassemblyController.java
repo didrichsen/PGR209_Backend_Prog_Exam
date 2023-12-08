@@ -1,13 +1,13 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.DeleteResult;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
+import com.example.backendexam2023.ResponseEntityHelper;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,8 +45,11 @@ public class SubassemblyController {
 
 
     @DeleteMapping("/{id}")
-    public void deleteSubassembly(@PathVariable Long id){
-        subassemblyService.deleteSubassembly(id);
+    public ResponseEntity<List<Long>> deletePart(@PathVariable Long id){
+
+        DeleteResult deleteResult = subassemblyService.deleteSubassemblyById(id);
+        return ResponseEntityHelper.createResponseEntity(deleteResult);
+
     }
 
 

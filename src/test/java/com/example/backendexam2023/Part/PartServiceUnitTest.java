@@ -1,17 +1,26 @@
 package com.example.backendexam2023.Part;
 
+import com.example.backendexam2023.DeleteResult;
 import com.example.backendexam2023.Model.Part;
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
+import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.PartService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 @ActiveProfiles("test")
@@ -20,6 +29,9 @@ public class PartServiceUnitTest {
 
     @MockBean
     private PartRepository partRepository;
+
+    @MockBean
+    private SubassemblyRepository subassemblyRepository;
 
     @Autowired
     private PartService partService;
@@ -45,6 +57,76 @@ public class PartServiceUnitTest {
         assertThrows(RuntimeException.class, () -> partService.createPart(partWithNullName));
 
     }
+
+    @Test
+    void Part_Shall_Not_Be_Deleted_Because_Its_In_Use() {
+
+        Part part = new Part();
+        part.setPartId(1L);
+
+        Subassembly subassembly = new Subassembly();
+        subassembly.getParts().add(part);
+
+        List<Subassembly> subassembliesToCheck = List.of(subassembly);
+
+        when(subassemblyRepository.findAll()).thenReturn(subassembliesToCheck);
+        when(partRepository.findById(part.getPartId())).thenReturn(Optional.of(part));
+
+
+        DeleteResult deleteResult = partService.deletePartById(1L);
+
+        assertFalse(deleteResult.isDeletable());
+        assertFalse(deleteResult.getIdsInUse().isEmpty());
+
+    }
+
+    @Test
+    void Part_Shall_Not_Be_Deleted_Because_It_Does_Not_Exist() {
+
+        Part part = new Part();
+        part.setPartId(1L);
+
+        Subassembly subassembly = new Subassembly();
+        subassembly.getParts().add(part);
+
+        List<Subassembly> subassembliesToCheck = List.of(subassembly);
+
+        when(subassemblyRepository.findAll()).thenReturn(subassembliesToCheck);
+        when(partRepository.findById(part.getPartId())).thenReturn(Optional.of(part));
+
+
+        DeleteResult deleteResult = partService.deletePartById(2L);
+
+        assertFalse(deleteResult.isDeletable());
+
+    }
+
+    @Test
+    void Part_Shall_Not_Be_Deleted() {
+
+        Part part = new Part();
+        part.setPartId(1L);
+
+        Part partToDelete = new Part();
+        part.setPartId(2L);
+
+        Subassembly subassembly = new Subassembly();
+        subassembly.getParts().add(part);
+
+        List<Subassembly> subassembliesToCheck = List.of(subassembly);
+
+        when(subassemblyRepository.findAll()).thenReturn(subassembliesToCheck);
+        when(partRepository.findById(partToDelete.getPartId())).thenReturn(Optional.of(partToDelete));
+
+
+        DeleteResult deleteResult = partService.deletePartById(2L);
+
+        assert (deleteResult.isDeletable());
+        assert (deleteResult.getIdsInUse().isEmpty());
+
+    }
+
+
 
 
 
