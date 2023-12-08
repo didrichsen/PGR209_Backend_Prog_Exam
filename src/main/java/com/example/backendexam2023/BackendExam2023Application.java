@@ -2,6 +2,7 @@ package com.example.backendexam2023;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
@@ -66,7 +67,7 @@ public class BackendExam2023Application {
                     }
                     Machine machine2 = machineRepository.save(machine);
 
-                    List<OrderLine> orderLines = new ArrayList<>();
+                    List<Long> orderLines = new ArrayList<>();
 
                     if(i % 2 == 0){
 
@@ -83,21 +84,27 @@ public class BackendExam2023Application {
                         CreateOrderLines(machine2,orderLines,orderLineRepo);
                     }
                     if (i % 2 == 0){
-                        List<OrderLine> orderLines2 = new ArrayList<>();
+                        List<Long> orderLines2 = new ArrayList<>();
                         CreateOrderLines(machine2,orderLines2,orderLineRepo);
-                        orderService.createOrder(orderLines2,customer);
+                        OrderRequest orderRequest = new OrderRequest();
+                        orderRequest.getOrderLineIds().addAll(orderLines2);
+                        orderRequest.setCustomerId(customer.getCustomerId());
+                        orderService.createOrder(orderRequest);
                     }
 
-                    orderService.createOrder(orderLines,customer);
+                    OrderRequest orderRequest2 = new OrderRequest();
+                    orderRequest2.getOrderLineIds().addAll(orderLines);
+                    orderRequest2.setCustomerId(customer.getCustomerId());
+                    orderService.createOrder(orderRequest2);
 
                 }
             }
         };
     }
-    private void CreateOrderLines(Machine machine, List<OrderLine> orderLines, OrderLineRepository orderLineRepository){
+    private void CreateOrderLines(Machine machine, List<Long> orderLines, OrderLineRepository orderLineRepository){
         OrderLine orderLine = orderLineRepository.save(new OrderLine());
         orderLine.setMachine(machine);
         orderLineRepository.save(orderLine);
-        orderLines.add(orderLine);
+        orderLines.add(orderLine.getOrderLineId());
     }
 }

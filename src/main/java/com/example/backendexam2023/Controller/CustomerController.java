@@ -1,8 +1,9 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Util.ResponseEntityHelper;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,18 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @PostMapping
+    public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) {
+
+        OperationResult<Object> operationResult = customerService.addCustomer(customer);
+        if (operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id){
         Customer customer = customerService.getCustomerById(id);
@@ -31,68 +44,57 @@ public class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
-        try{
-            Customer customer1 = customerService.addCustomer(customer);
-            return new ResponseEntity<>(customer, HttpStatus.CREATED);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/{customerId}/add-address/{addressId}")
-    public ResponseEntity<?> addAddressToCustomer(
-            @PathVariable Long customerId,
-            @PathVariable Long addressId) {
-        try {
-            Customer customer = customerService.addAddressToCustomer(customerId, addressId);
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @DeleteMapping("/{customerId}/remove-addresses/{addressId}")
-    public ResponseEntity<?> deleteAddressFromCustomer(
-            @PathVariable Long customerId,
-            @PathVariable Long addressId
-    ){
-        try{
-            Customer customer = customerService.deleteAddressFromCustomer(customerId, addressId);
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/get-all")
-    public List<Customer> getAllCustomers(){
-        return customerService.getAllCustomers();
-    }
     @GetMapping("/page/{pageNumber}")
     public List<Customer> getCustomersByPage(@PathVariable int pageNumber) {
         return customerService.getCustomersPageable(pageNumber);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomerById(@PathVariable Long id){
 
-        boolean isDeleted = customerService.deleteCustomer(id);
+    @PostMapping("/{customerId}/add/{addressId}")
+    public ResponseEntity<Object> addAddressToCustomer(@PathVariable Long customerId, @PathVariable Long addressId) {
 
-        if(!isDeleted){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer has active orders. Cannot delete.");
-        }
+            OperationResult<Object> operationResult = customerService.addAddressToCustomer(customerId, addressId);
 
-        return ResponseEntity.ok("Customer deleted successfully.");
+            if(operationResult.success()){
+                return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
+            }
+
     }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody Customer newCustomer){
-        try{
-            return new ResponseEntity<>(customerService.updateCustomer(id, newCustomer), HttpStatus.OK);
+
+    @DeleteMapping("/{customerId}/remove-addresses/{addressId}")
+    public ResponseEntity<Object> deleteAddressFromCustomer(@PathVariable Long customerId, @PathVariable Long addressId){
+
+        OperationResult<Object> operationResult = customerService.deleteAddressFromCustomer(customerId,addressId);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteCustomerById(@PathVariable Long id){
+
+        DeleteResult deleteResult = customerService.deleteCustomer(id);
+
+        return ResponseEntityHelper.getResponseForDelete(deleteResult);
+    }
+
+    @PutMapping("/update/{customerId}")
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long customerId, @RequestBody Customer customerData){
+
+        OperationResult<Object> operationResult = customerService.updateCustomer(customerId, customerData);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
 

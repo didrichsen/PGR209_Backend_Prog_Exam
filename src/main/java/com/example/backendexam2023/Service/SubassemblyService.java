@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.DeleteResult;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
@@ -39,7 +40,10 @@ public class SubassemblyService {
         return subassemblyRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
-    public Subassembly createSubassembly(SubassemblyRequest subassemblyRequest){
+    public OperationResult<Object> createSubassembly(SubassemblyRequest subassemblyRequest){
+
+        if (subassemblyRequest.getSubassemblyName() == null || subassemblyRequest.getSubassemblyName().trim().isEmpty())
+            return new OperationResult<>(false, "subassembly needs name", null);
 
         Subassembly subassembly = new Subassembly(subassemblyRequest.getSubassemblyName());
 
@@ -49,10 +53,12 @@ public class SubassemblyService {
             Part part = partService.getPartById(partId);
             parts.add(part);
         }
-
         subassembly.setParts(parts);
+        if (subassembly.getParts().isEmpty()){
+            return new OperationResult<>(false, "Subassembly has no parts", null);
+        }
 
-        return subassemblyRepository.save(subassembly);
+        return new OperationResult<>(true, null, subassemblyRepository.save(subassembly));
     }
 
     public DeleteResult deleteSubassemblyById(Long id){
@@ -65,7 +71,7 @@ public class SubassemblyService {
         Subassembly subassemblyToDelete = getSubassemblyById(id);
 
         if(subassemblyToDelete == null){
-            return new DeleteResult(false, Collections.emptyList());
+            return new DeleteResult(false, Collections.emptyList(), "Couldn't find subassembly " + id);
         }
 
         for (Machine machine:machinesToCheck) {
@@ -79,12 +85,12 @@ public class SubassemblyService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,machinesUsingSubassembly);
+            return new DeleteResult(false,machinesUsingSubassembly, "Subassembly is in use. Cant delete.");
         }
 
         subassemblyRepository.deleteById(subassemblyToDelete.getSubassemblyId());
 
-        return new DeleteResult(true,Collections.emptyList());
+        return new DeleteResult(true,Collections.emptyList(), null);
     }
 
     protected List<Subassembly> getAllSubassemblies() {

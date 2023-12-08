@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AddressService {
@@ -22,14 +24,15 @@ public class AddressService {
         return addressRepository.findById(id).orElse(null);
     }
     
-    public Address createAddress(Address address){
+    public OperationResult<Object> createAddress(Address address){
         List<Address> addresses = addressRepository.findAll();
         for(Address a : addresses){
-            if (a.getStreetAddress().equals(address.getStreetAddress()) && a.getZipCode() == address.getZipCode()){
-                throw new RuntimeException("Address already exists with id: " + a.getAddressId());
+            if (Objects.equals(a.getStreetAddress(),address.getStreetAddress()) && Objects.equals(a.getZipCode(),address.getZipCode())){
+                System.out.println("Within here");
+                return new OperationResult<>(false,"Address already exists with id " + a.getAddressId(), null);
             }
         }
-        return addressRepository.save(address);
+        return new OperationResult<>(true, null,addressRepository.save(address));
     }
 
 

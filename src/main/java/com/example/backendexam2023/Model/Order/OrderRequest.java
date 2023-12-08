@@ -12,6 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class OrderRequest {
-    private List<OrderLine> orderLines = new ArrayList<>();
+
+    private Long customerId;
+    private List<Long> orderLineIds = new ArrayList<>();
 
 }

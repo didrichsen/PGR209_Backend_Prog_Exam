@@ -1,9 +1,10 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.DeleteResult;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
-import com.example.backendexam2023.ResponseEntityHelper;
+import com.example.backendexam2023.Util.ResponseEntityHelper;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,19 +39,27 @@ public class SubassemblyController {
     }
 
     @PostMapping
-    public Subassembly createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
-        return subassemblyService.createSubassembly(subassemblyRequest);
+    public ResponseEntity<Object> createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
+
+        OperationResult<Object> operationResult = subassemblyService.createSubassembly(subassemblyRequest);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
+        }
+
     }
-
-
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Long>> deletePart(@PathVariable Long id){
+    public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
         DeleteResult deleteResult = subassemblyService.deleteSubassemblyById(id);
-        return ResponseEntityHelper.createResponseEntity(deleteResult);
+
+        return ResponseEntityHelper.getResponseForDelete(deleteResult);
 
     }
+
 
 
 

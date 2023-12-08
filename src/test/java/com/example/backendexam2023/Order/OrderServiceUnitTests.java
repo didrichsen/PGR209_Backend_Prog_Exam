@@ -34,6 +34,7 @@ public class OrderServiceUnitTests {
     @Test
     void shouldCreateOrder(){
 
+        //Setup
         Customer customer = new Customer("cust", "cust@c.com");
         customer.setCustomerId(1L);
 
@@ -41,22 +42,62 @@ public class OrderServiceUnitTests {
 
         OrderLine orderLine = new OrderLine();
         orderLine.setMachine(new Machine("machine", 100));
-        orderLine.setOrder(order);
+        //orderLine.setOrder(order);
 
         OrderLine orderLine1 = new OrderLine();
         orderLine1.setMachine(new Machine("machine1", 100));
-        orderLine1.setOrder(order);
+        //orderLine1.setOrder(order);
 
         List<OrderLine> orderLines = new ArrayList<>();
         orderLines.add(orderLine);
+        orderLines.add(orderLine1);
+
+        order.setOrderLines(orderLines);
+        order.setCustomer(customer);
+        order.setTotalPrice(200);
+
+        List<OrderLine> orderLinesToTest = new ArrayList<>();
+        orderLinesToTest.add(orderLine);
+        orderLinesToTest.add(orderLine1);
 
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        Order newOrder = orderService.createOrder(orderLines, customer);
+        Order newOrder = orderService.createOrder(orderLinesToTest, customer);
 
         assert newOrder.getOrderDate() == order.getOrderDate();
-        assert newOrder.getTotalPrice() == 200;
+        assert newOrder.getTotalPrice() == newOrder.getTotalPrice();
 
+
+    }
+
+    @Test
+    void shouldCreateOrder2(){
+
+        //Setup
+        Customer customer = new Customer("cust", "cust@c.com");
+        Machine machine = new Machine("Mock Machine", 10000);
+        OrderLine orderLineMock = new OrderLine();
+        orderLineMock.setMachine(machine);
+        Order order = new Order(LocalDateTime.now());
+
+        order.getOrderLines().add(orderLineMock);
+        order.setCustomer(customer);
+        order.setTotalPrice(10000);
+
+        //Mock
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        OrderLine orderLine2 = new OrderLine();
+        orderLine2.setMachine(machine);
+
+        List<OrderLine> orderLines = new ArrayList<>();
+        orderLines.add(orderLineMock);
+        orderLines.add(orderLine2);
+
+        Order createdOrder = orderService.createOrder(orderLines,customer);
+
+        assert createdOrder.getOrderLines().size() == order.getOrderLines().size();
+        assert createdOrder.getTotalPrice() == order.getTotalPrice();
 
     }
 

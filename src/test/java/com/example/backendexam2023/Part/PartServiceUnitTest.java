@@ -1,19 +1,17 @@
 package com.example.backendexam2023.Part;
 
-import com.example.backendexam2023.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.PartService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,8 +73,8 @@ public class PartServiceUnitTest {
 
         DeleteResult deleteResult = partService.deletePartById(1L);
 
-        assertFalse(deleteResult.isDeletable());
-        assertFalse(deleteResult.getIdsInUse().isEmpty());
+        assertFalse(deleteResult.isSuccess());
+        assertFalse(deleteResult.getIds().isEmpty());
 
     }
 
@@ -97,7 +95,7 @@ public class PartServiceUnitTest {
 
         DeleteResult deleteResult = partService.deletePartById(2L);
 
-        assertFalse(deleteResult.isDeletable());
+        assertFalse(deleteResult.isSuccess());
 
     }
 
@@ -121,8 +119,8 @@ public class PartServiceUnitTest {
 
         DeleteResult deleteResult = partService.deletePartById(2L);
 
-        assert (deleteResult.isDeletable());
-        assert (deleteResult.getIdsInUse().isEmpty());
+        assert (deleteResult.isSuccess());
+        assert (deleteResult.getIds().isEmpty());
 
     }
 

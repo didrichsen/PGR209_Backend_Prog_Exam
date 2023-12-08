@@ -1,14 +1,13 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +20,18 @@ public class OrderController {
     @Autowired
     public OrderController(OrderService orderService){
         this.orderService = orderService;
+    }
+
+    @PostMapping()
+    public ResponseEntity<Object> createOrder(@RequestBody OrderRequest orderRequest) {
+
+        OperationResult<Object> operationResult = orderService.createOrder(orderRequest);
+
+        if (operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
@@ -37,4 +48,8 @@ public class OrderController {
     public List<Order> getOrdersByPage(@PathVariable int pageNumber) {
         return orderService.getOrdersPageable(pageNumber);
     }
+
+
+
+
 }

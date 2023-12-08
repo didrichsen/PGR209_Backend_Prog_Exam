@@ -1,11 +1,10 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.DeleteResult;
-import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
-import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,13 +41,22 @@ public class MachineService {
         return machineRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
-    public Machine createMachine(MachineRequest machineRequest){
+    public OperationResult<Object> createMachine(MachineRequest machineRequest){
+
+        if (machineRequest.getMachineName() == null || machineRequest.getMachineName().trim().isEmpty()){
+            return new OperationResult<>(false,"Machine needs a name", null);
+        }
+
+        if (machineRequest.getPrice() == null || machineRequest.getPrice() <= 0) {
+            return new OperationResult<>(false,"Machine needs a price", null);
+        }
+
         Machine machine = new Machine(machineRequest.getMachineName(), machineRequest.getPrice());
 
         List<Subassembly> subassemblies = new ArrayList<>();
 
         if(machineRequest.getSubassemblyIds().isEmpty()){
-            throw new RuntimeException();
+            return new OperationResult<>(false, "A machine needs to at least have one subassembly", null);
         }
 
         for(Long partId : machineRequest.getSubassemblyIds()){
@@ -59,7 +66,7 @@ public class MachineService {
 
         machine.setSubassemblies(subassemblies);
 
-        return machineRepository.save(machine);
+        return new OperationResult<>(true,"Machine Created", machineRepository.save(machine));
 
     }
 
@@ -73,7 +80,7 @@ public class MachineService {
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new DeleteResult(false, Collections.emptyList());
+            return new DeleteResult(false, Collections.emptyList(), "Couldn't find machine with id " + id);
         }
 
         for (OrderLine orderLine : orderLinesToCheck) {
@@ -85,12 +92,12 @@ public class MachineService {
             }
 
         if(isInUse){
-            return new DeleteResult(false,orderLinesRegisteredWithMachine);
+            return new DeleteResult(false,orderLinesRegisteredWithMachine, "Cant delete machine. Machine placed in order lines.");
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
 
-        return new DeleteResult(true,Collections.emptyList());
+        return new DeleteResult(true,Collections.emptyList(), null);
     }
 
     public Machine updateMachine(Long machineId, Machine newMachine){

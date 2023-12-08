@@ -1,8 +1,9 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.DeleteResult;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part;
-import com.example.backendexam2023.ResponseEntityHelper;
+import com.example.backendexam2023.Util.ResponseEntityHelper;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,19 @@ public class PartController {
     @Autowired
     public PartController(PartService partService){
         this.partService = partService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createPart(@RequestBody Part part){
+
+        OperationResult<Object> operationResult = partService.createPart(part);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(),HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping
@@ -41,22 +55,13 @@ public class PartController {
     }
 
     //Return Bad Request if the part is not correct formated.
-    @PostMapping
-    public ResponseEntity<Part> createPart(@RequestBody Part part){
-        try{
 
-            return new ResponseEntity<>(partService.createPart(part),HttpStatus.CREATED);
-
-        } catch (Exception e){
-
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Long>> deletePart(@PathVariable Long id){
+    public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
         DeleteResult deleteResult = partService.deletePartById(id);
-        return ResponseEntityHelper.createResponseEntity(deleteResult);
+
+        return ResponseEntityHelper.getResponseForDelete(deleteResult);
 
     }
 

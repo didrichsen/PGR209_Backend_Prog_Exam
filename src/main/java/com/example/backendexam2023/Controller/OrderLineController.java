@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Service.OrderLineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,18 @@ public class OrderLineController {
     @Autowired
     public OrderLineController(OrderLineService orderLineService){
         this.orderLineService = orderLineService;
+    }
+
+    @PostMapping()
+    public ResponseEntity<Object> createOrderLine(Long MachineId) {
+
+        OperationResult<Object> operationResult = orderLineService.createOrderLine(MachineId);
+
+        if (operationResult.success()) {
+            return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(operationResult.errorMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -50,14 +62,6 @@ public class OrderLineController {
     }
 
 
-
-/*
-    @PostMapping("")
-    public Order createOrder(@RequestBody OrderRequest orderRequest){
-        return orderService.createOrder(orderRequest);
-    }
-
- */
 
 
 

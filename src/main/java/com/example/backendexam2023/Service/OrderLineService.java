@@ -1,6 +1,10 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
+import com.example.backendexam2023.Repository.CustomerRepository;
+import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,39 +15,37 @@ import java.util.List;
 public class OrderLineService {
 
     private final OrderLineRepository orderLineRepository;
-    private final MachineService machineService;
+    private final MachineRepository machineRepository;
 
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public OrderLineService(OrderLineRepository orderLineRepository, MachineService machineService, CustomerService customerService){
+    public OrderLineService(OrderLineRepository orderLineRepository, MachineRepository machineRepository, CustomerRepository customerRepository){
         this.orderLineRepository = orderLineRepository;
-        this.machineService = machineService;
-        this.customerService = customerService;
+        this.machineRepository = machineRepository;
+        this.customerRepository = customerRepository;
     }
 
     public OrderLine getOrderLineById(Long id){
         return orderLineRepository.findById(id).orElse(null);
     }
-/*
-    public Order createOrder(OrderRequest orderRequest){
-        Order order = new Order();
-        Customer customer = customerService.getCustomerById(orderRequest.getCustomerId());
 
-        List<Machine> machines = new ArrayList<>();
+    public OperationResult<Object> createOrderLine(Long machineId){
 
-        for(Long machineId : orderRequest.getMachineIds()){
-            Machine machine = machineService.getMachineById(machineId);
-            machines.add(machine);
+        Machine machine = machineRepository.findById(machineId).orElse(null);
+
+        if(machine == null){
+            return new OperationResult<>(false, "Couldn't find any machines with id of " + machineId, null);
         }
 
-        order.setMachines(machines);
-        order.setCustomer(customer);
+        OrderLine orderLine = new OrderLine();
+        orderLine.setMachine(machine);
+        OrderLine orderLineReturned = orderLineRepository.save(orderLine);
 
-        return orderRepository.save(order);
+        return new OperationResult(true, "Order Created", orderLineReturned);
     }
 
- */
+
 
     //Insert pagination later
     public List<OrderLine> getAllOrderLines(){
@@ -54,33 +56,6 @@ public class OrderLineService {
         return orderLineRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
-
-    /*
-    public void deleteOrderLine(Long id){
-
-        Order order = getOrderLineById(id);
-
-        List<Machine> machines = order.getMachines();
-
-        machines.forEach(machine ->{
-
-            List<Subassembly> subassemblies = machine.getSubassemblies();
-            subassemblies.forEach(subassembly -> {
-
-                List<Part> parts = subassembly.getParts();
-                parts.forEach(part -> partService.deletePartById(part.getPartId()));
-                subassemblyService.deleteSubassembly(subassembly.getSubassemblyId());
-            });
-
-            machineService.deleteMachine(machine.getMachineId());
-
-            });
-
-        orderRepository.deleteById(order.getOrderId());
-
-    }
-
-     */
 
     public void deleteOrderLine(Long id){
 

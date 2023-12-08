@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.DeleteResult;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
@@ -27,10 +28,18 @@ public class PartService {
         return partRepository.findById(id).orElse(null);
     }
 
-    public Part createPart(Part part){
-        if (part.getPartName() == null) throw new RuntimeException();
-        return partRepository.save(part);
+    public OperationResult<Object> createPart(Part part){
+
+        if(part.getPartName() == null){
+            return new OperationResult<>(false,"Invalid name", null);
+        }
+
+        Part createdPart = partRepository.save(part);
+        return new OperationResult<>(true,"Part Created", createdPart);
+
     }
+
+
 
     public List<Part> getAllParts(){
         return partRepository.findAll();
@@ -50,7 +59,7 @@ public class PartService {
         Part partToDelete = partRepository.findById(id).orElse(null);
 
         if(partToDelete == null){
-            return new DeleteResult(false, Collections.emptyList());
+            return new DeleteResult(false, Collections.emptyList(), "Couldn't find subassembly with id " + id);
         }
 
         for (Subassembly subassembly:subassembliesToCheck) {
@@ -64,12 +73,12 @@ public class PartService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,subassembliesUsingPart);
+            return new DeleteResult(false,subassembliesUsingPart, "Part in use. Cant delete part.");
         }
 
         partRepository.deleteById(partToDelete.getPartId());
 
-        return new DeleteResult(true,Collections.emptyList());
+        return new DeleteResult(true,Collections.emptyList(), null);
     }
 
     public Part updatePart(Part part){
