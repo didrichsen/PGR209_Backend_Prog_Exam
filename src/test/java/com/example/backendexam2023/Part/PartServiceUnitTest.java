@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -25,9 +27,6 @@ public class PartServiceUnitTest {
     @Autowired
     private PartService partService;
 
-
-
-
     @Test
     void shouldReturnPartWhenCreatingPart(){
 
@@ -35,11 +34,26 @@ public class PartServiceUnitTest {
 
         when(partRepository.save(any(Part.class))).thenReturn(part);
 
-        Part fork = partRepository.save(new Part("fork"));
+        Part fork = partService.createPart(new Part("Fork"));
 
         assert fork.getPartName().equals(part.getPartName());
 
     }
+
+    @Test
+    void shouldReturnErrorIfPartNameIsNull() {
+
+        Part partWithNullName = new Part();
+
+        assertThrows(RuntimeException.class, () -> partService.createPart(partWithNullName));
+
+    }
+
+
+
+
+
+
 
 
 

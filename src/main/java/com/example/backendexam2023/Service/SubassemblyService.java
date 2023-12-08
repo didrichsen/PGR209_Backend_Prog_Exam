@@ -52,6 +52,10 @@ public class SubassemblyService {
         subassemblyRepository.deleteById(id);
     }
 
+    protected List<Subassembly> getAllSubassemblies() {
+        return subassemblyRepository.findAll();
+    }
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.DeleteResult;
 import com.example.backendexam2023.Model.Part;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,22 @@ public class PartController {
         }
     }
     @DeleteMapping("/{id}")
-    public void deletePart(@PathVariable Long id){
-        partService.deletePartById(id);
+    public ResponseEntity<List<Long>> deletePart(@PathVariable Long id){
+
+        DeleteResult deleteResult = partService.deletePartById(id);
+
+        if(!deleteResult.getIdsInUse().isEmpty()){
+            List<Long> listOfIdsUsingPart = deleteResult.getIdsInUse();
+            return new ResponseEntity<>(listOfIdsUsingPart,HttpStatus.CONFLICT);
+        }
+
+        if(!deleteResult.isDeletable()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PutMapping
     public Part updatePart(@RequestBody Part part){
         return partService.updatePart(part);
