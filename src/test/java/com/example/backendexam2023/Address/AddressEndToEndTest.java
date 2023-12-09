@@ -11,8 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -68,6 +68,24 @@ public class AddressEndToEndTest {
         mockMvc.perform(get("/api/address/" + nonExistentAddressId))
                 .andExpect(status().isNotFound());
     }
+
+
+    // Denne funker ikke enda... Se på det imorgen. Kaster nullpointer exception på: ResponseHelperDeletionIdArray.java:15
+
+    /*
+    @Test
+    public void testDeleteAddress() throws Exception {
+        Address address = new Address("testAddress", 1234);
+        addressRepository.save(address);
+        Long addressId = address.getAddressId();
+
+
+        mockMvc.perform(delete("/api/address/" + addressId))
+                .andExpect(status().isNoContent());
+
+    }
+
+     */
 
 
 

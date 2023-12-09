@@ -10,6 +10,7 @@ import java.util.Map;
 public class ResponseHelperDeletionIdArray {
 
     public static ResponseEntity<Object> getResponseForDelete(DeleteResult deleteResult) {
+
         if(deleteResult.ids() == null){
             return new ResponseEntity<>(Map.of("error",deleteResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
