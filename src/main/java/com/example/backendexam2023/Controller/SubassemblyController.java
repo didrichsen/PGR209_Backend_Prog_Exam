@@ -1,11 +1,10 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
-import com.example.backendexam2023.Util.RensponseHelper;
+import com.example.backendexam2023.Util.ResponseHelperDeletionIdArray;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,7 +57,7 @@ public class SubassemblyController {
 
         DeleteResult deleteResult = subassemblyService.deleteSubassemblyById(id);
 
-        return RensponseHelper.getResponseForDelete(deleteResult);
+        return ResponseHelperDeletionIdArray.getResponseForDelete(deleteResult);
 
     }
 

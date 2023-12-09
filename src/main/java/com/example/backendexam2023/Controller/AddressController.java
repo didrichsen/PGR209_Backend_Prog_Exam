@@ -4,7 +4,7 @@ import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Service.AddressService;
-import com.example.backendexam2023.Util.RensponseHelper;
+import com.example.backendexam2023.Util.ResponseHelperDeletionIdArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,6 @@ public class AddressController {
         }
     }
 
-    //Decided to go for optional to return a more detailed description than only status code.
     @GetMapping("/{id}")
     public ResponseEntity<Address> getAddressById(@PathVariable Long id){
 
@@ -46,7 +45,6 @@ public class AddressController {
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
-    //Returns an empty array if page doesn't exist.
     @GetMapping("/page/{pageNumber}")
     public List<Address> getAddressesByPage(@PathVariable int pageNumber) {
         return addressService.getAddressesPageable(pageNumber);
@@ -57,7 +55,7 @@ public class AddressController {
 
         DeleteResult deleteResult = addressService.deleteAddress(id);
 
-        return RensponseHelper.getResponseForDelete(deleteResult);
+        return ResponseHelperDeletionIdArray.getResponseForDelete(deleteResult);
     }
 
     @PutMapping("/update/{id}")

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
-public class RensponseHelper {
+public class ResponseHelperDeletionIdArray {
 
     public static ResponseEntity<Object> getResponseForDelete(DeleteResult deleteResult) {
         if(deleteResult.ids() == null){
