@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Service.OrderLineService;
@@ -37,8 +37,15 @@ public class OrderLineController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrderLine(@PathVariable Long id){
-        orderLineService.deleteOrderLine(id);
+    public ResponseEntity<Object> deleteOrderLine(@PathVariable Long id){
+        DeleteResult deleteResult = orderLineService.deleteOrderLine(id);
+
+        if(deleteResult.success()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(deleteResult.errorMessage(),HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/{id}")

@@ -1,14 +1,11 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.DeletionResponse;
-import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeletionResponseOrder;
 import com.example.backendexam2023.Records.DeletedOrder;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Service.OrderService;
-import com.example.backendexam2023.Util.RensponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +71,7 @@ public class OrderController {
         DeletedOrder deletedOrder = orderService.deleteOrderById(orderId);
 
         if(deletedOrder.success()){
-            DeletionResponse deletionResponse = new DeletionResponse(
+            DeletionResponseOrder deletionResponse = new DeletionResponseOrder(
                     deletedOrder.success(),
                     deletedOrder.message(),
                     deletedOrder.objects()
