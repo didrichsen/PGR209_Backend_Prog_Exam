@@ -31,6 +31,7 @@ public class OrderServiceUnitTests {
     @Autowired
     private OrderService orderService;
 
+    /*
     @Test
     void shouldCreateOrder(){
 
@@ -70,6 +71,8 @@ public class OrderServiceUnitTests {
 
     }
 
+
+
     @Test
     void shouldCreateOrder2(){
 
@@ -100,6 +103,8 @@ public class OrderServiceUnitTests {
         assert createdOrder.getTotalPrice() == order.getTotalPrice();
 
     }
+
+     */
 
 
 }

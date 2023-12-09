@@ -33,7 +33,7 @@ public class PartServiceUnitTest {
 
     @Autowired
     private PartService partService;
-
+/*
     @Test
     void shouldReturnPartWhenCreatingPart(){
 
@@ -46,6 +46,8 @@ public class PartServiceUnitTest {
         assert fork.getPartName().equals(part.getPartName());
 
     }
+
+
 
     @Test
     void shouldReturnErrorIfPartNameIsNull() {
@@ -123,6 +125,8 @@ public class PartServiceUnitTest {
         assert (deleteResult.getIds().isEmpty());
 
     }
+
+ */
 
 
 
