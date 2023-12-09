@@ -45,9 +45,6 @@ public class OrderLineService {
         return new OperationResult(true, "Order Created", orderLineReturned);
     }
 
-
-
-    //Insert pagination later
     public List<OrderLine> getAllOrderLines(){
         return orderLineRepository.findAll();
     }
@@ -63,14 +60,20 @@ public class OrderLineService {
 
     }
 
-    public OrderLine updateOrderLine(Long orderLineId, OrderLine newOrderLine){
+    public OperationResult<Object> updateOrderLine(Long orderLineId, OrderLine newOrderLine){
+
         OrderLine orderLineToUpdate = getOrderLineById(orderLineId);
 
-        if (orderLineToUpdate == null) throw new RuntimeException("Could not find orderLine with id " + orderLineId);
+        if (orderLineToUpdate == null) {
+            return new OperationResult<>(false,"Couldn't find any order lines with id " + orderLineId, null);
+        }
+
         if (newOrderLine.getOrder() != null) orderLineToUpdate.setOrder(newOrderLine.getOrder());
         if (newOrderLine.getMachine() != null) orderLineToUpdate.setMachine(newOrderLine.getMachine());
 
-        return orderLineRepository.save(orderLineToUpdate);
+        return new OperationResult<>(true, null,orderLineRepository.save(orderLineToUpdate));
     }
 
 }
+
+

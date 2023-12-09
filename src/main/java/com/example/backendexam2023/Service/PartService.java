@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part.Part;
@@ -38,12 +39,6 @@ public class PartService {
         return new OperationResult<>(true,"Part Created", createdPart);
 
     }
-
-
-
-    public List<Part> getAllParts(){
-        return partRepository.findAll();
-    }
     
     public List<Part> getPartsPageable(int pageNumber) {
         return partRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
@@ -59,7 +54,7 @@ public class PartService {
         Part partToDelete = partRepository.findById(id).orElse(null);
 
         if(partToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(), "Couldn't find subassembly with id " + id);
+            return new DeleteResult(false, Collections.emptyList(), null,"Couldn't find subassembly with id " + id);
         }
 
         for (Subassembly subassembly:subassembliesToCheck) {
@@ -73,16 +68,26 @@ public class PartService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,subassembliesUsingPart, "Part in use. Cant delete part.");
+            return new DeleteResult(false,subassembliesUsingPart, null,"Part in use. Cant delete part.");
         }
 
         partRepository.deleteById(partToDelete.getPartId());
 
-        return new DeleteResult(true,Collections.emptyList(), null);
+        return new DeleteResult(true,Collections.emptyList(),null, null);
     }
 
-    public Part updatePart(Part part){
-        return partRepository.save(part);
+    public OperationResult<Object> updatePart(Long partId, Part partData){
+
+        Part partToUpdate = getPartById(partId);
+
+        if (partToUpdate == null) {
+            return new OperationResult<>(false,"Couldn't find any part with id " + partId, null);
+        }
+
+        if (partData.getPartName() != null) partToUpdate.setPartName(partData.getPartName());
+
+        return new OperationResult<>(true, null,partRepository.save(partToUpdate));
+
     }
 
 

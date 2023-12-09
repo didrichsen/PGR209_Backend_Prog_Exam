@@ -52,11 +52,6 @@ public class AddressController {
         return addressService.getAddressesPageable(pageNumber);
     }
 
-
-    //Returns optional since we either return an address or an exception message.
-
-
-    // If address has active customer or doesn't exist, we return av message to the client.
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteAddress(@PathVariable Long id){
 

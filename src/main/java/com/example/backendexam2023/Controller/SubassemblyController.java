@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
@@ -25,6 +26,19 @@ public class SubassemblyController {
         this.subassemblyService = subassemblyService;
     }
 
+    @PostMapping
+    public ResponseEntity<Object> createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
+
+        OperationResult<Object> operationResult = subassemblyService.createSubassembly(subassemblyRequest);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Subassembly> getSubassemblyById(@PathVariable Long id){
         Subassembly subassembly = subassemblyService.getSubassemblyById(id);
@@ -39,19 +53,6 @@ public class SubassemblyController {
         return subassemblyService.getSubassembliesPageable(pageNumber);
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createSubassembly(@RequestBody SubassemblyRequest subassemblyRequest){
-
-        OperationResult<Object> operationResult = subassemblyService.createSubassembly(subassemblyRequest);
-
-        if(operationResult.success()){
-            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(Map.of("error",operationResult.errorMessage()),HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
@@ -61,7 +62,17 @@ public class SubassemblyController {
 
     }
 
+    @PutMapping("/subassembly/{subassemblyId}")
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long subassemblyId, @RequestBody Subassembly subassemblyData){
 
+        OperationResult<Object> operationResult = subassemblyService.updateSubassembly(subassemblyId,subassemblyData);
 
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }

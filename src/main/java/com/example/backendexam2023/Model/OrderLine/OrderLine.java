@@ -22,7 +22,7 @@ public class OrderLine {
     @Column(name="order_line_id")
     private Long orderLineId = 0L;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "machine_id")
     private Machine machine;
 

@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Part.Part;
@@ -51,8 +52,6 @@ public class PartController {
         return new ResponseEntity<>(part,HttpStatus.OK);
     }
 
-    //Return Bad Request if the part is not correct formated.
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
@@ -62,12 +61,18 @@ public class PartController {
 
     }
 
-    @PutMapping
-    public Part updatePart(@RequestBody Part part){
-        return partService.updatePart(part);
+    @PutMapping("/update/{partId}")
+    public ResponseEntity<Object> updatePart(@PathVariable Long partId, @RequestBody Part partData){
+
+        OperationResult<Object> operationResult = partService.updatePart(partId,partData);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
+        }
+
     }
-
-
 
 
 }

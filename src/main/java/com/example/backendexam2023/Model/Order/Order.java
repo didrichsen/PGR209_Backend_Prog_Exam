@@ -38,7 +38,7 @@ public class Order {
     @JsonIgnoreProperties("orders")
     private Customer customer;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private List<OrderLine> orderLines = new ArrayList<>();
 

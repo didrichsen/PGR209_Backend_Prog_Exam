@@ -1,9 +1,14 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.DeletionResponse;
+import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeletedOrder;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Service.OrderService;
+import com.example.backendexam2023.Util.RensponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +55,36 @@ public class OrderController {
         return orderService.getOrdersPageable(pageNumber);
     }
 
+    @PutMapping("/update/{orderId}")
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long orderId, @RequestBody Order orderData){
 
+        OperationResult<Object> operationResult = orderService.updateOrder(orderId, orderData);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Object> deleteCustomerById(@PathVariable Long orderId){
+
+        DeletedOrder deletedOrder = orderService.deleteOrderById(orderId);
+
+        if(deletedOrder.success()){
+            DeletionResponse deletionResponse = new DeletionResponse(
+                    deletedOrder.success(),
+                    deletedOrder.message(),
+                    deletedOrder.objects()
+            );
+            return new ResponseEntity<>(deletionResponse,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(deletedOrder.errorMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 
 }

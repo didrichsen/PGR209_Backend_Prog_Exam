@@ -1,11 +1,13 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Util.RensponseHelper;
 import com.example.backendexam2023.Service.MachineService;
+import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +55,6 @@ public class MachineController {
         return machineService.getMachinesPageable(pageNumber);
     }
 
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteMachineById(@PathVariable Long id){
 
@@ -64,21 +64,24 @@ public class MachineController {
 
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateMachine(@PathVariable Long id, @RequestBody Machine newMachine){
-        try{
-            return new ResponseEntity<>(machineService.updateMachine(id, newMachine), HttpStatus.OK);
+    @PutMapping("/update/{machineId}")
+    public ResponseEntity<Object> updateMachine(@PathVariable Long machineId, @RequestBody Machine machineData){
+
+        OperationResult<Object> operationResult = machineService.updateMachine(machineId,machineData);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+
     }
 
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+

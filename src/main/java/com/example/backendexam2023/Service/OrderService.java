@@ -1,5 +1,8 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Machine.Machine;
+import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeletedOrder;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.OrderRequest;
@@ -14,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -77,6 +82,46 @@ public class OrderService {
         Order createdOrder = orderRepository.save(order);
 
         return new OperationResult<>(true, null, createdOrder);
+    }
+
+    public OperationResult<Object> updateOrder(Long orderId, Order orderData){
+
+        Order orderToUpdate = getOrderById(orderId);
+
+        if (orderToUpdate == null) {
+            return new OperationResult<>(false,"Couldn't find any order with id " + orderId, null);
+        }
+
+        if (orderData.getOrderLines() != null) orderToUpdate.getOrderLines().addAll(orderData.getOrderLines());
+        if (orderData.getCustomer() != null) orderToUpdate.setCustomer(orderData.getCustomer());
+
+        return new OperationResult<>(true, null,orderRepository.save(orderToUpdate));
+
+    }
+
+    public DeletedOrder deleteOrderById(Long orderId){
+
+        Order order = getOrderById(orderId);
+
+
+        if(order == null){
+            return new DeletedOrder(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
+        }
+
+        List<OrderLine> orderLinesToDelete = order.getOrderLines();
+
+        orderRepository.deleteById(orderId);
+
+        for (OrderLine orderline: orderLinesToDelete) {
+            orderRepository.deleteById(orderline.getOrderLineId());
+        }
+
+
+        List<Object> customerAndOrderLines = List.of(order.getCustomer(),order.getOrderLines());
+
+        return new DeletedOrder(true,customerAndOrderLines,"Order and Order Lines deleted",null);
+
+
     }
 
 

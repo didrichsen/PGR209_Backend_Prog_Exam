@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
@@ -80,7 +81,7 @@ public class MachineService {
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(), "Couldn't find machine with id " + id);
+            return new DeleteResult(false, Collections.emptyList(), null,"Couldn't find machine with id " + id);
         }
 
         for (OrderLine orderLine : orderLinesToCheck) {
@@ -92,28 +93,27 @@ public class MachineService {
             }
 
         if(isInUse){
-            return new DeleteResult(false,orderLinesRegisteredWithMachine, "Cant delete machine. Machine placed in order lines.");
+            return new DeleteResult(false,orderLinesRegisteredWithMachine,null, "Cant delete machine. Machine placed in order lines.");
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
+        //Delete subassemblies and parts
 
-        return new DeleteResult(true,Collections.emptyList(), null);
+        return new DeleteResult(true,Collections.emptyList(),null, null);
     }
 
-    public Machine updateMachine(Long machineId, Machine newMachine){
+    public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){
         Machine machineToUpdate = getMachineById(machineId);
 
-        if (machineToUpdate == null) throw new RuntimeException("Could not find machine with id " + machineId);
+        if (machineToUpdate == null) {
+            return new OperationResult<>(false,"Couldn't find machine with id " + machineId, null);
+        }
 
         if (newMachine.getMachineName() != null) machineToUpdate.setMachineName(newMachine.getMachineName());
         if (newMachine.getPrice() != null) machineToUpdate.setPrice(newMachine.getPrice());
+        if (!newMachine.getSubassemblies().isEmpty()) machineToUpdate.getSubassemblies().addAll(newMachine.getSubassemblies());
 
-        return machineRepository.save(machineToUpdate);
+        return new OperationResult<>(true, null,machineRepository.save(machineToUpdate));
     }
-
-    
-
-
-
 
 }

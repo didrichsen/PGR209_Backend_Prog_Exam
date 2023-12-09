@@ -93,7 +93,7 @@ public class CustomerService {
         Customer customer = customerRepository.findById(id).orElse(null);
 
         if(customer == null){
-            return new DeleteResult(false, null, "Couldn't find customer with id " + id);
+            return new DeleteResult(false, null, null,"Couldn't find customer with id " + id);
         }
 
         if(!customer.getOrders().isEmpty()){
@@ -103,11 +103,11 @@ public class CustomerService {
                 orderIds.add(order.getOrderId());
             }
 
-            return new DeleteResult(false, orderIds, "Customer has active orders.");
+            return new DeleteResult(false, orderIds,null, "Customer has active orders.");
         }
 
         customerRepository.deleteById(id);
-        return new DeleteResult(false,null, "Customer successfully deleted.");
+        return new DeleteResult(false,null,null, "Customer successfully deleted.");
     }
     public OperationResult<Object> updateCustomer(Long customerId, Customer newCustomer){
 

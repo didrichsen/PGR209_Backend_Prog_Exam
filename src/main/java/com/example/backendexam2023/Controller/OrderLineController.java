@@ -1,5 +1,6 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Service.OrderLineService;
@@ -54,19 +55,18 @@ public class OrderLineController {
         return orderLineService.getOrderLinesPageable(pageNumber);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateOrderLine(@PathVariable Long id, @RequestBody OrderLine newOrderLine){
-        try{
-            return new ResponseEntity<>(orderLineService.updateOrderLine(id, newOrderLine), HttpStatus.OK);
+    @PutMapping("/update/{orderLineId}")
+    public ResponseEntity<Object> updateOrderLine(@PathVariable Long orderLineId, @RequestBody OrderLine orderLineData){
+
+        OperationResult<Object> operationResult = orderLineService.updateOrderLine(orderLineId,orderLineData);
+
+        if(operationResult.success()){
+            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+
     }
-
-
-
-
 
 
 
