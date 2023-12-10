@@ -115,13 +115,20 @@ public class OrderServiceUnitTests {
         orderRequest.getOrderLineIds().addAll(orderLineIds);
 
 
-        when(orderRepository.save(any(Order.class))).thenReturn(new Order(List.of(new OrderLine()), new Customer()));
+        Order orderMock = new Order(List.of(new OrderLine(new Machine("TestMachine2", 1000))), new Customer());
+        orderMock.setTotalPrice(1000);
+
+        when(orderRepository.save(any(Order.class))).thenReturn(orderMock);
 
         OperationResult operationResult = orderService.createOrder(orderRequest);
+        Order order = (Order) operationResult.createdObject();
 
         assertTrue(operationResult.success());
         assert operationResult.errorMessage() == null;
-        assertTrue(operationResult.createdObject() instanceof Order);
+        assertNotNull(operationResult.createdObject());
+        assert order.getTotalPrice() == 1000;
+        assert order.getOrderLines().size() == 1;
+
     }
 
 }
