@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Address;
 
 import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Service.AddressService;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -25,21 +26,29 @@ public class AddressServiceUnitTests {
     @Autowired
     private AddressService addressService;
 
-    /*
+
     @Test
     void shouldReturnAddressWhenCreatingAddress(){
         Address address = new Address("vei 1", 0666);
 
         when(addressRepository.save(any(Address.class))).thenReturn(address);
 
+        OperationResult<Object> operationResult = addressService.createAddress(address);
 
-        Address address1 = addressService.createAddress(new Address("veivei", 6000));
+        assertTrue(operationResult.success());
+        assertNull(operationResult.errorMessage());
+        assertNotNull(operationResult.createdObject());
+        assertTrue(operationResult.createdObject() instanceof Address);
 
-        assert address1.getStreetAddress().equals(address.getStreetAddress());
+        Address createdAddress = (Address) operationResult.createdObject();
+
+        assertEquals(address.getStreetAddress(), createdAddress.getStreetAddress());
+        assertEquals(address.getZipCode(), createdAddress.getZipCode());
+
 
     }
 
-     */
+
 
     @Test
     void shouldGetAddressById(){

@@ -4,7 +4,11 @@ package com.example.backendexam2023.Order;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
+import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Repository.CustomerRepository;
+import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.OrderService;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -16,8 +20,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -28,10 +37,16 @@ public class OrderServiceUnitTests {
     @MockBean
     private OrderRepository orderRepository;
 
+    @MockBean
+    private CustomerRepository customerRepository;
+
+    @MockBean
+    private OrderLineRepository orderLineRepository;
+
     @Autowired
     private OrderService orderService;
 
-    /*
+
     @Test
     void shouldCreateOrder(){
 
@@ -40,38 +55,61 @@ public class OrderServiceUnitTests {
         customer.setCustomerId(1L);
 
         Order order = new Order(LocalDateTime.now());
+        order.setCustomer(customer);
 
         OrderLine orderLine = new OrderLine();
         orderLine.setMachine(new Machine("machine", 100));
-        //orderLine.setOrder(order);
+        orderLine.setOrderLineId(1L);
+        orderLine.setOrder(order);
 
         OrderLine orderLine1 = new OrderLine();
         orderLine1.setMachine(new Machine("machine1", 100));
-        //orderLine1.setOrder(order);
+        orderLine1.setOrderLineId(2L);
+        orderLine1.setOrder(order);
 
-        List<OrderLine> orderLines = new ArrayList<>();
-        orderLines.add(orderLine);
-        orderLines.add(orderLine1);
-
-        order.setOrderLines(orderLines);
-        order.setCustomer(customer);
-        order.setTotalPrice(200);
 
         List<OrderLine> orderLinesToTest = new ArrayList<>();
         orderLinesToTest.add(orderLine);
         orderLinesToTest.add(orderLine1);
 
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(1L);
+        orderRequest.setOrderLineIds(Arrays.asList(1L, 2L));
+
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
+        when(orderLineRepository.findById(any(Long.class)))
+                .thenReturn(Optional.of(orderLine), Optional.of(orderLine1));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        Order newOrder = orderService.createOrder(orderLinesToTest, customer);
 
-        assert newOrder.getOrderDate() == order.getOrderDate();
-        assert newOrder.getTotalPrice() == newOrder.getTotalPrice();
+        OperationResult operationResult = orderService.createOrder(orderRequest);
+
+        assertTrue(operationResult.success());
+        assertNull(operationResult.errorMessage());
+        assertNotNull(operationResult.createdObject());
+        assertTrue(operationResult.createdObject() instanceof Order);
+
+        /*
+        Order createdOrder = (Order) operationResult.createdObject();
+        System.out.println(createdOrder.getOrderLines());
+        System.out.println(createdOrder.getCustomer());
+        System.out.println(createdOrder.getTotalPrice());
+
+        assertEquals(customer.getCustomerName(), createdOrder.getCustomer().getCustomerName());
+        assertEquals(orderLinesToTest.size(), createdOrder.getOrderLines().size());
+        assertEquals(orderRequest.getOrderLineIds(), createdOrder.getOrderLines().stream()
+                .map(orderLineFromCreatedOrder -> orderLineFromCreatedOrder.getOrderLineId())
+                .collect(Collectors.toList()));
+        assertEquals(200, createdOrder.getTotalPrice());
+
+         */
+
+
 
 
     }
 
-
+/*
 
     @Test
     void shouldCreateOrder2(){
