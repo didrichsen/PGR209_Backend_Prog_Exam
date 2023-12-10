@@ -60,12 +60,12 @@ public class OrderServiceUnitTests {
         OrderLine orderLine = new OrderLine();
         orderLine.setMachine(new Machine("machine", 100));
         orderLine.setOrderLineId(1L);
-        orderLine.setOrder(order);
+        //orderLine.setOrder(order);
 
         OrderLine orderLine1 = new OrderLine();
         orderLine1.setMachine(new Machine("machine1", 100));
         orderLine1.setOrderLineId(2L);
-        orderLine1.setOrder(order);
+        //orderLine1.setOrder(order);
 
 
         List<OrderLine> orderLinesToTest = new ArrayList<>();
@@ -75,6 +75,9 @@ public class OrderServiceUnitTests {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setCustomerId(1L);
         orderRequest.setOrderLineIds(Arrays.asList(1L, 2L));
+
+        order.setOrderLines(orderLinesToTest);
+        order.setTotalPrice(200);
 
         when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
         when(orderLineRepository.findById(any(Long.class)))
@@ -89,7 +92,7 @@ public class OrderServiceUnitTests {
         assertNotNull(operationResult.createdObject());
         assertTrue(operationResult.createdObject() instanceof Order);
 
-        /*
+
         Order createdOrder = (Order) operationResult.createdObject();
         System.out.println(createdOrder.getOrderLines());
         System.out.println(createdOrder.getCustomer());
@@ -102,7 +105,7 @@ public class OrderServiceUnitTests {
                 .collect(Collectors.toList()));
         assertEquals(200, createdOrder.getTotalPrice());
 
-         */
+
 
 
 
