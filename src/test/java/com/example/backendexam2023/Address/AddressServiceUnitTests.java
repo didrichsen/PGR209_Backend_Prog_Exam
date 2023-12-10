@@ -33,12 +33,10 @@ public class AddressServiceUnitTests {
     void should_update_Address(){
 
         Address addressToUpdate = new Address("address", 9876);
-        addressToUpdate.setAddressId(1L);
 
         when(addressRepository.findById(any(Long.class))).thenReturn(Optional.of(addressToUpdate));
 
         Address newAddress = new Address("new", 1234);
-        newAddress.setAddressId(1L);
 
         when(addressRepository.save(any(Address.class))).thenReturn(newAddress);
 
