@@ -60,13 +60,10 @@ public class OrderServiceUnitTests {
         OrderLine orderLine = new OrderLine();
         orderLine.setMachine(new Machine("machine", 100));
         orderLine.setOrderLineId(1L);
-        //orderLine.setOrder(order);
 
         OrderLine orderLine1 = new OrderLine();
         orderLine1.setMachine(new Machine("machine1", 100));
         orderLine1.setOrderLineId(2L);
-        //orderLine1.setOrder(order);
-
 
         List<OrderLine> orderLinesToTest = new ArrayList<>();
         orderLinesToTest.add(orderLine);
@@ -105,10 +102,24 @@ public class OrderServiceUnitTests {
                 .collect(Collectors.toList()));
         assertEquals(200, createdOrder.getTotalPrice());
 
+    }
 
+    @Test
+    void Should_Through_Error_Because_Of_Empty_OrderLine_In_OrderRequest_Array(){
 
+        //Setup
+        Customer customer = new Customer("cust", "cust@c.com");
+        customer.setCustomerId(1L);
 
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
 
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(1L);
+
+        OperationResult operationResult = orderService.createOrder(orderRequest);
+
+        assertFalse(operationResult.success());
+        assert (operationResult.errorMessage().equals("At least one order line has to be added."));
 
     }
 
