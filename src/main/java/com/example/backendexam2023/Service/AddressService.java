@@ -70,16 +70,16 @@ public class AddressService {
 
     public OperationResult<Object> updateAddress(Long addressId, Address newAddress){
 
-        Address addressToUpdate = getAddressById(addressId);
+        Address addressToUpdate = addressRepository.findById(addressId).orElse(null);
 
         if(addressToUpdate == null){
-            return new OperationResult<>(false,"Couldn't find customer with id " + addressId, null);
+            return new OperationResult<>(false,"Couldn't find address with id " + addressId, null);
         }
 
         if (newAddress.getCustomers() != null) addressToUpdate.getCustomers().addAll(newAddress.getCustomers());
         if (newAddress.getZipCode() != null) addressToUpdate.setZipCode(newAddress.getZipCode());
 
-        return new OperationResult<>(true, null,addressRepository.save(addressToUpdate));
+        return new OperationResult<>(true, null, addressRepository.save(addressToUpdate));
     }
 
 
