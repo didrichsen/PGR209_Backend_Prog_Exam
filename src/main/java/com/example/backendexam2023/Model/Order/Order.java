@@ -46,4 +46,9 @@ public class Order {
         this.orderDate = orderDate;
     }
 
+    public Order(List<OrderLine> orderLines, Customer customer){
+        this.orderLines = orderLines;
+        this.customer = customer;
+    }
+
 }

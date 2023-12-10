@@ -31,5 +31,9 @@ public class OrderLine {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    public OrderLine(Machine machine){
+        this.machine = machine;
+    }
+
 
 }

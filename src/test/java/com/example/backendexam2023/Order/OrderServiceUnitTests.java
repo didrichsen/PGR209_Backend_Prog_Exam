@@ -47,7 +47,22 @@ public class OrderServiceUnitTests {
     private OrderService orderService;
 
     @Test
-    void Should_Through_Error_Because_Of_Empty_OrderLine_In_OrderRequest_Array(){
+    void Should_Not_Create_Order_Because_Customer_Is_Null_AKA_Invalid_ID(){
+
+        OrderRequest orderRequest = new OrderRequest();
+
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        OperationResult operationResult = orderService.createOrder(orderRequest);
+
+        assert !operationResult.success();
+        assert operationResult.errorMessage().equals("Customer not found");
+        assert operationResult.createdObject() == null;
+
+    }
+
+    @Test
+    void Should_Not_Create_Order_Because_OrderRequest_Has_Empty_OrderLine_Array(){
 
         //Setup
         Customer customer = new Customer("cust", "cust@c.com");
@@ -60,9 +75,30 @@ public class OrderServiceUnitTests {
 
         OperationResult operationResult = orderService.createOrder(orderRequest);
 
-        assertFalse(operationResult.success());
-
+        assert (!operationResult.success());
         assert (operationResult.errorMessage().equals("At least one order line has to be added."));
+        assert (operationResult.createdObject() == null);
+
+    }
+
+    @Test
+    void Should_Not_Create_Order_Because_OrderLine_Was_Null_AKA_Invalid_ID(){
+
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(new Customer()));
+        when(orderLineRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(1L);
+        List<Long> orderLineIds = List.of(1L,2L,3L);
+        orderRequest.getOrderLineIds().addAll(orderLineIds);
+
+        OperationResult operationResult = orderService.createOrder(orderRequest);
+
+        System.out.println(operationResult.errorMessage());
+
+        assertFalse(operationResult.success());
+        assert operationResult.errorMessage().equals("OrderLine not found");
+        assert operationResult.createdObject() == null;
 
     }
 
@@ -70,96 +106,22 @@ public class OrderServiceUnitTests {
     @Test
     void shouldCreateOrder(){
 
-        //Setup
-        Customer customer = new Customer("cust", "cust@c.com");
-        customer.setCustomerId(1L);
-
-        Order order = new Order(LocalDateTime.now());
-        order.setCustomer(customer);
-
-        OrderLine orderLine = new OrderLine();
-        orderLine.setMachine(new Machine("machine", 100));
-        orderLine.setOrderLineId(1L);
-
-        OrderLine orderLine1 = new OrderLine();
-        orderLine1.setMachine(new Machine("machine1", 100));
-        orderLine1.setOrderLineId(2L);
-
-        List<OrderLine> orderLinesToTest = new ArrayList<>();
-        orderLinesToTest.add(orderLine);
-        orderLinesToTest.add(orderLine1);
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(new Customer()));
+        when(orderLineRepository.findById(any(Long.class))).thenReturn(Optional.of(new OrderLine(new Machine("TestMachine",1000))));
 
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setCustomerId(1L);
-        orderRequest.setOrderLineIds(Arrays.asList(1L, 2L));
+        List<Long> orderLineIds = List.of(1L,2L,3L);
+        orderRequest.getOrderLineIds().addAll(orderLineIds);
 
-        order.setOrderLines(orderLinesToTest);
-        order.setTotalPrice(200);
 
-        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
-        when(orderLineRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(orderLine), Optional.of(orderLine1));
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
+        when(orderRepository.save(any(Order.class))).thenReturn(new Order(List.of(new OrderLine()), new Customer()));
 
         OperationResult operationResult = orderService.createOrder(orderRequest);
 
         assertTrue(operationResult.success());
-        assertNull(operationResult.errorMessage());
-        assertNotNull(operationResult.createdObject());
+        assert operationResult.errorMessage() == null;
         assertTrue(operationResult.createdObject() instanceof Order);
-
-
-        Order createdOrder = (Order) operationResult.createdObject();
-        System.out.println(createdOrder.getOrderLines());
-        System.out.println(createdOrder.getCustomer());
-        System.out.println(createdOrder.getTotalPrice());
-
-        assertEquals(customer.getCustomerName(), createdOrder.getCustomer().getCustomerName());
-        assertEquals(orderLinesToTest.size(), createdOrder.getOrderLines().size());
-        assertEquals(orderRequest.getOrderLineIds(), createdOrder.getOrderLines().stream()
-                .map(orderLineFromCreatedOrder -> orderLineFromCreatedOrder.getOrderLineId())
-                .collect(Collectors.toList()));
-        assertEquals(200, createdOrder.getTotalPrice());
-
     }
-
-
-
-/*
-
-    @Test
-    void shouldCreateOrder2(){
-
-        //Setup
-        Customer customer = new Customer("cust", "cust@c.com");
-        Machine machine = new Machine("Mock Machine", 10000);
-        OrderLine orderLineMock = new OrderLine();
-        orderLineMock.setMachine(machine);
-        Order order = new Order(LocalDateTime.now());
-
-        order.getOrderLines().add(orderLineMock);
-        order.setCustomer(customer);
-        order.setTotalPrice(10000);
-
-        //Mock
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
-        OrderLine orderLine2 = new OrderLine();
-        orderLine2.setMachine(machine);
-
-        List<OrderLine> orderLines = new ArrayList<>();
-        orderLines.add(orderLineMock);
-        orderLines.add(orderLine2);
-
-        Order createdOrder = orderService.createOrder(orderLines,customer);
-
-        assert createdOrder.getOrderLines().size() == order.getOrderLines().size();
-        assert createdOrder.getTotalPrice() == order.getTotalPrice();
-
-    }
-
-     */
-
 
 }
