@@ -62,10 +62,10 @@ public class OrderLineService {
         OrderLine orderLine = getOrderLineById(orderLineId);
 
         if(orderLine == null){
-            return new DeleteResult(false, Collections.emptyList(), null, "Couldn't find order lines with id " + orderLineId);
+            return new DeleteResult(false, Collections.emptyList(), "Couldn't find order lines with id " + orderLineId);
         }
 
-        return new DeleteResult(true, Collections.emptyList(),null,null);
+        return new DeleteResult(true, Collections.emptyList(),null);
 
     }
 

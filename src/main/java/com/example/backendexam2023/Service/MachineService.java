@@ -81,7 +81,7 @@ public class MachineService {
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(), null,"Couldn't find machine with id " + id);
+            return new DeleteResult(false, Collections.emptyList(),"Couldn't find machine with id " + id);
         }
 
         for (OrderLine orderLine : orderLinesToCheck) {
@@ -93,13 +93,13 @@ public class MachineService {
             }
 
         if(isInUse){
-            return new DeleteResult(false,orderLinesRegisteredWithMachine,null, "Cant delete machine. Machine placed in order lines.");
+            return new DeleteResult(false,orderLinesRegisteredWithMachine, "Cant delete machine. Machine placed in order lines.");
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
         //Delete subassemblies and parts
 
-        return new DeleteResult(true,Collections.emptyList(),null, null);
+        return new DeleteResult(true,Collections.emptyList(), null);
     }
 
     public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){

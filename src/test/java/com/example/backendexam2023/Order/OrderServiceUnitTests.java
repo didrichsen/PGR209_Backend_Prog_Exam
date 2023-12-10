@@ -46,6 +46,26 @@ public class OrderServiceUnitTests {
     @Autowired
     private OrderService orderService;
 
+    @Test
+    void Should_Through_Error_Because_Of_Empty_OrderLine_In_OrderRequest_Array(){
+
+        //Setup
+        Customer customer = new Customer("cust", "cust@c.com");
+        customer.setCustomerId(1L);
+
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
+
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(1L);
+
+        OperationResult operationResult = orderService.createOrder(orderRequest);
+
+        assertFalse(operationResult.success());
+
+        assert (operationResult.errorMessage().equals("At least one order line has to be added."));
+
+    }
+
 
     @Test
     void shouldCreateOrder(){
@@ -104,24 +124,7 @@ public class OrderServiceUnitTests {
 
     }
 
-    @Test
-    void Should_Through_Error_Because_Of_Empty_OrderLine_In_OrderRequest_Array(){
 
-        //Setup
-        Customer customer = new Customer("cust", "cust@c.com");
-        customer.setCustomerId(1L);
-
-        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
-
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setCustomerId(1L);
-
-        OperationResult operationResult = orderService.createOrder(orderRequest);
-
-        assertFalse(operationResult.success());
-        assert (operationResult.errorMessage().equals("At least one order line has to be added."));
-
-    }
 
 /*
 

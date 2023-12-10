@@ -29,19 +29,53 @@ public class AddressEndToEndTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Address address = new Address("testAddress", 0666);
+        Address address = new Address("testAddress", 1);
 
 
         mockMvc.perform(post("/api/address")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(address)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.errorMessage").doesNotExist())
                 .andExpect(jsonPath("$.addressId").exists())
                 .andExpect(jsonPath("$.streetAddress").value("testAddress"))
-                .andExpect(jsonPath("$.zipCode").value(0666));
+                .andExpect(jsonPath("$.zipCode").value(1));
+    }
+
+    @Test
+    void Should_Not_Create_Address_Because_ZipCode_Is_Blank() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Address address = new Address();
+        address.setStreetAddress("testAddress");
+
+
+        mockMvc.perform(post("/api/address")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(address)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"error\":\"Address has to have a valid zip code\"}"));
+    }
+
+    @Test
+    void Should_Not_Create_Address_Because_Address_Exist() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Address address = new Address("testAddress", 0666);
+
+        Address addressFromDB = addressRepository.save(address);
+
+
+        mockMvc.perform(post("/api/address")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(address)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"error\":\"Address already exists with id " + addressFromDB.getAddressId() + "\"}"));
 
     }
+
+
 
     @Test
     void shouldGetAddressById() throws Exception {
@@ -71,12 +105,12 @@ public class AddressEndToEndTest {
 
     // Denne funker ikke enda... Se på det imorgen. Kaster nullpointer exception på: ResponseHelperDeletionIdArray.java:15
 
-    /*
+
     @Test
     public void testDeleteAddress() throws Exception {
         Address address = new Address("testAddress", 1234);
-        addressRepository.save(address);
-        Long addressId = address.getAddressId();
+        Address addressFromDB = addressRepository.save(address);
+        Long addressId = addressFromDB.getAddressId();
 
 
         mockMvc.perform(delete("/api/address/" + addressId))
@@ -84,7 +118,7 @@ public class AddressEndToEndTest {
 
     }
 
-     */
+
 
 
 

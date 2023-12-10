@@ -54,7 +54,7 @@ public class PartService {
         Part partToDelete = partRepository.findById(id).orElse(null);
 
         if(partToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(), null,"Couldn't find subassembly with id " + id);
+            return new DeleteResult(false, Collections.emptyList(),"Couldn't find subassembly with id " + id);
         }
 
         for (Subassembly subassembly:subassembliesToCheck) {
@@ -68,12 +68,12 @@ public class PartService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,subassembliesUsingPart, null,"Part in use. Cant delete part.");
+            return new DeleteResult(false,subassembliesUsingPart,"Part in use. Cant delete part.");
         }
 
         partRepository.deleteById(partToDelete.getPartId());
 
-        return new DeleteResult(true,Collections.emptyList(),null, null);
+        return new DeleteResult(true,Collections.emptyList(), null);
     }
 
     public OperationResult<Object> updatePart(Long partId, Part partData){

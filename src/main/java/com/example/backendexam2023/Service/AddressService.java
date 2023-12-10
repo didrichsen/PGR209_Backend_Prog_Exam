@@ -29,6 +29,11 @@ public class AddressService {
     
     public OperationResult<Object> createAddress(Address address){
         List<Address> addresses = addressRepository.findAll();
+
+        if(address.getZipCode() == null || address.getZipCode().toString().trim().isEmpty()){
+            return new OperationResult<>(false,"Address has to have a valid zip code", null);
+        }
+
         for(Address a : addresses){
             if (Objects.equals(a.getStreetAddress(),address.getStreetAddress()) && Objects.equals(a.getZipCode(),address.getZipCode())){
                 return new OperationResult<>(false,"Address already exists with id " + a.getAddressId(), null);
@@ -47,7 +52,7 @@ public class AddressService {
         Address address = addressRepository.findById(id).orElse(null);
 
         if(address == null){
-            return new DeleteResult(false, null,null, "Couldn't find address with id " + id);
+            return new DeleteResult(false, null, "Couldn't find address with id " + id);
         }
 
         if(!address.getCustomers().isEmpty()){
@@ -55,11 +60,11 @@ public class AddressService {
             for (Customer customer: address.getCustomers()) {
                 customerIds.add(customer.getCustomerId());
             }
-            return new DeleteResult(false,customerIds,null,"Address has active customers.");
+            return new DeleteResult(false,customerIds,"Address has active customers.");
         }
 
         addressRepository.deleteById(id);
-        return new DeleteResult(true,null,null, null);
+        return new DeleteResult(true,null, null);
 
     }
 
