@@ -40,6 +40,8 @@ public class AddressServiceUnitTests {
         Address newAddress = new Address("new", 1234);
         newAddress.setAddressId(1L);
 
+        when(addressRepository.save(any(Address.class))).thenReturn(newAddress);
+
         OperationResult result = addressService.updateAddress(1L, newAddress);
 
         assertTrue(result.success());
