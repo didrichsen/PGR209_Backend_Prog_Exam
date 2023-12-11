@@ -60,14 +60,17 @@ public class MachineService {
             return new OperationResult<>(false, "A machine needs to at least have one subassembly", null);
         }
 
-        for(Long partId : machineRequest.getSubassemblyIds()){
-            Subassembly subassembly = subassemblyRepository.findById(partId).orElse(null);
+        for(Long subassemblyId : machineRequest.getSubassemblyIds()){
+            Subassembly subassembly = subassemblyRepository.findById(subassemblyId).orElse(null);
+            if(subassembly == null){
+                return new OperationResult<>(false, "Couldn't find subassembly with id " + subassemblyId, null);
+            }
             subassemblies.add(subassembly);
         }
 
         machine.setSubassemblies(subassemblies);
 
-        return new OperationResult<>(true,"Machine Created", machineRepository.save(machine));
+        return new OperationResult<>(true,null, machineRepository.save(machine));
 
     }
 

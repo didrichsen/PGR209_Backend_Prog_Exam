@@ -31,7 +31,7 @@ public class PartService {
 
     public OperationResult<Object> createPart(Part part){
 
-        if(part.getPartName() == null){
+        if(part.getPartName() == null || part.getPartName().trim().isEmpty()){
             return new OperationResult<>(false,"Invalid name", null);
         }
 

@@ -106,26 +106,57 @@ public class AddressServiceUnitTests {
         assertNull(result.ids());
     }
 
-
     @Test
-    void shouldReturnAddressWhenCreatingAddress(){
-        Address address = new Address("vei 1", 0666);
-
-        when(addressRepository.save(any(Address.class))).thenReturn(address);
+    void should_not_create_address_because_zip_code_is_null() {
+        Address address = new Address();
+        address.setZipCode(null);
+        address.setStreetAddress("vei 123");
 
         OperationResult<Object> operationResult = addressService.createAddress(address);
+
+        assertFalse(operationResult.success());
+        assertEquals("Address has to have a valid zip code", operationResult.errorMessage());
+        assertNull(operationResult.createdObject());
+    }
+
+    @Test
+    void should_not_create_address_because_address_already_exist() {
+        Address address = new Address();
+        address.setZipCode(12345);
+        address.setStreetAddress("vei 123");
+
+        Address existingAddress = new Address();
+        existingAddress.setAddressId(1L);
+        existingAddress.setZipCode(12345);
+        existingAddress.setStreetAddress("vei 123");
+
+        when(addressRepository.findByZipCodeAndStreetAddress(address.getZipCode(), address.getStreetAddress())).thenReturn(Optional.of(existingAddress));
+
+        OperationResult<Object> operationResult = addressService.createAddress(address);
+
+        assertFalse(operationResult.success());
+        assertEquals("Address already exists with id " + existingAddress.getAddressId(), operationResult.errorMessage());
+        assertNull(operationResult.createdObject());
+    }
+
+
+    @Test
+    void shouldCreateAddressSuccessfully() {
+        Address address = new Address();
+        address.setZipCode(12345);
+        address.setStreetAddress("vei 123");
+
+        when(addressRepository.findByZipCodeAndStreetAddress(address.getZipCode(), address.getStreetAddress())).thenReturn(Optional.empty());
+        when(addressRepository.save(any(Address.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> operationResult = addressService.createAddress(address);
+        Address savedAddress = (Address) operationResult.createdObject();
 
         assertTrue(operationResult.success());
         assertNull(operationResult.errorMessage());
         assertNotNull(operationResult.createdObject());
-        assertTrue(operationResult.createdObject() instanceof Address);
-
-        Address createdAddress = (Address) operationResult.createdObject();
-
-        assertEquals(address.getStreetAddress(), createdAddress.getStreetAddress());
-        assertEquals(address.getZipCode(), createdAddress.getZipCode());
-
-
+        assertEquals(12345, savedAddress.getZipCode());
+        assertEquals("vei 123", savedAddress.getStreetAddress());
     }
 
     @Test

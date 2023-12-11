@@ -86,23 +86,24 @@ public class OrderService {
 
     public OperationResult<Object> updateOrder(Long orderId, Order orderData){
 
-        Order orderToUpdate = getOrderById(orderId);
+        Order orderToUpdate = orderRepository.findById(orderId).orElse(null);
 
         if (orderToUpdate == null) {
             return new OperationResult<>(false,"Couldn't find any order with id " + orderId, null);
         }
 
-        if (orderData.getOrderLines() != null) orderToUpdate.getOrderLines().addAll(orderData.getOrderLines());
+        if (orderData.getOrderLines() != null) orderToUpdate.setOrderLines(orderData.getOrderLines());
         if (orderData.getCustomer() != null) orderToUpdate.setCustomer(orderData.getCustomer());
 
-        return new OperationResult<>(true, null,orderRepository.save(orderToUpdate));
+        Order updatedOrder = orderRepository.save(orderToUpdate);
+
+        return new OperationResult<>(true, null,updatedOrder);
 
     }
 
     public DeletedOrder deleteOrderById(Long orderId){
 
-        Order order = getOrderById(orderId);
-
+        Order order = orderRepository.findById(orderId).orElse(null);
 
         if(order == null){
             return new DeletedOrder(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
@@ -113,14 +114,13 @@ public class OrderService {
         orderRepository.deleteById(orderId);
 
         for (OrderLine orderline: orderLinesToDelete) {
-            orderRepository.deleteById(orderline.getOrderLineId());
+            orderLineRepository.deleteById(orderline.getOrderLineId());
         }
 
 
         List<Object> customerAndOrderLines = List.of(order.getCustomer(),order.getOrderLines());
 
         return new DeletedOrder(true,customerAndOrderLines,"Order and Order Lines deleted",null);
-
 
     }
 

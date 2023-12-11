@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -28,17 +29,17 @@ public class AddressService {
     }
     
     public OperationResult<Object> createAddress(Address address){
-        List<Address> addresses = addressRepository.findAll();
 
         if(address.getZipCode() == null || address.getZipCode().toString().trim().isEmpty()){
             return new OperationResult<>(false,"Address has to have a valid zip code", null);
         }
 
-        for(Address a : addresses){
-            if (Objects.equals(a.getStreetAddress(),address.getStreetAddress()) && Objects.equals(a.getZipCode(),address.getZipCode())){
-                return new OperationResult<>(false,"Address already exists with id " + a.getAddressId(), null);
-            }
+        Optional<Address> existingAddress = addressRepository.findByZipCodeAndStreetAddress(address.getZipCode(),address.getStreetAddress());
+
+        if(existingAddress.isPresent()){
+            return new OperationResult<>(false,"Address already exists with id " + existingAddress.get().getAddressId(), null);
         }
+
         return new OperationResult<>(true, null,addressRepository.save(address));
     }
 
@@ -64,6 +65,7 @@ public class AddressService {
         }
 
         addressRepository.deleteById(id);
+
         return new DeleteResult(true,null, null);
 
     }

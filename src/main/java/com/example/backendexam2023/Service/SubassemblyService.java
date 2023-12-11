@@ -7,6 +7,7 @@ import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Repository.MachineRepository;
+import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,14 +22,14 @@ import java.util.Objects;
 public class SubassemblyService {
 
     private final SubassemblyRepository subassemblyRepository;
-    private final PartService partService;
+    private final PartRepository partRepository;
 
     private final MachineRepository machineRepository;
 
     @Autowired
-    public SubassemblyService(SubassemblyRepository subassemblyRepository, PartService partService, MachineRepository machineRepository){
+    public SubassemblyService(SubassemblyRepository subassemblyRepository, PartRepository partRepository, MachineRepository machineRepository){
         this.subassemblyRepository = subassemblyRepository;
-        this.partService = partService;
+        this.partRepository = partRepository;
         this.machineRepository = machineRepository;
     }
     
@@ -50,7 +51,10 @@ public class SubassemblyService {
         List<Part> parts = new ArrayList<>();
 
         for(Long partId : subassemblyRequest.getPartIds()){
-            Part part = partService.getPartById(partId);
+            Part part = partRepository.findById(partId).orElse(null);
+            if(part == null){
+                return new OperationResult<>(false, "Couldn't find part with id " + partId, null);
+            }
             parts.add(part);
         }
         subassembly.setParts(parts);

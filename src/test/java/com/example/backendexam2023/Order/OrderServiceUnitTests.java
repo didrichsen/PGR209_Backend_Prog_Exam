@@ -6,6 +6,7 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
+import com.example.backendexam2023.Records.DeletedOrder;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
@@ -26,7 +27,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -130,5 +134,90 @@ public class OrderServiceUnitTests {
         assert order.getOrderLines().size() == 1;
 
     }
+
+    @Test
+    void update_order_should_because_fail_because_of_invalid_order_id(){
+
+        Order order = new Order();
+        order.setOrderId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.empty());
+
+        OperationResult operationResult = orderService.updateOrder(1L, order);
+
+        assertFalse(operationResult.success());
+        assertEquals("Couldn't find any order with id " + order.getOrderId(), operationResult.errorMessage());
+        assertNull(operationResult.createdObject());
+    }
+
+
+    @Test
+    void should_update_old_order() {
+
+        Order existingOrder = new Order();
+        existingOrder.setOrderId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(existingOrder));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Order newOrderInfo = new Order();
+        newOrderInfo.setOrderLines(List.of(new OrderLine(), new OrderLine(), new OrderLine()));
+        newOrderInfo.setCustomer(new Customer("Updated Customer", "update@update.no"));
+
+
+        OperationResult operationResult = orderService.updateOrder(1L, newOrderInfo);
+        Order updatedOrder = (Order) operationResult.createdObject();
+
+
+        assertTrue(operationResult.success());
+        assertNotNull(updatedOrder);
+        assertEquals(3, updatedOrder.getOrderLines().size());
+        assertEquals("Updated Customer", updatedOrder.getCustomer().getCustomerName());
+        assertEquals("update@update.no", updatedOrder.getCustomer().getEmail());
+
+    }
+
+    @Test
+    public void deleteOrderById_OrderNotFound() {
+        Long orderId = 1L;
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+        DeletedOrder result = orderService.deleteOrderById(orderId);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find order with id " + orderId, result.errorMessage());
+        assertTrue(result.objects().isEmpty());
+    }
+
+    @Test
+    public void deleteOrderById_OrderFoundAndDeleted() {
+
+        Long orderId = 1L;
+        Long orderLineId = 2l;
+
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setCustomer(new Customer("Test Customer", "test@test.no"));
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setOrderLineId(orderLineId);
+
+        order.getOrderLines().add(orderLine);
+
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        doNothing().when(orderRepository).deleteById(orderId);
+        doNothing().when(orderLineRepository).deleteById(orderLineId);
+
+        DeletedOrder result = orderService.deleteOrderById(orderId);
+
+        assertTrue(result.success());
+        assertEquals("Order and Order Lines deleted", result.message());
+        assertFalse(result.objects().isEmpty());
+
+    }
+
+
+
+
 
 }

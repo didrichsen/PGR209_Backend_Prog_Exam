@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -31,14 +32,14 @@ public class CustomerService {
         return customerRepository.findById(id).orElse(null);
     }
 
-    public OperationResult<Object> addCustomer(Customer customer){
-        List<Customer> customers = customerRepository.findAll();
-        for (Customer c : customers){
-            if (c.getEmail().equals(customer.getEmail())){
-                return new OperationResult<>(false, "Customer already exists!", null);
-            }
-        }
-        return new OperationResult<>(true, null, customerRepository.save(customer));
+    public OperationResult<Object> addCustomer(Customer newCustomer){
+
+        Optional<Customer> existingCustomer = customerRepository.findByEmail(newCustomer.getEmail());
+
+        if(existingCustomer.isPresent()) return new OperationResult<>(false, "Customer already exists with id " +  existingCustomer.get().getCustomerId(), null);
+
+
+        return new OperationResult<>(true, null, customerRepository.save(newCustomer));
     }
 
     public List<Customer> getAllCustomers(){
@@ -79,7 +80,9 @@ public class CustomerService {
         if (customer.getAddresses().contains(address)) {
             customer.getAddresses().remove(address);
 
-            // Check if the address has more customers and delete it if needed
+           if(address.getCustomers().isEmpty()){
+               addressRepository.deleteById(addressId);
+           }
 
             return new OperationResult<>(true, "Address removed from customer", customerRepository.save(customer));
 

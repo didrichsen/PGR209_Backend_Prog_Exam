@@ -20,13 +20,11 @@ public class OrderLineService {
     private final OrderLineRepository orderLineRepository;
     private final MachineRepository machineRepository;
 
-    private final CustomerRepository customerRepository;
 
     @Autowired
-    public OrderLineService(OrderLineRepository orderLineRepository, MachineRepository machineRepository, CustomerRepository customerRepository){
+    public OrderLineService(OrderLineRepository orderLineRepository, MachineRepository machineRepository){
         this.orderLineRepository = orderLineRepository;
         this.machineRepository = machineRepository;
-        this.customerRepository = customerRepository;
     }
 
     public OrderLine getOrderLineById(Long id){

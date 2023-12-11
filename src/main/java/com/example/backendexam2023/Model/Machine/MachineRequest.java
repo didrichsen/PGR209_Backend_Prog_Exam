@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,6 +13,6 @@ public class MachineRequest {
 
         private String machineName;
         private Integer price;
-        private List<Long> subassemblyIds;
+        private List<Long> subassemblyIds = new ArrayList<>();
 
 }
