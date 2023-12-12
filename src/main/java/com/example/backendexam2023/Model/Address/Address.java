@@ -34,7 +34,7 @@ public class Address {
         zipCode = zip;
     }
 
-    @ManyToMany(mappedBy = "addresses", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "addresses", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
 

@@ -32,12 +32,12 @@ public class Customer {
     @Column(name="customer_email")
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnoreProperties("customer")
     @JoinColumn(name="customer_id")
     private List<Order> orders = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(
             name="customer_address",
             joinColumns = @JoinColumn(name = "customer_id"),

@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Order;
 
-
+import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
@@ -21,9 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.Optional;
 
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,6 +63,7 @@ public class OrderServiceUnitTests {
         //Setup
         Customer customer = new Customer("cust", "cust@c.com");
         customer.setCustomerId(1L);
+        customer.setAddresses(List.of(new Address()));
 
         when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
 
@@ -74,15 +73,17 @@ public class OrderServiceUnitTests {
         OperationResult operationResult = orderService.createOrder(orderRequest);
 
         assert (!operationResult.success());
-        assert (operationResult.errorMessage().equals("At least one order line has to be added."));
-        assert (operationResult.createdObject() == null);
+        assertEquals(operationResult.errorMessage(), "At least one order line has to be added.");
+        assertNull(operationResult.createdObject());
 
     }
 
     @Test
     void Should_Not_Create_Order_Because_OrderLine_Was_Null_AKA_Invalid_ID(){
 
-        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(new Customer()));
+        Customer customer = new Customer();
+        customer.getAddresses().add(new Address());
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
         when(orderLineRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
         OrderRequest orderRequest = new OrderRequest();
@@ -95,38 +96,40 @@ public class OrderServiceUnitTests {
         System.out.println(operationResult.errorMessage());
 
         assertFalse(operationResult.success());
-        assert operationResult.errorMessage().equals("OrderLine not found");
-        assert operationResult.createdObject() == null;
+        assertEquals(operationResult.errorMessage(),"OrderLine not found");
+        assertNull(operationResult.createdObject());
 
     }
 
 
     @Test
-    void shouldCreateOrder(){
+    void shouldCreateOrder() {
 
-        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(new Customer()));
-        when(orderLineRepository.findById(any(Long.class))).thenReturn(Optional.of(new OrderLine(new Machine("TestMachine",1000))));
+        Customer customer = new Customer();
+        customer.getAddresses().add(new Address());
+        when(customerRepository.findById(any(Long.class))).thenReturn(Optional.of(customer));
+
+        List<OrderLine> mockOrderLines = List.of(new OrderLine(new Machine("TestMachine2", 1000)));
+        when(orderLineRepository.findById(any(Long.class))).thenReturn(Optional.of(mockOrderLines.get(0)));
 
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setCustomerId(1L);
-        List<Long> orderLineIds = List.of(1L,2L,3L);
+        List<Long> orderLineIds = List.of(1L, 2L, 3L);
         orderRequest.getOrderLineIds().addAll(orderLineIds);
 
+        Order mockOrder = new Order(mockOrderLines, new Customer());
+        mockOrder.setTotalPrice(1000);
+        when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
 
-        Order orderMock = new Order(List.of(new OrderLine(new Machine("TestMachine2", 1000))), new Customer());
-        orderMock.setTotalPrice(1000);
 
-        when(orderRepository.save(any(Order.class))).thenReturn(orderMock);
-
-        OperationResult operationResult = orderService.createOrder(orderRequest);
+        OperationResult<Object> operationResult = orderService.createOrder(orderRequest);
         Order order = (Order) operationResult.createdObject();
 
         assertTrue(operationResult.success());
-        assert operationResult.errorMessage() == null;
+        assertNull(operationResult.errorMessage());
         assertNotNull(operationResult.createdObject());
-        assert order.getTotalPrice() == 1000;
-        assert order.getOrderLines().size() == 1;
-
+        assertEquals(1000, order.getTotalPrice());
+        assertEquals(1, order.getOrderLines().size());
     }
 
     @Test
