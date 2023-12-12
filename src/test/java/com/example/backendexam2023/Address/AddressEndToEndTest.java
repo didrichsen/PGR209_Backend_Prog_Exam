@@ -49,7 +49,6 @@ public class AddressEndToEndTest {
         Address address = new Address();
         address.setStreetAddress("testAddress");
 
-
         mockMvc.perform(post("/api/address")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(address)))
