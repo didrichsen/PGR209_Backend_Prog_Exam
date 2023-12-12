@@ -105,25 +105,36 @@ public class AddressEndToEndTest {
                 .andExpect(status().isNotFound());
     }
 
-
-    // Denne funker ikke enda... Se på det imorgen. Kaster nullpointer exception på: ResponseHelperDeletionIdArray.java:15
-
-
     @Test
-    public void testDeleteAddress() throws Exception {
+    void should_delete_address() throws Exception {
         Address address = new Address("testAddress", 1234);
         Address addressFromDB = addressRepository.save(address);
         Long addressId = addressFromDB.getAddressId();
-        System.out.println("Id = " + addressId);
-        System.out.println("Customers: " + addressFromDB.getCustomers().isEmpty());
-        System.out.println("Customers: " + addressFromDB.getCustomers());
-
 
         mockMvc.perform(delete("/api/address/" + addressId))
                 .andExpect(status().isNoContent());
-
     }
 
+
+    @Test
+    void should_fail_to_delete_address_when_address_has_cutomers() throws Exception {
+        Address addressFromDb = addressRepository.findById(1L).orElse(null);
+
+        mockMvc.perform(delete("/api/address/" + addressFromDb.getAddressId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Address has active customers."));
+
+    }
+    @Test
+    void should_fail_to_delete_address_that_is_null() throws Exception {
+        mockMvc.perform(delete("/api/address/" + 0L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Couldn't find address with id " + 0L))
+                .andExpect(jsonPath("$.related_ids").isEmpty());
+
+    }
 
 
 
