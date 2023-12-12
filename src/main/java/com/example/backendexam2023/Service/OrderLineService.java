@@ -41,11 +41,7 @@ public class OrderLineService {
         orderLine.setMachine(machine);
         OrderLine orderLineReturned = orderLineRepository.save(orderLine);
 
-        return new OperationResult(true, "Order Created", orderLineReturned);
-    }
-
-    public List<OrderLine> getAllOrderLines(){
-        return orderLineRepository.findAll();
+        return new OperationResult(true, null, orderLineReturned);
     }
 
     public List<OrderLine> getOrderLinesPageable(int pageNumber) {
@@ -55,13 +51,13 @@ public class OrderLineService {
 
     public DeleteResult deleteOrderLine(Long orderLineId){
 
-        OrderLine orderLine = getOrderLineById(orderLineId);
+        OrderLine orderLine = orderLineRepository.findById(orderLineId).orElse(null);
 
         if(orderLine == null){
-            return new DeleteResult(false, "Couldn't find order lines with id " + orderLineId,Collections.emptyList());
+            return new DeleteResult(false, "Couldn't find order lines with id " + orderLineId,null);
         }
 
-        return new DeleteResult(true,null,Collections.emptyList());
+        return new DeleteResult(true,null,null);
 
     }
 
@@ -78,6 +74,7 @@ public class OrderLineService {
 
         return new OperationResult<>(true, null,orderLineRepository.save(orderLineToUpdate));
     }
+
 
 }
 
