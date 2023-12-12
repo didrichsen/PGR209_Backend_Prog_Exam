@@ -18,6 +18,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,12 +86,29 @@ public class CustomerEndToEndTests {
         customer.setAddresses(List.of(address));
         customerRepository.save(customer);
 
-
-
-
         mockMvc.perform(delete("/api/customer/" + customer.getCustomerId() + "/remove/" + address.getAddressId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.addresses").isEmpty());
+
+    }
+
+    @Test
+    void should_update_customer() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Customer customer = new Customer("prev", "prev@p.no");
+        Customer prevCust = customerRepository.save(customer);
+
+        Customer newCust = new Customer("new", "new@n.no");
+
+        mockMvc.perform(put("/api/customer/update/" + prevCust.getCustomerId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newCust)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerId").exists())
+                .andExpect(jsonPath("$.customerName").value("new"))
+                .andExpect(jsonPath("$.email").value("new@n.no"));
 
     }
 }
