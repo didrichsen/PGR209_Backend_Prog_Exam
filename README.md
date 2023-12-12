@@ -31,10 +31,61 @@
 | Delete Machine          | DELETE /api/machine/{id}     | Delete a machine by its ID.                    | Path Parameters: {id}   | 204 No Content if the machine is successfully deleted | 400 Bad Request with an error message        |
 | Update Machine          | PUT /api/machine/update/{machineId} | Update machine details.              | Path Parameters: {machineId} | 200 OK with the updated machine        | 400 Bad Request with an error message        |
 
-### MachineRequest
+### MachineRequest Object
 
 {
-"subassemblyIds": [1, 2, 3],
-"machineName": "Sample Machine",
-"price": 1500
+"machineName": "your_machine_name",
+"price": 1000,
+"subassemblyIds": [1, 2, 3]
+}
+
+## OrderController
+
+| Operation               | Endpoint                   | Description                                     | Request Body            | Success Response                        | Error Response                                |
+|-------------------------|----------------------------|-------------------------------------------------|-------------------------|------------------------------------------|----------------------------------------------|
+| Create Order            | POST /api/order              | Create a new order.                             | OrderRequest object     | 201 Created with the created order       | 400 Bad Request with an error message        |
+| Get Order by ID         | GET /api/order/{id}          | Retrieve an order by its ID.                    | Path Parameters: {id}   | 200 OK with the retrieved order          | 404 Not Found if the order does not exist    |
+| Get Orders by Page      | GET /api/order/page/{pageNumber} | Retrieve a list of orders based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of orders         | None                                         |
+| Update Order            | PUT /api/order/update/{orderId} | Update order details.                         | Path Parameters: {orderId}, Order Object | 200 OK with updated object                            | 400 Bad Request with an error message. |
+| Delete Order            | DELETE /api/order/{orderId}  | Delete an order by its ID.                      | Path Parameters: {orderId} | 204 No Content if the order is successfully deleted | 400 Bad Request with an error message        |
+
+### OrderRequest Object
+
+{
+"customerId": 1,
+"orderLineIds": [1,2,3]
+}
+
+## OrderLineController
+
+| Operation               | Endpoint                   | Description                                     | Request Body            | Success Response                        | Error Response                                |
+|-------------------------|----------------------------|-------------------------------------------------|-------------------------|------------------------------------------|----------------------------------------------|
+| Create OrderLine        | POST /api/order-line/{id}    | Create a new order line for a given order.     | Path Parameters: {id}   | 201 Created with the created order line | 400 Bad Request with an error message        |
+| Delete OrderLine        | DELETE /api/order-line/{id}  | Delete an order line by its ID.                 | Path Parameters: {id}   | 204 No Content if the order line is successfully deleted | 400 Bad Request with an error message        |
+| Get OrderLine by ID     | GET /api/order-line/{id}     | Retrieve an order line by its ID.              | Path Parameters: {id}   | 200 OK with the retrieved order line    | 404 Not Found if the order line does not exist |
+| Get OrderLines by Page  | GET /api/order-line/page/{pageNumber} | Retrieve a list of order lines based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of order lines   | None                                         |
+| Update OrderLine        | PUT /api/order-line/update/{orderLineId} | Update order line details.              | Path Parameters: {orderLineId}, OrderLine Object | 200 OK with updated object                            | 400 Bad Request with an error message        |
+
+## PartController
+
+| Operation               | Endpoint                   | Description                                     | Request Body            | Success Response                        | Error Response                                |
+|-------------------------|----------------------------|-------------------------------------------------|-------------------------|------------------------------------------|----------------------------------------------|
+| Create Part             | POST /api/part               | Create a new part.                             | Part object             | 201 Created with the created part        | 400 Bad Request with an error message        |
+| Get Parts by Page       | GET /api/part/page/{pageNumber} | Retrieve a list of parts based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of parts           | None                                         |
+| Get Part by ID          | GET /api/part/{id}           | Retrieve a part by its ID.                     | Path Parameters: {id}   | 200 OK with the retrieved part          | 404 Not Found if the part does not exist    |
+| Delete Part             | DELETE /api/part/{id}        | Delete a part by its ID.                       | Path Parameters: {id}   | 204 No Content if the part is successfully deleted | 400 Bad Request with an error message        |
+| Update Part             | PUT /api/part/update/{partId} | Update part details.                      | Path Parameters: {partId}, Part Object | 200 OK with updated object                            | 400 Bad Request with an error message        |
+
+## SubassemblyController
+
+| Operation             | Endpoint                  | Description                       | Request Body              | Success Response                         | Error Response                                  |
+|-----------------------|---------------------------|-----------------------------------|---------------------------|------------------------------------------|-------------------------------------------------|
+| Create Subassembly    | POST /api/subassembly     | Create a new subassembly.         | SubassemblyRequest object | 201 Created with the created subassembly | 400 Bad Request with an error message           |
+| Get Subassembly by ID | GET /api/subassembly/{id} | Retrieve a subassembly by its ID. | Path Parameters: {id}     | 200 OK with the retrieved subassembly    | 404 Not Found if the subassembly does not exist |
+
+### SubassemblyRequest Object
+
+{
+"subassemblyName": "Subassembly Name",
+"partIds": [1,2,3,4]
 }

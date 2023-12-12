@@ -1,6 +1,5 @@
 package com.example.backendexam2023.Model.Order;
 
-import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
