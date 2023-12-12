@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Records.DeletionResponseOrder;
-import com.example.backendexam2023.Records.DeletedOrder;
+import com.example.backendexam2023.Records.DeletionReponseObject;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
@@ -68,10 +68,10 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Object> deleteCustomerById(@PathVariable Long orderId){
 
-        DeletedOrder deletedOrder = orderService.deleteOrderById(orderId);
+        OperationResultDeletion deletedOrder = orderService.deleteOrderById(orderId);
 
         if(deletedOrder.success()){
-            DeletionResponseOrder deletionResponse = new DeletionResponseOrder(
+            DeletionReponseObject deletionResponse = new DeletionReponseObject(
                     deletedOrder.success(),
                     deletedOrder.message(),
                     deletedOrder.objects()

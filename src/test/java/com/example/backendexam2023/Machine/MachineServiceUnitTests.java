@@ -2,9 +2,13 @@ package com.example.backendexam2023.Machine;
 
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
+import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Repository.MachineRepository;
+import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.MachineService;
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,9 @@ public class MachineServiceUnitTests {
 
     @MockBean
     private SubassemblyRepository subassemblyRepository;
+
+    @MockBean
+    private PartRepository partRepository;
 
     @Autowired
     private MachineService machineService;
@@ -127,4 +134,17 @@ public class MachineServiceUnitTests {
         assertTrue(machine.getSubassemblies().contains(subassembly1));
         assertTrue(machine.getSubassemblies().contains(subassembly2));
     }
+
+    @Test
+    public void should_not_delete_machine_not_found() {
+        Long machineId = 1L;
+        when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
+
+        OperationResultDeletion result = machineService.deleteMachineById(machineId);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find machine with id " + machineId, result.errorMessage());
+        assertTrue(result.objects().isEmpty());
+    }
+
 }

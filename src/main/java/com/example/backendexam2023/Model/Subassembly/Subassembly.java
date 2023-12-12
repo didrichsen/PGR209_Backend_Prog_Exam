@@ -25,7 +25,7 @@ public class Subassembly {
     @Column(name = "subassembly_name")
     private String subassemblyName;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "subassembly_id")
     private List<Part> parts = new ArrayList<>();
 

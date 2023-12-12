@@ -1,23 +1,21 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Model.Part.Part;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
-import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
+import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class MachineService {
@@ -25,12 +23,14 @@ public class MachineService {
     private final MachineRepository machineRepository;
     private final SubassemblyRepository subassemblyRepository;
     private final OrderLineRepository orderLineRepository;
+    private final PartRepository partRepository;
 
     @Autowired
-    public MachineService(MachineRepository machineRepository, SubassemblyRepository subassemblyRepository, OrderLineRepository orderLineRepository){
+    public MachineService(MachineRepository machineRepository, SubassemblyRepository subassemblyRepository, OrderLineRepository orderLineRepository, PartRepository partRepository){
         this.machineRepository = machineRepository;
         this.subassemblyRepository = subassemblyRepository;
         this.orderLineRepository = orderLineRepository;
+        this.partRepository = partRepository;
 
     }
 
@@ -74,35 +74,33 @@ public class MachineService {
 
     }
 
-    public DeleteResult deleteMachineById(Long id){
-
-        List<OrderLine> orderLinesToCheck = orderLineRepository.findAll();
-        List<Long> orderLinesRegisteredWithMachine = new ArrayList<>();
-
-        boolean isInUse = false;
+    public OperationResultDeletion deleteMachineById(Long id){
 
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(),"Couldn't find machine with id " + id);
+            return new OperationResultDeletion(false, null,null,"Couldn't find machine with id " + id);
         }
 
-        for (OrderLine orderLine : orderLinesToCheck) {
-            Machine machine = orderLine.getMachine();
-                if(Objects.equals(machine, machineToDelete)){
-                    isInUse = true;
-                    orderLinesRegisteredWithMachine.add(orderLine.getOrderLineId());
-                }
-            }
+        List<Object> orderLinesRegisteredWithMachine = orderLineRepository.findByMachine(machineToDelete);
 
-        if(isInUse){
-            return new DeleteResult(false,orderLinesRegisteredWithMachine, "Cant delete machine. Machine placed in order lines.");
+        if(!orderLinesRegisteredWithMachine.isEmpty()){
+            return new OperationResultDeletion(false,orderLinesRegisteredWithMachine, null, "Cant delete machine. Machine placed in order lines.");
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
-        //Delete subassemblies and parts
 
-        return new DeleteResult(true,Collections.emptyList(), null);
+        List<Subassembly> subassemblies = machineToDelete.getSubassemblies();
+
+        for (Subassembly subassembly : subassemblies){
+            List<Part> parts = subassembly.getParts();
+            for(Part part : parts){
+                partRepository.deleteById(part.getPartId());
+            }
+            subassemblyRepository.deleteById(subassembly.getSubassemblyId());
+        }
+
+        return new OperationResultDeletion(true,null, null,null);
     }
 
     public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){

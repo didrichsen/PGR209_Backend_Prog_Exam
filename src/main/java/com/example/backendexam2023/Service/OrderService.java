@@ -1,8 +1,6 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.Records.DeleteResult;
-import com.example.backendexam2023.Records.DeletedOrder;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.OrderRequest;
@@ -19,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -101,12 +98,12 @@ public class OrderService {
 
     }
 
-    public DeletedOrder deleteOrderById(Long orderId){
+    public OperationResultDeletion deleteOrderById(Long orderId){
 
         Order order = orderRepository.findById(orderId).orElse(null);
 
         if(order == null){
-            return new DeletedOrder(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
+            return new OperationResultDeletion(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
         }
 
         List<OrderLine> orderLinesToDelete = order.getOrderLines();
@@ -120,7 +117,7 @@ public class OrderService {
 
         List<Object> customerAndOrderLines = List.of(order.getCustomer(),order.getOrderLines());
 
-        return new DeletedOrder(true,customerAndOrderLines,"Order and Order Lines deleted",null);
+        return new OperationResultDeletion(true,customerAndOrderLines,"Order and Order Lines deleted",null);
 
     }
 

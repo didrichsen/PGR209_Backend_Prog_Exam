@@ -1,9 +1,10 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Records.DeletionReponseObject;
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Util.ResponseHelperDeletionIdArray;
 import com.example.backendexam2023.Service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +57,14 @@ public class MachineController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteMachineById(@PathVariable Long id){
 
-        DeleteResult deleteResult = machineService.deleteMachineById(id);
+        OperationResultDeletion operationResultDeletion = machineService.deleteMachineById(id);
 
-        return ResponseHelperDeletionIdArray.getResponseForDelete(deleteResult);
+        if(operationResultDeletion.success()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            DeletionReponseObject deletionReponseObject = new DeletionReponseObject(false, operationResultDeletion.errorMessage(), operationResultDeletion.objects());
+            return new ResponseEntity<>(deletionReponseObject,HttpStatus.BAD_REQUEST);
+        }
 
     }
 

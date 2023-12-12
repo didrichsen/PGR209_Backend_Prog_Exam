@@ -29,7 +29,7 @@ public class Machine {
     @Column(name = "price")
     private Integer price;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "machine_id")
     private List<Subassembly> subassemblies = new ArrayList<>();
 

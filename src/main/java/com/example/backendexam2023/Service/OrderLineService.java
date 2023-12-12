@@ -1,11 +1,9 @@
 package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Records.DeleteResult;
-import com.example.backendexam2023.Records.DeletedOrder;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
-import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;

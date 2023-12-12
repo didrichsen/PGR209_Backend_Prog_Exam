@@ -6,28 +6,22 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
-import com.example.backendexam2023.Records.DeletedOrder;
+import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.OrderService;
-import com.fasterxml.jackson.databind.ObjectReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.doNothing;
@@ -178,11 +172,11 @@ public class OrderServiceUnitTests {
     }
 
     @Test
-    public void deleteOrderById_OrderNotFound() {
+    public void should_not_delete_order_not_found() {
         Long orderId = 1L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
-        DeletedOrder result = orderService.deleteOrderById(orderId);
+        OperationResultDeletion result = orderService.deleteOrderById(orderId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find order with id " + orderId, result.errorMessage());
@@ -190,7 +184,7 @@ public class OrderServiceUnitTests {
     }
 
     @Test
-    public void deleteOrderById_OrderFoundAndDeleted() {
+    public void should_delete_order_by_id() {
 
         Long orderId = 1L;
         Long orderLineId = 2l;
@@ -208,7 +202,7 @@ public class OrderServiceUnitTests {
         doNothing().when(orderRepository).deleteById(orderId);
         doNothing().when(orderLineRepository).deleteById(orderLineId);
 
-        DeletedOrder result = orderService.deleteOrderById(orderId);
+        OperationResultDeletion result = orderService.deleteOrderById(orderId);
 
         assertTrue(result.success());
         assertEquals("Order and Order Lines deleted", result.message());
