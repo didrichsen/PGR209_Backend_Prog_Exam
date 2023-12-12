@@ -176,6 +176,44 @@ public class MachineServiceUnitTests {
 
     }
 
+    @Test
+    public void should_not_update_machine_not_found() {
+        Long machineId = 1L;
+        Machine newMachine = new Machine();
+        when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
+
+        OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find machine with id " + machineId, result.errorMessage());
+        assertNull(result.createdObject());
+    }
+
+    @Test
+    public void should_update_machine_with_price_subassemblies_and_name() {
+        Long machineId = 1L;
+        Machine existingMachine = new Machine();
+        existingMachine.setMachineId(machineId);
+        existingMachine.setMachineName("Old Machine");
+
+        Machine newMachine = new Machine();
+        newMachine.setPrice(10000);
+        newMachine.setMachineName("New Machine");
+        newMachine.setSubassemblies(List.of(new Subassembly(), new Subassembly()));
+
+        when(machineRepository.findById(machineId)).thenReturn(Optional.of(existingMachine));
+        when(machineRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
+
+        assertTrue(result.success());
+        assertNull(result.errorMessage());
+        assertEquals(newMachine.getPrice(), ((Machine) result.createdObject()).getPrice());
+        assertEquals(newMachine.getSubassemblies(), ((Machine) result.createdObject()).getSubassemblies());
+        assertEquals(newMachine.getMachineName(), ((Machine) result.createdObject()).getMachineName());
+
+    }
+
 
 
 }

@@ -80,6 +80,7 @@ public class AddressService {
 
         if (newAddress.getCustomers() != null) addressToUpdate.getCustomers().addAll(newAddress.getCustomers());
         if (newAddress.getZipCode() != null) addressToUpdate.setZipCode(newAddress.getZipCode());
+        if (newAddress.getStreetAddress() != null) addressToUpdate.setStreetAddress(newAddress.getStreetAddress());
 
         return new OperationResult<>(true, null, addressRepository.save(addressToUpdate));
     }

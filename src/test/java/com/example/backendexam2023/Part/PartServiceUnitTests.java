@@ -122,4 +122,38 @@ public class PartServiceUnitTests {
         assertNull(result.related_ids());
     }
 
+    @Test
+    public void should_not_update_part_not_found() {
+        Long partId = 1L;
+        Part partData = new Part();
+        when(partRepository.findById(partId)).thenReturn(Optional.empty());
+
+        OperationResult<Object> result = partService.updatePart(partId, partData);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find any part with id " + partId, result.errorMessage());
+        assertNull(result.createdObject());
+    }
+
+    @Test
+    public void should_update_part() {
+        Long partId = 1L;
+        Part existingPart = new Part();
+        existingPart.setPartId(partId);
+        existingPart.setPartName("Old Part");
+
+        Part partData = new Part();
+        partData.setPartName("New Part");
+
+        when(partRepository.findById(partId)).thenReturn(Optional.of(existingPart));
+        when(partRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> result = partService.updatePart(partId, partData);
+
+        assertTrue(result.success());
+        assertNull(result.errorMessage());
+        assertEquals(partData.getPartName(), ((Part) result.createdObject()).getPartName());
+
+    }
+
 }

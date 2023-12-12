@@ -64,15 +64,15 @@ public class SubassemblyController {
 
     }
 
-    @PutMapping("/subassembly/{subassemblyId}")
+    @PutMapping("/{subassemblyId}")
     public ResponseEntity<Object> updateCustomer(@PathVariable Long subassemblyId, @RequestBody Subassembly subassemblyData){
 
         OperationResult<Object> operationResult = subassemblyService.updateSubassembly(subassemblyId,subassemblyData);
 
         if(operationResult.success()){
-            return new ResponseEntity<>(operationResult.createdObject(),HttpStatus.OK);
+            return new ResponseEntity<>(operationResult,HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(operationResult, HttpStatus.BAD_REQUEST);
         }
 
     }

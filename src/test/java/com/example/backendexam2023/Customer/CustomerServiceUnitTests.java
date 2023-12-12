@@ -179,4 +179,41 @@ public class CustomerServiceUnitTests {
         assertNull(result.related_ids());
 
     }
+
+    @Test
+    public void should_not_update_customer_not_found() {
+        Long customerId = 1L;
+        Customer newCustomer = new Customer();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
+
+        OperationResult<Object> result = customerService.updateCustomer(customerId, newCustomer);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find customer with id " + customerId, result.errorMessage());
+        assertNull(result.createdObject());
+    }
+
+    @Test
+    public void should_update_customer_email_and_name() {
+        Long customerId = 1L;
+        Customer existingCustomer = new Customer();
+        existingCustomer.setCustomerId(customerId);
+        existingCustomer.setCustomerName("Old Customer");
+        existingCustomer.setEmail("old@test.com");
+
+        Customer newCustomer = new Customer();
+        newCustomer.setCustomerName("New Customer");
+        newCustomer.setEmail("new@test.com");
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> result = customerService.updateCustomer(customerId, newCustomer);
+
+        assertTrue(result.success());
+        assertNull(result.errorMessage());
+        assertEquals(newCustomer.getCustomerName(), ((Customer) result.createdObject()).getCustomerName());
+        assertEquals(newCustomer.getEmail(), ((Customer) result.createdObject()).getEmail());
+
+    }
 }

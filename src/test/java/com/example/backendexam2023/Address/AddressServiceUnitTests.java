@@ -223,6 +223,46 @@ public class AddressServiceUnitTests {
 
     }
 
+    @Test
+    public void should_not_update_address_not_found() {
+        Long addressId = 1L;
+        Address newAddress = new Address();
+        when(addressRepository.findById(addressId)).thenReturn(Optional.empty());
+
+        OperationResult<Object> result = addressService.updateAddress(addressId, newAddress);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find address with id " + addressId, result.errorMessage());
+        assertNull(result.createdObject());
+    }
+
+    @Test
+    public void should_update_address_zip_code_street_name_and_customers() {
+        Long addressId = 1L;
+        Address existingAddress = new Address();
+        existingAddress.setAddressId(addressId);
+        existingAddress.setZipCode(123);
+        existingAddress.setStreetAddress("Old Street Address");
+
+        Address newAddress = new Address();
+        newAddress.setZipCode(321);
+        newAddress.setCustomers(List.of(new Customer(), new Customer()));
+        newAddress.setStreetAddress("New Street Address");
+
+
+        when(addressRepository.findById(addressId)).thenReturn(Optional.of(existingAddress));
+        when(addressRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> result = addressService.updateAddress(addressId, newAddress);
+
+        assertTrue(result.success());
+        assertNull(result.errorMessage());
+        assertEquals(newAddress.getZipCode(), ((Address) result.createdObject()).getZipCode());
+        assertEquals(newAddress.getStreetAddress(), ((Address) result.createdObject()).getStreetAddress());
+        assertEquals(newAddress.getCustomers(), ((Address) result.createdObject()).getCustomers());
+
+    }
+
 
 
 

@@ -169,4 +169,39 @@ public class SubassemblyServiceUnitTests {
         assertNull(result.related_ids());
 
     }
+
+    @Test
+    public void should_not_update_subassembly_not_found() {
+        Long subassemblyId = 1L;
+        Subassembly subassemblyData = new Subassembly();
+        when(subassemblyRepository.findById(subassemblyId)).thenReturn(Optional.empty());
+
+        OperationResult<Object> result = subassemblyService.updateSubassembly(subassemblyId, subassemblyData);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find any subassembly with id " + subassemblyId, result.errorMessage());
+        assertNull(result.createdObject());
+    }
+
+    @Test
+    public void should_update_subassembly() {
+        Long subassemblyId = 1L;
+        Subassembly existingSubassembly = new Subassembly();
+        existingSubassembly.setSubassemblyId(subassemblyId);
+        existingSubassembly.setSubassemblyName("Old Subassembly");
+
+        Subassembly subassemblyData = new Subassembly();
+        subassemblyData.setSubassemblyName("New Subassembly");
+
+        when(subassemblyRepository.findById(subassemblyId)).thenReturn(Optional.of(existingSubassembly));
+        when(subassemblyRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OperationResult<Object> result = subassemblyService.updateSubassembly(subassemblyId, subassemblyData);
+
+        assertTrue(result.success());
+        assertNull(result.errorMessage());
+        assertEquals(subassemblyData.getSubassemblyName(), ((Subassembly) result.createdObject()).getSubassemblyName());
+
+    }
+
 }

@@ -108,7 +108,9 @@ public class SubassemblyService {
         if (subassemblyData.getSubassemblyName() != null) subassemblyToUpdate.setSubassemblyName(subassemblyData.getSubassemblyName());
         if(subassemblyData.getParts() != null) subassemblyToUpdate.getParts().addAll(subassemblyData.getParts());
 
-        return new OperationResult<>(true, null,subassemblyRepository.save(subassemblyToUpdate));
+        Subassembly updatedSubassembly = subassemblyRepository.save(subassemblyToUpdate);
+
+        return new OperationResult<>(true, null,updatedSubassembly);
 
     }
 
