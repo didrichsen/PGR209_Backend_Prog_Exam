@@ -110,7 +110,7 @@ public class CustomerService {
         }
 
         customerRepository.deleteById(id);
-        return new DeleteResult(false, "Customer successfully deleted.",null);
+        return new DeleteResult(true, "Customer successfully deleted.",null);
     }
     public OperationResult<Object> updateCustomer(Long customerId, Customer newCustomer){
 

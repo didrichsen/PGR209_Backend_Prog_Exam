@@ -5,6 +5,7 @@ import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
+import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Service.AddressService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,9 @@ public class AddressServiceUnitTests {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
 
     @Test
@@ -170,6 +175,55 @@ public class AddressServiceUnitTests {
 
         assertEquals(address.getStreetAddress(), a.getStreetAddress());
     }
+
+    @Test
+    public void should_not_delete_address_not_found() {
+        Long addressId = 1L;
+        when(addressRepository.findById(addressId)).thenReturn(Optional.empty());
+
+        DeleteResult result = addressService.deleteAddress(addressId);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find address with id " + addressId, result.error());
+        assertNull(result.related_ids());
+    }
+
+    @Test
+    public void should_not_delete_address_with_active_customers() {
+        Long addressId = 1L;
+        Address address = new Address();
+        address.setAddressId(addressId);
+
+        Customer customer = new Customer();
+        customer.setCustomerId(1L);
+        address.getCustomers().add(customer);
+
+        when(addressRepository.findById(addressId)).thenReturn(Optional.of(address));
+
+        DeleteResult result = addressService.deleteAddress(addressId);
+
+        assertFalse(result.success());
+        assertEquals("Address has active customers.", result.error());
+        assertEquals(List.of(customer.getCustomerId()), result.related_ids());
+    }
+
+    @Test
+    public void should_delete_address() {
+        Long addressId = 1L;
+        Address address = new Address();
+        address.setAddressId(addressId);
+
+        when(addressRepository.findById(addressId)).thenReturn(Optional.of(address));
+
+        DeleteResult result = addressService.deleteAddress(addressId);
+
+        assertTrue(result.success());
+        assertNull(result.error());
+        assertNull(result.related_ids());
+
+    }
+
+
 
 
 }

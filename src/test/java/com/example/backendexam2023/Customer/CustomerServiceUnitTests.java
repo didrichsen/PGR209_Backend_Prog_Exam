@@ -2,16 +2,22 @@ package com.example.backendexam2023.Customer;
 
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
+import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.CustomerService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,8 +34,13 @@ public class CustomerServiceUnitTests {
     @MockBean
     private AddressRepository addressRepository;
 
+    @MockBean
+    private OrderRepository orderRepository;
+
     @Autowired
     private CustomerService customerService;
+
+
 
     @Test
     void should_not_add_customer_because_customer_already_exist() {
@@ -119,5 +130,53 @@ public class CustomerServiceUnitTests {
         assertFalse(result.success());
         assertNull(result.createdObject());
         assertEquals(result.errorMessage(),"Couldn't find address with id " + 2L );
+    }
+
+    @Test
+    public void should_not_delete_customer_not_found() {
+        Long customerId = 1L;
+        when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
+
+        DeleteResult result = customerService.deleteCustomer(customerId);
+
+        assertFalse(result.success());
+        assertEquals("Couldn't find customer with id " + customerId, result.error());
+        assertNull(result.related_ids());
+    }
+
+
+    @Test
+    public void should_not_delete_customer_with_active_orders() {
+        Long customerId = 1L;
+        Customer customer = new Customer();
+        customer.setCustomerId(customerId);
+
+        Order order = new Order();
+        order.setOrderId(1L);
+        customer.getOrders().add(order);
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        DeleteResult result = customerService.deleteCustomer(customerId);
+
+        assertFalse(result.success());
+        assertEquals("Customer has active orders.", result.error());
+        assertEquals(List.of(order.getOrderId()), result.related_ids());
+    }
+
+    @Test
+    public void should_delete_customer() {
+        Long customerId = 1L;
+        Customer customer = new Customer();
+        customer.setCustomerId(customerId);
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        DeleteResult result = customerService.deleteCustomer(customerId);
+
+        assertEquals("Customer successfully deleted.", result.error());
+        assertTrue(result.success());
+        assertNull(result.related_ids());
+
     }
 }
