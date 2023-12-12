@@ -8,9 +8,11 @@ import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Repository.MachineRepository;
+import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.MachineService;
+import jakarta.servlet.annotation.MultipartConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +39,9 @@ public class MachineServiceUnitTests {
 
     @MockBean
     private PartRepository partRepository;
+
+    @MockBean
+    private OrderLineRepository orderLineRepository;
 
     @Autowired
     private MachineService machineService;
@@ -136,15 +141,41 @@ public class MachineServiceUnitTests {
     }
 
     @Test
-    public void should_not_delete_machine_not_found() {
+    public void should_not_delete_machine_in_use() {
         Long machineId = 1L;
-        when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
+        Machine machine = new Machine();
+        machine.setMachineId(machineId);
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setOrderLineId(1L);
+
+        when(machineRepository.findById(machineId)).thenReturn(Optional.of(machine));
+        when(orderLineRepository.findByMachine(machine)).thenReturn(Optional.of(List.of(orderLine)));
 
         DeleteResult result = machineService.deleteMachineById(machineId);
 
         assertFalse(result.success());
-        assertEquals("Couldn't find machine with id " + machineId, result.error());
-        assertNull(result.related_ids());
+        assertEquals("Can't delete machine. Machine placed in order lines.", result.error());
+        assertEquals(List.of(1L), result.related_ids());
     }
+
+    @Test
+    public void should_delete_machine() {
+        Long machineId = 1L;
+        Machine machine = new Machine();
+        machine.setMachineId(machineId);
+
+        when(machineRepository.findById(machineId)).thenReturn(Optional.of(machine));
+        when(orderLineRepository.findByMachine(machine)).thenReturn(Optional.empty());
+
+        DeleteResult result = machineService.deleteMachineById(machineId);
+
+        assertTrue(result.success());
+        assertNull(result.error());
+        assertNull(result.related_ids());
+
+    }
+
+
 
 }

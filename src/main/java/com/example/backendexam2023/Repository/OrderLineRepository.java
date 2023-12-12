@@ -11,6 +11,5 @@ import java.util.Optional;
 @Repository
 public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
 
-    List<OrderLine> findByMachine(Machine machine);
-
+    Optional<List<OrderLine>> findByMachine(Machine machine);
 }

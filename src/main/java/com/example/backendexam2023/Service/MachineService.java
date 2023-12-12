@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MachineService {
@@ -84,20 +86,14 @@ public class MachineService {
             return new DeleteResult(false ,"Couldn't find machine with id " + id,null);
         }
 
-        List<OrderLine> orderLinesRegisteredWithMachine = orderLineRepository.findByMachine(machineToDelete);
+        Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
 
-        List<Long> orderLineIds = new ArrayList<>();
-
-        for (OrderLine orderLine : orderLinesRegisteredWithMachine){
-            orderLineIds.add(orderLine.getOrderLineId());
-        }
-
-
-        System.out.println("Size:" + orderLineIds.size());
-
-
-        if(!orderLinesRegisteredWithMachine.isEmpty()){
-            return new DeleteResult(false, "Cant delete machine. Machine placed in order lines.",orderLineIds);
+        if(orderLinesOptional.isPresent()){
+            List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.get();
+            List<Long> orderLineIds = orderLinesRegisteredWithMachine.stream()
+                    .map(OrderLine::getOrderLineId)
+                    .collect(Collectors.toList());
+            return new DeleteResult(false, "Can't delete machine. Machine placed in order lines.",orderLineIds);
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
