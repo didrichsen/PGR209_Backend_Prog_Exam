@@ -2,7 +2,9 @@ package com.example.backendexam2023.Customer;
 
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
+import com.example.backendexam2023.Service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +31,11 @@ public class CustomerEndToEndTests {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Test
     void should_create_customer() throws Exception {
@@ -63,6 +73,24 @@ public class CustomerEndToEndTests {
         mockMvc.perform(get("/api/customer/" + 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerId").value(1L));
+
+    }
+    @Test
+    void should_delete_address_from_customer() throws Exception {
+
+        Customer customer = customerRepository.save(new Customer("cust", "cust@a.com"));
+
+        Address address = addressRepository.save(new Address("road", 1234));
+
+        customer.setAddresses(List.of(address));
+        customerRepository.save(customer);
+
+
+
+
+        mockMvc.perform(delete("/api/customer/" + customer.getCustomerId() + "/remove/" + address.getAddressId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.addresses").isEmpty());
 
     }
 }
