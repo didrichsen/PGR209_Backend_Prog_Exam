@@ -75,7 +75,7 @@ public class SubassemblyService {
         Subassembly subassemblyToDelete = getSubassemblyById(id);
 
         if(subassemblyToDelete == null){
-            return new DeleteResult(false, Collections.emptyList(), "Couldn't find subassembly " + id);
+            return new DeleteResult(false,  "Couldn't find subassembly " + id, Collections.emptyList());
         }
 
         for (Machine machine:machinesToCheck) {
@@ -89,12 +89,12 @@ public class SubassemblyService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,machinesUsingSubassembly, "Subassembly is in use. Cant delete.");
+            return new DeleteResult(false, "Subassembly is in use. Cant delete.",machinesUsingSubassembly);
         }
 
         subassemblyRepository.deleteById(subassemblyToDelete.getSubassemblyId());
 
-        return new DeleteResult(true,Collections.emptyList(), null);
+        return new DeleteResult(true, null, Collections.emptyList());
     }
 
     public OperationResult<Object> updateSubassembly(Long subassemblyId, Subassembly subassemblyData){

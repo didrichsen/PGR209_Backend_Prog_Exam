@@ -1,6 +1,8 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Part.Part;
+import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
@@ -74,18 +76,28 @@ public class MachineService {
 
     }
 
-    public OperationResultDeletion deleteMachineById(Long id){
+    public DeleteResult deleteMachineById(Long id){
 
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new OperationResultDeletion(false, null,null,"Couldn't find machine with id " + id);
+            return new DeleteResult(false ,"Couldn't find machine with id " + id,null);
         }
 
-        List<Object> orderLinesRegisteredWithMachine = orderLineRepository.findByMachine(machineToDelete);
+        List<OrderLine> orderLinesRegisteredWithMachine = orderLineRepository.findByMachine(machineToDelete);
+
+        List<Long> orderLineIds = new ArrayList<>();
+
+        for (OrderLine orderLine : orderLinesRegisteredWithMachine){
+            orderLineIds.add(orderLine.getOrderLineId());
+        }
+
+
+        System.out.println("Size:" + orderLineIds.size());
+
 
         if(!orderLinesRegisteredWithMachine.isEmpty()){
-            return new OperationResultDeletion(false,orderLinesRegisteredWithMachine, null, "Cant delete machine. Machine placed in order lines.");
+            return new DeleteResult(false, "Cant delete machine. Machine placed in order lines.",orderLineIds);
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
@@ -100,7 +112,7 @@ public class MachineService {
             subassemblyRepository.deleteById(subassembly.getSubassemblyId());
         }
 
-        return new OperationResultDeletion(true,null, null,null);
+        return new DeleteResult(true,null,null);
     }
 
     public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){

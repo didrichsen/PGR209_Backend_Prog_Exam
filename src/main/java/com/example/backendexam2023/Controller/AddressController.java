@@ -4,7 +4,6 @@ import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Service.AddressService;
-import com.example.backendexam2023.Util.ResponseHelperDeletionIdArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +54,11 @@ public class AddressController {
 
         DeleteResult deleteResult = addressService.deleteAddress(id);
 
-        return ResponseHelperDeletionIdArray.getResponseForDelete(deleteResult);
+        if(deleteResult.success()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(deleteResult, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/update/{id}")

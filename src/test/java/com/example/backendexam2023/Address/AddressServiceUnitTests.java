@@ -72,7 +72,7 @@ public class AddressServiceUnitTests {
         DeleteResult result = addressService.deleteAddress(1L);
 
         assertFalse(result.success());
-        assertEquals(result.errorMessage(), "Couldn't find address with id " + 1L);
+        assertEquals(result.error(), "Couldn't find address with id " + 1L);
     }
 
     @Test
@@ -88,8 +88,8 @@ public class AddressServiceUnitTests {
         DeleteResult result = addressService.deleteAddress(1L);
 
         assertFalse(result.success());
-        assertEquals(result.errorMessage(), "Address has active customers.");
-        assert result.ids().contains(5L);
+        assertEquals(result.error(), "Address has active customers.");
+        assert result.related_ids().contains(5L);
 
     }
 
@@ -102,8 +102,8 @@ public class AddressServiceUnitTests {
         DeleteResult result = addressService.deleteAddress(1L);
 
         assertTrue(result.success());
-        assertNull(result.errorMessage());
-        assertNull(result.ids());
+        assertNull(result.error());
+        assertNull(result.related_ids());
     }
 
     @Test

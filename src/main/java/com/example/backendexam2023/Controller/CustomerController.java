@@ -3,7 +3,6 @@ package com.example.backendexam2023.Controller;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResult;
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Util.ResponseHelperDeletionIdArray;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,7 +80,11 @@ public class CustomerController {
 
         DeleteResult deleteResult = customerService.deleteCustomer(id);
 
-        return ResponseHelperDeletionIdArray.getResponseForDelete(deleteResult);
+        if(deleteResult.success()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(deleteResult, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/update/{customerId}")

@@ -43,7 +43,7 @@ public class OrderLineController {
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(deleteResult.errorMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(deleteResult.error(),HttpStatus.BAD_REQUEST);
         }
 
     }

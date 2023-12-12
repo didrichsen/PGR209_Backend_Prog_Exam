@@ -53,7 +53,7 @@ public class AddressService {
         Address address = addressRepository.findById(id).orElse(null);
 
         if(address == null){
-            return new DeleteResult(false, null, "Couldn't find address with id " + id);
+            return new DeleteResult(false ,"Couldn't find address with id " + id,null);
         }
 
         if(!address.getCustomers().isEmpty()){
@@ -61,7 +61,7 @@ public class AddressService {
             for (Customer customer: address.getCustomers()) {
                 customerIds.add(customer.getCustomerId());
             }
-            return new DeleteResult(false,customerIds,"Address has active customers.");
+            return new DeleteResult(false,"Address has active customers.",customerIds);
         }
 
         addressRepository.deleteById(id);
