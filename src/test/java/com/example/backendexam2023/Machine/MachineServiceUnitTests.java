@@ -114,7 +114,7 @@ public class MachineServiceUnitTests {
 
         when(subassemblyRepository.findById(1L)).thenReturn(Optional.of(subassembly1));
         when(subassemblyRepository.findById(2L)).thenReturn(Optional.of(subassembly2));
-        when(machineRepository.save(any(Machine.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(machineRepository.save(any(Machine.class))).thenAnswer(argument -> argument.getArgument(0));
 
         OperationResult<Object> operationResult = machineService.createMachine(machineRequest);
         Machine machine = (Machine) operationResult.createdObject();
