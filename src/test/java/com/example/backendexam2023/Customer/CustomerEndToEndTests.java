@@ -91,6 +91,25 @@ public class CustomerEndToEndTests {
                 .andExpect(jsonPath("$.addresses").isEmpty());
 
     }
+    @Test
+    void should_delete_customer_by_id() throws Exception {
+
+        Customer c = new Customer("abc", "abc@d.ef");
+        Customer customer = customerRepository.save(c);
+
+        mockMvc.perform(delete("/api/customer/" + customer.getCustomerId()))
+                .andExpect(status().isNoContent());
+
+    }
+    @Test
+    void should_fail_when_deleting_nonExistant_customer() throws Exception {
+
+        mockMvc.perform(delete("/api/customer/" + 0L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Couldn't find customer with id " + 0L))
+                .andExpect(jsonPath("$.related_ids").isEmpty());
+    }
 
     @Test
     void should_update_customer() throws Exception {
