@@ -49,6 +49,10 @@ public class OrderService {
             return new OperationResult<>(false, "Customer not found", null);
         }
 
+        if(customer.getAddresses().isEmpty()){
+            return new OperationResult<>(false,"Customer has no address. Add address to customer.", null);
+        }
+
         List<OrderLine> orderLines = new ArrayList<>();
 
         List<Long> orderLineIds = orderRequest.getOrderLineIds();
