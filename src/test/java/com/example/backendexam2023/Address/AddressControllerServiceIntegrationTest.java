@@ -28,7 +28,7 @@ public class AddressControllerServiceIntegrationTest {
     @Test
     public void should_Return_Status_No_Content_When_Deleting_Address() throws Exception {
         Long addressId = 1L;
-        DeleteResult deleteResult = new DeleteResult(true, Collections.emptyList(), null);
+        DeleteResult deleteResult = new DeleteResult(true, new String(), null);
 
         when(addressService.deleteAddress(addressId)).thenReturn(deleteResult);
 

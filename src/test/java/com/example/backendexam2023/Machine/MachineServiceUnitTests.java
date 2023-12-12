@@ -140,11 +140,11 @@ public class MachineServiceUnitTests {
         Long machineId = 1L;
         when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
 
-        OperationResultDeletion result = machineService.deleteMachineById(machineId);
+        DeleteResult result = machineService.deleteMachineById(machineId);
 
         assertFalse(result.success());
-        assertEquals("Couldn't find machine with id " + machineId, result.errorMessage());
-        assertTrue(result.objects().isEmpty());
+        assertEquals("Couldn't find machine with id " + machineId, result.error());
+        assertNull(result.related_ids());
     }
 
 }

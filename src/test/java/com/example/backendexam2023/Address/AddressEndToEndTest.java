@@ -1,6 +1,7 @@
 package com.example.backendexam2023.Address;
 
 import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -110,6 +114,9 @@ public class AddressEndToEndTest {
         Address address = new Address("testAddress", 1234);
         Address addressFromDB = addressRepository.save(address);
         Long addressId = addressFromDB.getAddressId();
+        System.out.println("Id = " + addressId);
+        System.out.println("Customers: " + addressFromDB.getCustomers().isEmpty());
+        System.out.println("Customers: " + addressFromDB.getCustomers());
 
 
         mockMvc.perform(delete("/api/address/" + addressId))
