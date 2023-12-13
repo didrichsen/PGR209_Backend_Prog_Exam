@@ -106,7 +106,7 @@ public class BackendExam2023Application {
                 }
             }
 
-            partRepository.save(new Part());
+            partRepository.save(new Part("Cotton"));
 
         };
 
