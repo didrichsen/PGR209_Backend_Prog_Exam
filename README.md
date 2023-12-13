@@ -3,6 +3,9 @@
 Welcome to our REST API documentation for our order system for managing orders. 
 Our API allows users to create machines and customers, which can then be added to orders.
 
+The order system is populated with a lot of data when running main, which can queried 
+with a tool like postman. If so, see endpoint documentation below. 
+
 ### Creating a machine 
 A machine is composed of subassemblies, and each subassembly consists of various parts. An
 already designed machine can be included in multiple orders through order lines.
