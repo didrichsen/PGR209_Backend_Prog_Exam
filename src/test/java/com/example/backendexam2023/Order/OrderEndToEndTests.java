@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.crypto.Mac;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,7 +57,15 @@ public class OrderEndToEndTests {
                 .andExpect(jsonPath("$.totalPrice").exists())
                 .andExpect(jsonPath("$.orderLines").isNotEmpty())
                 .andExpect(jsonPath("$.customer").isNotEmpty());
-
     }
+
+    @Test
+    void should_delete_order() throws Exception {
+        mockMvc.perform(delete("/api/order/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Order and Order Lines deleted"))
+                .andExpect(jsonPath("$.deletedObjects").isNotEmpty());
+    }
+
 
 }
