@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +32,9 @@ public class MachineEndToEndTests {
 
     @Autowired
     private SubassemblyRepository subassemblyRepository;
+
+    @Autowired
+    private MachineRepository machineRepository;
 
 
     @Test
@@ -54,5 +58,13 @@ public class MachineEndToEndTests {
                 .andExpect(jsonPath("$.machineId").exists())
                 .andExpect(jsonPath("$.machineName").value("Drill"))
                 .andExpect(jsonPath("$.price").value(100));
+    }
+    @Test
+    void should_not_delete_machine_by_id_if_machine_is_null() throws Exception {
+
+        mockMvc.perform(delete("/api/machine/" + 0L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Couldn't find machine with id " + 0L));
     }
 }
