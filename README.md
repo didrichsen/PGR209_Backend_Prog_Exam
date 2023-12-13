@@ -1,5 +1,82 @@
 # Backend Exam 2023 API Documentation
 
+Welcome to our REST API documentation for our order system for managing orders. 
+Our API allows users to create machines and customers, which can then be added to orders.
+
+### Creating a machine 
+A machine is composed of subassemblies, and each subassembly consists of various parts. An
+already designed machine can be included in multiple orders through order lines.
+
+However, for a new machine, the process involves creating parts, subassemblies, 
+and finally, the machine – in that specific order. Each machine is aware of its subassemblies, 
+and subassemblies are linked to their respective parts.
+
+Worth nothing, if a Machine is deleted, its underlying subassemblies and parts are deleted in that 
+order.
+
+Our Order system is designed to receive a list of ids when relying on **Request objects**. 
+
+### MachineRequest Object
+
+{
+"machineName": "your_machine_name",
+"price": 1000,
+"subassemblyIds": [1, 2, 3]
+}
+
+### SubassemblyRequest Object
+
+{
+"subassemblyName": "your_subassembly_name",
+"partIds": [1, 2, 3]
+}
+
+### Creating an order 
+An order consists of order lines, each containing a single machine. 
+An order has one customer, and it may have multiple order lines. 
+A customer must have an address associated with them to be linked to an order. 
+While an order can exist without order lines or a customer, if an order is deleted, 
+its underlying order lines will also be removed. Customers, on the other hand, persist in the system even if 
+they have no associated orders. A customer can have multiple orders, but an order line can 
+only have one order. 
+
+An Order is created by sending an OrderRequest Object.
+
+#### OrderRequest Object
+{
+"customerId": 1,
+"orderLineIds": [1,2,3,4]
+}
+
+##### Order Object
+{
+"orderId": 1,
+"orderDate": "2023-12-13T12:34:56",
+"totalPrice": 14999,
+"customer": {
+  Customer object properties go here
+},
+"orderLines": [{OrderLine Object, OrderLine Object}]
+}
+
+### Customer
+Customers can be created without specifying an address, initially, only email and name is required.
+However, as previously mentioned, they must have a registered address before being associated with any orders.
+It's worth noting that a customer can have multiple addresses associated with their profile.
+The creation of a customer involves sending a Customer Object through the designated API endpoint.
+
+#### Customer Object
+
+{
+"customerId": 0,
+"customerName": "John Doe",
+"email": "john.doe@example.com",
+"orders": [],
+"addresses": []
+}
+
+## Endpoints documentation
+
 ## AddressController
 
 | Operation               | Endpoint                   | Description                                                   | Request Body                         | Success Response                                      | Error Response                                |
@@ -31,13 +108,6 @@
 | Delete Machine          | DELETE /api/machine/{id}     | Delete a machine by its ID.                    | Path Parameters: {id}   | 204 No Content if the machine is successfully deleted | 400 Bad Request with an error message        |
 | Update Machine          | PUT /api/machine/update/{machineId} | Update machine details.              | Path Parameters: {machineId} | 200 OK with the updated machine        | 400 Bad Request with an error message        |
 
-### MachineRequest Object
-
-{
-"machineName": "your_machine_name",
-"price": 1000,
-"subassemblyIds": [1, 2, 3]
-}
 
 ## OrderController
 
@@ -49,12 +119,6 @@
 | Update Order            | PUT /api/order/update/{orderId} | Update order details.                         | Path Parameters: {orderId}, Order Object | 200 OK with updated object                            | 400 Bad Request with an error message. |
 | Delete Order            | DELETE /api/order/{orderId}  | Delete an order by its ID.                      | Path Parameters: {orderId} | 204 No Content if the order is successfully deleted | 400 Bad Request with an error message        |
 
-### OrderRequest Object
-
-{
-"customerId": 1,
-"orderLineIds": [1,2,3]
-}
 
 ## OrderLineController
 
@@ -78,14 +142,10 @@
 
 ## SubassemblyController
 
-| Operation             | Endpoint                  | Description                       | Request Body              | Success Response                         | Error Response                                  |
-|-----------------------|---------------------------|-----------------------------------|---------------------------|------------------------------------------|-------------------------------------------------|
-| Create Subassembly    | POST /api/subassembly     | Create a new subassembly.         | SubassemblyRequest object | 201 Created with the created subassembly | 400 Bad Request with an error message           |
-| Get Subassembly by ID | GET /api/subassembly/{id} | Retrieve a subassembly by its ID. | Path Parameters: {id}     | 200 OK with the retrieved subassembly    | 404 Not Found if the subassembly does not exist |
-
-### SubassemblyRequest Object
-
-{
-"subassemblyName": "Subassembly Name",
-"partIds": [1,2,3,4]
-}
+| Operation               | Endpoint                   | Description                                     | Request Body            | Success Response                        | Error Response                                |
+|-------------------------|----------------------------|-------------------------------------------------|-------------------------|------------------------------------------|----------------------------------------------|
+| Create Subassembly      | POST /api/subassembly       | Create a new subassembly.                       | SubassemblyRequest      | 201 Created with the created subassembly | 400 Bad Request with an error message        |
+| Get Subassembly by ID   | GET /api/subassembly/{id}  | Retrieve a subassembly by its ID.               | Path Parameters: {id}   | 200 OK with the retrieved subassembly   | 404 Not Found if the subassembly does not exist |
+| Get Subassemblies by Page | GET /api/subassembly/page/{pageNumber} | Retrieve a list of subassemblies based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of subassemblies   | None                                         |
+| Delete Subassembly      | DELETE /api/subassembly/{id} | Delete a subassembly by its ID.                 | Path Parameters: {id}   | 204 No Content if the subassembly is successfully deleted | 400 Bad Request with an error message        |
+| Update Subassembly      | PUT /api/subassembly/{subassemblyId} | Update subassembly details.                | Path Parameters: {subassemblyId}, Subassembly Object | 200 OK with updated object                            | 400 Bad Request with an error message        |
