@@ -3,7 +3,7 @@
 Welcome to our REST API documentation for our order system for managing orders. 
 Our API allows users to create machines and customers, which can then be added to orders.
 
-The order system is populated with a lot of data when running main, which can queried 
+The order system is populated with a lot of data when running main, which can be queried 
 with a tool like postman. If so, see endpoint documentation below. 
 
 ### Creating a machine 
@@ -14,7 +14,7 @@ However, for a new machine, the process involves creating parts, subassemblies,
 and finally, the machine – in that specific order. Each machine is aware of its subassemblies, 
 and subassemblies are linked to their respective parts.
 
-Worth nothing, if a Machine is deleted, its underlying subassemblies and parts are deleted in that 
+Worth noting, if a Machine is deleted, its underlying subassemblies and parts are deleted in that 
 order.
 
 Our Order system is designed to receive a list of ids when relying on **Request objects**. 
@@ -38,10 +38,10 @@ Our Order system is designed to receive a list of ids when relying on **Request 
 An order consists of order lines, each containing a single machine. 
 An order has one customer, and it may have multiple order lines. 
 A customer must have an address associated with them to be linked to an order. 
-While an order can exist without order lines or a customer, if an order is deleted, 
-its underlying order lines will also be removed. Customers, on the other hand, persist in the system even if 
+If an order is deleted, 
+its underlying order lines will also be deleted. Customers, on the other hand, persist in the system even if 
 they have no associated orders. A customer can have multiple orders, but an order line can 
-only have one order. 
+only be part of one order. 
 
 An Order is created by sending an OrderRequest Object.
 
@@ -63,7 +63,7 @@ An Order is created by sending an OrderRequest Object.
 }
 
 ### Customer
-Customers can be created without specifying an address, initially, only email and name is required.
+Customers can be created without specifying an address, only email and name is required.
 However, as previously mentioned, they must have a registered address before being associated with any orders.
 It's worth noting that a customer can have multiple addresses associated with their profile.
 The creation of a customer involves sending a Customer Object through the designated API endpoint.
