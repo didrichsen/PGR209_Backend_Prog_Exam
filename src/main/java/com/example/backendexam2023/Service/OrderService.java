@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Records.OperationResultDeletion;
+import com.example.backendexam2023.Records.DeleteResultObject;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.OrderRequest;
@@ -102,12 +102,12 @@ public class OrderService {
 
     }
 
-    public OperationResultDeletion deleteOrderById(Long orderId){
+    public DeleteResultObject deleteOrderById(Long orderId){
 
         Order order = orderRepository.findById(orderId).orElse(null);
 
         if(order == null){
-            return new OperationResultDeletion(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
+            return new DeleteResultObject(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
         }
 
         List<OrderLine> orderLinesToDelete = order.getOrderLines();
@@ -121,7 +121,7 @@ public class OrderService {
 
         List<Object> customerAndOrderLines = List.of(order.getCustomer(),order.getOrderLines());
 
-        return new OperationResultDeletion(true,customerAndOrderLines,"Order and Order Lines deleted",null);
+        return new DeleteResultObject(true,customerAndOrderLines,"Order and Order Lines deleted",null);
 
     }
 

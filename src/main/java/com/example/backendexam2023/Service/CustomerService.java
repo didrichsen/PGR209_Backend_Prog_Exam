@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.Order;
@@ -91,12 +91,12 @@ public class CustomerService {
         }
 
     }
-    public DeleteResult deleteCustomer(Long id){
+    public DeleteResultIds deleteCustomer(Long id){
 
         Customer customer = customerRepository.findById(id).orElse(null);
 
         if(customer == null){
-            return new DeleteResult(false, "Couldn't find customer with id " + id,null);
+            return new DeleteResultIds(false, "Couldn't find customer with id " + id,null);
         }
 
         if(!customer.getOrders().isEmpty()){
@@ -106,11 +106,11 @@ public class CustomerService {
                 orderIds.add(order.getOrderId());
             }
 
-            return new DeleteResult(false,  "Customer has active orders.",orderIds);
+            return new DeleteResultIds(false,  "Customer has active orders.",orderIds);
         }
 
         customerRepository.deleteById(id);
-        return new DeleteResult(true, "Customer successfully deleted.",null);
+        return new DeleteResultIds(true, "Customer successfully deleted.",null);
     }
     public OperationResult<Object> updateCustomer(Long customerId, Customer newCustomer){
 

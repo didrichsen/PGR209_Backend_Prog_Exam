@@ -2,8 +2,7 @@ package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Part.Part;
-import com.example.backendexam2023.Records.DeleteResult;
-import com.example.backendexam2023.Records.OperationResultDeletion;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
@@ -78,12 +77,12 @@ public class MachineService {
 
     }
 
-    public DeleteResult deleteMachineById(Long id){
+    public DeleteResultIds deleteMachineById(Long id){
 
         Machine machineToDelete = getMachineById(id);
 
         if(machineToDelete == null){
-            return new DeleteResult(false ,"Couldn't find machine with id " + id,null);
+            return new DeleteResultIds(false ,"Couldn't find machine with id " + id,null);
         }
 
         Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
@@ -93,7 +92,7 @@ public class MachineService {
             List<Long> orderLineIds = orderLinesRegisteredWithMachine.stream()
                     .map(OrderLine::getOrderLineId)
                     .collect(Collectors.toList());
-            return new DeleteResult(false, "Can't delete machine. Machine placed in order lines.",orderLineIds);
+            return new DeleteResultIds(false, "Can't delete machine. Machine placed in order lines.",orderLineIds);
         }
 
         machineRepository.deleteById(machineToDelete.getMachineId());
@@ -108,7 +107,7 @@ public class MachineService {
             subassemblyRepository.deleteById(subassembly.getSubassemblyId());
         }
 
-        return new DeleteResult(true,null,null);
+        return new DeleteResultIds(true,null,null);
     }
 
     public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){

@@ -1,8 +1,7 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Repository.PartRepository;
@@ -44,7 +43,7 @@ public class PartService {
         return partRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
     
-    public DeleteResult deletePartById(Long id){
+    public DeleteResultIds deletePartById(Long id){
 
         List<Subassembly> subassembliesToCheck = subassemblyRepository.findAll();
         List<Long> subassembliesUsingPart = new ArrayList<>();
@@ -54,7 +53,7 @@ public class PartService {
         Part partToDelete = partRepository.findById(id).orElse(null);
 
         if(partToDelete == null){
-            return new DeleteResult(false,"Couldn't find subassembly with id " + id,null);
+            return new DeleteResultIds(false,"Couldn't find subassembly with id " + id,null);
         }
 
         for (Subassembly subassembly:subassembliesToCheck) {
@@ -68,12 +67,12 @@ public class PartService {
         }
 
         if(isInUse){
-            return new DeleteResult(false,"Part in use. Can't delete part.",subassembliesUsingPart);
+            return new DeleteResultIds(false,"Part in use. Can't delete part.",subassembliesUsingPart);
         }
 
         partRepository.deleteById(partToDelete.getPartId());
 
-        return new DeleteResult(true, null,null);
+        return new DeleteResultIds(true, null,null);
     }
 
     public OperationResult<Object> updatePart(Long partId, Part partData){

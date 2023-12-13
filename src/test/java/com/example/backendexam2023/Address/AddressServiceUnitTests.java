@@ -2,7 +2,7 @@ package com.example.backendexam2023.Address;
 
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +73,7 @@ public class AddressServiceUnitTests {
 
         when(addressRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        DeleteResult result = addressService.deleteAddress(1L);
+        DeleteResultIds result = addressService.deleteAddress(1L);
 
         assertFalse(result.success());
         assertEquals(result.error(), "Couldn't find address with id " + 1L);
@@ -90,7 +89,7 @@ public class AddressServiceUnitTests {
 
         when(addressRepository.findById(any(Long.class))).thenReturn(Optional.of(address));
 
-        DeleteResult result = addressService.deleteAddress(1L);
+        DeleteResultIds result = addressService.deleteAddress(1L);
 
         assertFalse(result.success());
         assertEquals(result.error(), "Address has active customers.");
@@ -104,7 +103,7 @@ public class AddressServiceUnitTests {
 
         when(addressRepository.findById(any(Long.class))).thenReturn(Optional.of(address));
 
-        DeleteResult result = addressService.deleteAddress(1L);
+        DeleteResultIds result = addressService.deleteAddress(1L);
 
         assertTrue(result.success());
         assertNull(result.error());
@@ -181,7 +180,7 @@ public class AddressServiceUnitTests {
         Long addressId = 1L;
         when(addressRepository.findById(addressId)).thenReturn(Optional.empty());
 
-        DeleteResult result = addressService.deleteAddress(addressId);
+        DeleteResultIds result = addressService.deleteAddress(addressId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find address with id " + addressId, result.error());
@@ -200,7 +199,7 @@ public class AddressServiceUnitTests {
 
         when(addressRepository.findById(addressId)).thenReturn(Optional.of(address));
 
-        DeleteResult result = addressService.deleteAddress(addressId);
+        DeleteResultIds result = addressService.deleteAddress(addressId);
 
         assertFalse(result.success());
         assertEquals("Address has active customers.", result.error());
@@ -215,7 +214,7 @@ public class AddressServiceUnitTests {
 
         when(addressRepository.findById(addressId)).thenReturn(Optional.of(address));
 
-        DeleteResult result = addressService.deleteAddress(addressId);
+        DeleteResultIds result = addressService.deleteAddress(addressId);
 
         assertTrue(result.success());
         assertNull(result.error());

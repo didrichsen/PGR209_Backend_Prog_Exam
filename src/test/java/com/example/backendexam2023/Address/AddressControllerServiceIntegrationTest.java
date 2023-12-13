@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Address;
 
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Service.AddressService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Collections;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -28,7 +26,7 @@ public class AddressControllerServiceIntegrationTest {
     @Test
     public void should_Return_Status_No_Content_When_Deleting_Address() throws Exception {
         Long addressId = 1L;
-        DeleteResult deleteResult = new DeleteResult(true, null,null);
+        DeleteResultIds deleteResult = new DeleteResultIds(true, null,null);
 
         when(addressService.deleteAddress(addressId)).thenReturn(deleteResult);
 

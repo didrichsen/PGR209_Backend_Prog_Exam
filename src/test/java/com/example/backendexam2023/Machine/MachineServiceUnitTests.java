@@ -4,22 +4,19 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.OperationResultDeletion;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.MachineService;
-import jakarta.servlet.annotation.MultipartConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,7 +149,7 @@ public class MachineServiceUnitTests {
         when(machineRepository.findById(machineId)).thenReturn(Optional.of(machine));
         when(orderLineRepository.findByMachine(machine)).thenReturn(Optional.of(List.of(orderLine)));
 
-        DeleteResult result = machineService.deleteMachineById(machineId);
+        DeleteResultIds result = machineService.deleteMachineById(machineId);
 
         assertFalse(result.success());
         assertEquals("Can't delete machine. Machine placed in order lines.", result.error());
@@ -168,7 +165,7 @@ public class MachineServiceUnitTests {
         when(machineRepository.findById(machineId)).thenReturn(Optional.of(machine));
         when(orderLineRepository.findByMachine(machine)).thenReturn(Optional.empty());
 
-        DeleteResult result = machineService.deleteMachineById(machineId);
+        DeleteResultIds result = machineService.deleteMachineById(machineId);
 
         assertTrue(result.success());
         assertNull(result.error());

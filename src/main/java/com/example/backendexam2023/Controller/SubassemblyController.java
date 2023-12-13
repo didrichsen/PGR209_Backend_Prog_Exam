@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
 import com.example.backendexam2023.Service.SubassemblyService;
@@ -54,7 +54,7 @@ public class SubassemblyController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
-        DeleteResult deleteResult = subassemblyService.deleteSubassemblyById(id);
+        DeleteResultIds deleteResult = subassemblyService.deleteSubassemblyById(id);
 
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

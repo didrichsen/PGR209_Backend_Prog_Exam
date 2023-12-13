@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Service;
 
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Repository.AddressRepository;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -48,12 +47,12 @@ public class AddressService {
         return addressRepository.findAll(PageRequest.of(pageNumber, 5)).stream().toList();
     }
 
-    public DeleteResult deleteAddress(Long id){
+    public DeleteResultIds deleteAddress(Long id){
 
         Address address = addressRepository.findById(id).orElse(null);
 
         if(address == null){
-            return new DeleteResult(false ,"Couldn't find address with id " + id,null);
+            return new DeleteResultIds(false ,"Couldn't find address with id " + id,null);
         }
 
         if(!address.getCustomers().isEmpty()){
@@ -61,12 +60,12 @@ public class AddressService {
             for (Customer customer: address.getCustomers()) {
                 customerIds.add(customer.getCustomerId());
             }
-            return new DeleteResult(false,"Address has active customers.",customerIds);
+            return new DeleteResultIds(false,"Address has active customers.",customerIds);
         }
 
         addressRepository.deleteById(id);
 
-        return new DeleteResult(true,null, null);
+        return new DeleteResultIds(true,null, null);
 
     }
 

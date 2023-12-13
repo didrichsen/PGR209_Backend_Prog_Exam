@@ -6,7 +6,7 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
-import com.example.backendexam2023.Records.OperationResultDeletion;
+import com.example.backendexam2023.Records.DeleteResultObject;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
@@ -179,7 +179,7 @@ public class OrderServiceUnitTests {
         Long orderId = 1L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
-        OperationResultDeletion result = orderService.deleteOrderById(orderId);
+        DeleteResultObject result = orderService.deleteOrderById(orderId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find order with id " + orderId, result.errorMessage());
@@ -205,7 +205,7 @@ public class OrderServiceUnitTests {
         doNothing().when(orderRepository).deleteById(orderId);
         doNothing().when(orderLineRepository).deleteById(orderLineId);
 
-        OperationResultDeletion result = orderService.deleteOrderById(orderId);
+        DeleteResultObject result = orderService.deleteOrderById(orderId);
 
         assertTrue(result.success());
         assertEquals("Order and Order Lines deleted", result.message());

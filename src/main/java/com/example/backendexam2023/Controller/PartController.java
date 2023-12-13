@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class PartController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePart(@PathVariable Long id){
 
-        DeleteResult deleteResult = partService.deletePartById(id);
+        DeleteResultIds deleteResult = partService.deletePartById(id);
 
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

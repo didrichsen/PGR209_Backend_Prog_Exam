@@ -3,7 +3,7 @@ package com.example.backendexam2023.orderLine;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
@@ -17,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -71,7 +70,7 @@ public class OrderLineUnitTests {
 
         when(orderLineRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DeleteResult result = orderLineService.deleteOrderLine(orderLineId);
+        DeleteResultIds result = orderLineService.deleteOrderLine(orderLineId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find order lines with id " + orderLineId, result.error());
@@ -86,7 +85,7 @@ public class OrderLineUnitTests {
 
         when(orderLineRepository.findById(1L)).thenReturn(Optional.of(orderLine));
 
-        DeleteResult result = orderLineService.deleteOrderLine(orderLineId);
+        DeleteResultIds result = orderLineService.deleteOrderLine(orderLineId);
 
         assertTrue(result.success());
         assertNull(result.error());

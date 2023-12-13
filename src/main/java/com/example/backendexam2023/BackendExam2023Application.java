@@ -105,7 +105,12 @@ public class BackendExam2023Application {
 
                 }
             }
+
+            partRepository.save(new Part());
+
         };
+
+
     }
     private void CreateOrderLines(Machine machine, List<Long> orderLines, OrderLineRepository orderLineRepository){
         OrderLine orderLine = orderLineRepository.save(new OrderLine());

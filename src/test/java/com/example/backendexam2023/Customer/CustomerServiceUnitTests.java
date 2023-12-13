@@ -3,20 +3,18 @@ package com.example.backendexam2023.Customer;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.Order;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.CustomerService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,7 +135,7 @@ public class CustomerServiceUnitTests {
         Long customerId = 1L;
         when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
 
-        DeleteResult result = customerService.deleteCustomer(customerId);
+        DeleteResultIds result = customerService.deleteCustomer(customerId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find customer with id " + customerId, result.error());
@@ -157,7 +155,7 @@ public class CustomerServiceUnitTests {
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
-        DeleteResult result = customerService.deleteCustomer(customerId);
+        DeleteResultIds result = customerService.deleteCustomer(customerId);
 
         assertFalse(result.success());
         assertEquals("Customer has active orders.", result.error());
@@ -172,7 +170,7 @@ public class CustomerServiceUnitTests {
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
-        DeleteResult result = customerService.deleteCustomer(customerId);
+        DeleteResultIds result = customerService.deleteCustomer(customerId);
 
         assertEquals("Customer successfully deleted.", result.error());
         assertTrue(result.success());

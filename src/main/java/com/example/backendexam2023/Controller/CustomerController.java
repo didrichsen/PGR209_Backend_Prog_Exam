@@ -1,7 +1,7 @@
 package com.example.backendexam2023.Controller;
 
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteCustomerById(@PathVariable Long id){
 
-        DeleteResult deleteResult = customerService.deleteCustomer(id);
+        DeleteResultIds deleteResult = customerService.deleteCustomer(id);
 
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

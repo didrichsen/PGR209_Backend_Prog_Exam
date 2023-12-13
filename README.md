@@ -80,7 +80,7 @@ The creation of a customer involves sending a Customer Object through the design
 
 ## Service Layer
 
-Service layer is to a great extent making use of the records when sending result to controller. 
+Service layer is to a great extent making use records when sending result to controller. 
 
 OrderResult is used when sending info when something is created or updated: 
 
@@ -96,7 +96,7 @@ OrderResult is used when sending info when something is created or updated:
 "createdObject": null
 }
 
-DeleteResult is used when deleting. Returning a list of Ids if the object is in use and cant be deleted: 
+DeleteResultIds is used when deleting most of the objects. Returning a list of Ids if the object is in use and cant be deleted: 
 
 {
 "success": false,
@@ -104,9 +104,18 @@ DeleteResult is used when deleting. Returning a list of Ids if the object is in 
 "related_ids": [1,2,3]
 }
 
+DeleteResultObject is used when deleting an order. We wanted to return deleted order lines instead of just ids. 
 
+{
+"Success": true,
+"message": "Sample message",
+"error": null"
+"deletedObjects": [{} // List of order line objects that's been deleted]
+}
 
 ## Endpoints documentation
+
+All endpoints expect Json Request Body and all endpoints return Json objects. 
 
 ## AddressController
 

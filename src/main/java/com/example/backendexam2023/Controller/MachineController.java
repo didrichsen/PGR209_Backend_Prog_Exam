@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
@@ -55,7 +55,7 @@ public class MachineController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteMachineById(@PathVariable Long id){
 
-        DeleteResult deleteResult = machineService.deleteMachineById(id);
+        DeleteResultIds deleteResult = machineService.deleteMachineById(id);
 
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

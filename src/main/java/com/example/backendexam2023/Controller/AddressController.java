@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Service.AddressService;
@@ -52,7 +52,7 @@ public class AddressController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteAddress(@PathVariable Long id){
 
-        DeleteResult deleteResult = addressService.deleteAddress(id);
+        DeleteResultIds deleteResult = addressService.deleteAddress(id);
 
         if(deleteResult.success()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

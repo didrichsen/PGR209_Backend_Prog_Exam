@@ -1,6 +1,6 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 @Service
 public class OrderLineService {
@@ -49,15 +48,15 @@ public class OrderLineService {
     }
 
 
-    public DeleteResult deleteOrderLine(Long orderLineId){
+    public DeleteResultIds deleteOrderLine(Long orderLineId){
 
         OrderLine orderLine = orderLineRepository.findById(orderLineId).orElse(null);
 
         if(orderLine == null){
-            return new DeleteResult(false, "Couldn't find order lines with id " + orderLineId,null);
+            return new DeleteResultIds(false, "Couldn't find order lines with id " + orderLineId,null);
         }
 
-        return new DeleteResult(true,null,null);
+        return new DeleteResultIds(true,null,null);
 
     }
 

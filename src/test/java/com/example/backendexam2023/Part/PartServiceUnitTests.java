@@ -2,7 +2,7 @@ package com.example.backendexam2023.Part;
 
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.Records.DeleteResult;
+import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
@@ -79,7 +79,7 @@ public class PartServiceUnitTests {
         Long partId = 1L;
         when(partRepository.findById(partId)).thenReturn(Optional.empty());
 
-        DeleteResult result = partService.deletePartById(partId);
+        DeleteResultIds result = partService.deletePartById(partId);
 
         assertFalse(result.success());
         assertEquals("Couldn't find subassembly with id " + partId, result.error());
@@ -99,7 +99,7 @@ public class PartServiceUnitTests {
         when(partRepository.findById(partId)).thenReturn(Optional.of(part));
         when(subassemblyRepository.findAll()).thenReturn(List.of(subassembly));
 
-        DeleteResult result = partService.deletePartById(partId);
+        DeleteResultIds result = partService.deletePartById(partId);
 
         assertFalse(result.success());
         assertEquals("Part in use. Can't delete part.", result.error());
@@ -115,7 +115,7 @@ public class PartServiceUnitTests {
         when(partRepository.findById(partId)).thenReturn(Optional.of(part));
         when(subassemblyRepository.findAll()).thenReturn(Collections.emptyList());
 
-        DeleteResult result = partService.deletePartById(partId);
+        DeleteResultIds result = partService.deletePartById(partId);
 
         assertTrue(result.success());
         assertNull(result.error());
