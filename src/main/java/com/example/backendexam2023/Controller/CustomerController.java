@@ -3,6 +3,7 @@ package com.example.backendexam2023.Controller;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Customer.Customer;
+import com.example.backendexam2023.Records.TopCustomersResponseObject;
 import com.example.backendexam2023.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,6 +98,13 @@ public class CustomerController {
         } else {
             return new ResponseEntity<>(Map.of("error:",operationResult.errorMessage()), HttpStatus.BAD_REQUEST);
         }
+
+    }
+
+    @GetMapping("/top/{numberOfCustomers}")
+    public List<TopCustomersResponseObject> getTopCustomers(@PathVariable int numberOfCustomers){
+
+        return customerService.getTopCustomers(numberOfCustomers);
 
     }
 

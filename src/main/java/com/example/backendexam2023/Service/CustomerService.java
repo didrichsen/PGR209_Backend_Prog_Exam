@@ -5,6 +5,7 @@ import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Records.TopCustomersResponseObject;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Records.ValidationResult;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,6 +126,23 @@ public class CustomerService {
         if (newCustomer.getEmail() != null) customerToUpdate.setEmail(newCustomer.getEmail());
 
         return new OperationResult<>(true, null,customerRepository.save(customerToUpdate));
+    }
+
+
+    public List<TopCustomersResponseObject> getTopCustomers(int numberOfCustomers) {
+        List<Customer> customers = customerRepository.findAll();
+
+        List<TopCustomersResponseObject> topCustomers = customers.stream()
+                .sorted(Comparator.comparingInt(c -> c.getOrders().stream().mapToInt(Order::getTotalPrice).sum()))
+                .map(customer -> {
+                    int totalOrderSize = customer.getOrders().stream().mapToInt(Order::getTotalPrice).sum();
+                    return new TopCustomersResponseObject(customer.getCustomerId(), customer.getCustomerName(), totalOrderSize);
+                })
+                .sorted(Comparator.comparingInt(TopCustomersResponseObject::totalOrderValue).reversed())
+                .limit(numberOfCustomers)
+                .toList();
+
+        return topCustomers;
     }
 
     private OperationResult<ValidationResult> validateCustomerAndAddress(Long customerId, Long addressId) {

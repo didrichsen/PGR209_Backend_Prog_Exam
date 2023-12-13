@@ -113,6 +113,15 @@ DeleteResultObject is used when deleting an order. We wanted to return deleted o
 "deletedObjects": [{} // List of order line objects that's been deleted]
 }
 
+TopCustomerResponseObject is used when returning an array of x number of customers ordered by highest total order value
+
+{
+"id": 2,
+"name": "Kelle Walsh",
+"totalOrderValue": 30323
+},
+
+
 ## Endpoints documentation
 
 All endpoints expect Json Request Body and all endpoints return Json objects. 
@@ -128,15 +137,17 @@ All endpoints expect Json Request Body and all endpoints return Json objects.
 | Update Address          | PUT /api/address/{id}       | Update adress by its ID and with data from an Address object. | @Path Parameter: {id}, Address Object | 200 OK with updated object                            | 400 Bad Request with an error message. |
 ## CustomerController
 
-| Operation               | Endpoint                   | Description                                     | Request Body            | Success Response                        | Error Response                                |
-|-------------------------|----------------------------|-------------------------------------------------|-------------------------|------------------------------------------|----------------------------------------------|
-| Create Customer         | POST /api/customer           | Create a new customer.                          | Customer object         | 201 Created with the created customer    | 400 Bad Request with an error message        |
-| Get Customer by ID      | GET /api/customer/{id}       | Retrieve a customer by their ID.               | Path Parameters: {id}   | 200 OK with the retrieved customer      | 404 Not Found if the customer does not exist  |
-| Get Customers by Page   | GET /api/customer/page/{pageNumber} | Retrieve a list of customers based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of customers     | None                                         |
-| Add Address to Customer | POST /api/customer/{customerId}/add/{addressId} | Add an address to a customer.        | Path Parameters: {customerId}, {addressId} | 200 OK with the updated customer        | 400 Bad Request with an error message        |
-| Delete Address from Customer | DELETE /api/customer/{customerId}/remove/{addressId} | Remove an address from a customer. | Path Parameters: {customerId}, {addressId} | 200 OK with the updated customer    | 400 Bad Request with an error message        |
-| Delete Customer         | DELETE /api/customer/{id}    | Delete a customer by their ID.                | Path Parameters: {id}   | 204 No Content if the customer is successfully deleted | 400 Bad Request with an error message        |
-| Update Customer         | PUT /api/customer/update/{customerId} | Update customer details.           | Path Parameters: {customerId} | 200 OK with the updated customer        | 400 Bad Request with an error message        |
+| Operation               | Endpoint                         | Description                                     | Request Body                | Success Response                             | Error Response                                |
+|-------------------------|----------------------------------|-------------------------------------------------|-----------------------------|-----------------------------------------------|----------------------------------------------|
+| Create Customer         | POST /api/customer               | Create a new customer.                          | Customer object             | 201 Created with the created customer         | 400 Bad Request with an error message        |
+| Get Customer by ID      | GET /api/customer/{id}           | Retrieve a customer by their ID.               | Path Parameters: {id}       | 200 OK with the retrieved customer           | 404 Not Found if the customer does not exist  |
+| Get Customers by Page   | GET /api/customer/page/{pageNumber} | Retrieve a list of customers based on the page number. | Path Parameters: {pageNumber} | 200 OK with a list of customers              | None                                         |
+| Add Address to Customer | POST /api/customer/{customerId}/add/{addressId} | Add an address to a customer.        | Path Parameters: {customerId}, {addressId} | 200 OK with the updated customer             | 400 Bad Request with an error message        |
+| Delete Address from Customer | DELETE /api/customer/{customerId}/remove/{addressId} | Remove an address from a customer. | Path Parameters: {customerId}, {addressId} | 200 OK with the updated customer             | 400 Bad Request with an error message        |
+| Delete Customer         | DELETE /api/customer/{id}        | Delete a customer by their ID.                | Path Parameters: {id}       | 204 No Content if the customer is successfully deleted | 400 Bad Request with an error message        |
+| Update Customer         | PUT /api/customer/update/{customerId} | Update customer details.           | Path Parameters: {customerId} | 200 OK with the updated customer             | 400 Bad Request with an error message        |
+| Get Top Customers       | GET /api/customer/top/{numberOfCustomers} | Retrieve top customers by order value.      | Path Parameters: {numberOfCustomers} | 200 OK with a list of top customers          | None                                         |
+
 
 ## MachineController
 
