@@ -1,10 +1,14 @@
 package com.example.backendexam2023.Order;
 
+import com.example.backendexam2023.Model.Address.Address;
+import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
+import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
+import com.example.backendexam2023.Repository.OrderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.crypto.Mac;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,6 +36,12 @@ public class OrderEndToEndTests {
 
     @Autowired
     OrderLineRepository orderLineRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Test
     void should_create_order() throws Exception {
@@ -66,6 +79,62 @@ public class OrderEndToEndTests {
                 .andExpect(jsonPath("$.message").value("Order and Order Lines deleted"))
                 .andExpect(jsonPath("$.deletedObjects").isNotEmpty());
     }
+
+    @Test
+    void should_not_delete_order_because_order_is_not_found() throws Exception {
+        mockMvc.perform(delete("/api/order/100000"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Couldn't find order with id 100000"));
+    }
+
+    @Test
+    void should_get_order_with_id() throws Exception{
+        mockMvc.perform(get("/api/order/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderLines").isNotEmpty());
+
+    }
+
+    @Test
+    void should_update_order_with_new_customer() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Customer customer = new Customer();
+        customer.getAddresses().add(new Address("TestAddress", 1234));
+        customerRepository.save(customer);
+
+
+        Order order = new Order();
+        order.setCustomer(customer);
+        order.setOrderId(500L);
+        order.setOrderLines(List.of(new OrderLine()));
+
+
+        Order savedOrder = orderRepository.save(order);
+
+
+        Customer newCustomer = new Customer("Updated User", "updated@test.no");
+        customerRepository.save(newCustomer);
+
+        Order updatedOrder = new Order();
+        updatedOrder.setCustomer(newCustomer);
+
+        mockMvc.perform(put("/api/order/update/" + savedOrder.getOrderId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedOrder)))
+                .andExpect(status().isOk());
+
+
+        Order retrievedOrder = orderRepository.findById(savedOrder.getOrderId()).orElse(null);
+        assertNotNull(retrievedOrder);
+        assertEquals(newCustomer.getCustomerName(), retrievedOrder.getCustomer().getCustomerName());
+
+    }
+
+
+
+
 
 
 }

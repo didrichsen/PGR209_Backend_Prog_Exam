@@ -78,7 +78,7 @@ public class OrderController {
             );
             return new ResponseEntity<>(deletionResponse,HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(deletedOrder.errorMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("error",deletedOrder.errorMessage()),HttpStatus.BAD_REQUEST);
         }
 
     }
