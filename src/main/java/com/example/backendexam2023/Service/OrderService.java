@@ -66,6 +66,11 @@ public class OrderService {
             if (orderLine == null) {
                 return new OperationResult<>(false, "OrderLine not found", null);
             }
+
+            if(orderLineRepository.isOrderLineAvailable(orderLineId)){
+                return new OperationResult<>(false, "Order Line with id " + orderLineId + " is already registered with another order.", null);
+            }
+
             orderLines.add(orderLine);
         }
 

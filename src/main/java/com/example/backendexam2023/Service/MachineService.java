@@ -68,6 +68,11 @@ public class MachineService {
             if(subassembly == null){
                 return new OperationResult<>(false, "Couldn't find subassembly with id " + subassemblyId, null);
             }
+
+            if(subassemblyRepository.isSubassemblyInUse(subassemblyId)){
+                return new OperationResult<>(false, "Subassembly with id " + subassemblyId + " is already in use", null);
+            }
+
             subassemblies.add(subassembly);
         }
 

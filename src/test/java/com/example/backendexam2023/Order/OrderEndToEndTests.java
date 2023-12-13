@@ -1,8 +1,10 @@
 package com.example.backendexam2023.Order;
 
+import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
+import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.crypto.Mac;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,13 +26,25 @@ public class OrderEndToEndTests {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    OrderLineRepository orderLineRepository;
+
     @Test
     void should_create_order() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        Machine machine = new Machine();
+        machine.setPrice(1000);
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setOrderLineId(500L);
+        orderLine.setMachine(machine);
+        orderLineRepository.save(orderLine);
+
+
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.getOrderLineIds().add(1L);
+        orderRequest.getOrderLineIds().add(orderLine.getOrderLineId());
         orderRequest.setCustomerId(1L);
 
         mockMvc.perform(post("/api/order")
