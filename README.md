@@ -78,6 +78,34 @@ The creation of a customer involves sending a Customer Object through the design
 "addresses": []
 }
 
+## Service Layer
+
+Service layer is to a great extent making use of the records when sending result to controller. 
+
+OrderResult is used when sending info when something is created or updated: 
+
+{
+"success": true,
+"errorMessage": null,
+"createdObject": { }
+}
+
+{
+"success": true,
+"errorMessage": "A machine needs to at least have one subassembly",
+"createdObject": null
+}
+
+DeleteResult is used when deleting. Returning a list of Ids if the object is in use and cant be deleted: 
+
+{
+"success": false,
+"error": ""Can't delete machine. Machine placed in order lines.",
+"related_ids": [1,2,3]
+}
+
+
+
 ## Endpoints documentation
 
 ## AddressController
