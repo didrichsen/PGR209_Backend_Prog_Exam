@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -180,8 +181,11 @@ public class MachineServiceUnitTests {
         when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
 
         MachineRequest machineRequest = new MachineRequest();
+        machineRequest.setMachineName("testmac");
+        machineRequest.setPrice(100);
+        machineRequest.getSubassemblyIds().add(1L);
 
-        OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
+        OperationResult<Object> result = machineService.updateMachine(machineId, machineRequest);
 
         assertFalse(result.success());
         assertEquals("Couldn't find machine with id " + machineId, result.errorMessage());
@@ -195,20 +199,31 @@ public class MachineServiceUnitTests {
         existingMachine.setMachineId(machineId);
         existingMachine.setMachineName("Old Machine");
 
-        Machine newMachine = new Machine();
+
+        MachineRequest newMachine = new MachineRequest();
         newMachine.setPrice(10000);
         newMachine.setMachineName("New Machine");
-        newMachine.setSubassemblies(List.of(new Subassembly(), new Subassembly()));
+        newMachine.setSubassemblyIds(List.of(1L, 2L));
+
 
         when(machineRepository.findById(machineId)).thenReturn(Optional.of(existingMachine));
         when(machineRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
 
+        List<Long> subIds = new ArrayList<>();
+
+        Machine machine = (Machine) result.createdObject();
+
+        for (Subassembly s : machine.getSubassemblies()) {
+            System.out.println("in loop");
+            subIds.add(s.getSubassemblyId());
+        }
+
         assertTrue(result.success());
         assertNull(result.errorMessage());
         assertEquals(newMachine.getPrice(), ((Machine) result.createdObject()).getPrice());
-        assertEquals(newMachine.getSubassemblies(), ((Machine) result.createdObject()).getSubassemblies());
+        assertEquals(newMachine.getSubassemblyIds(), subIds);
         assertEquals(newMachine.getMachineName(), ((Machine) result.createdObject()).getMachineName());
 
     }

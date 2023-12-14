@@ -6,7 +6,6 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
-import com.example.backendexam2023.Records.UpdateRequestSubassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
@@ -104,7 +103,7 @@ public class SubassemblyService {
         return new DeleteResultIds(true, null,null);
     }
 
-    public OperationResult<Object> updateSubassembly(Long subassemblyId, UpdateRequestSubassembly subassemblyData){
+    public OperationResult<Object> updateSubassembly(Long subassemblyId, SubassemblyRequest subassemblyData){
 
         Subassembly subassemblyToUpdate = getSubassemblyById(subassemblyId);
 
@@ -112,10 +111,10 @@ public class SubassemblyService {
             return new OperationResult<>(false,"Couldn't find any subassembly with id " + subassemblyId, null);
         }
 
-        if (subassemblyData.subassemblyName() != null && !subassemblyData.subassemblyName().trim().isEmpty()) subassemblyToUpdate.setSubassemblyName(subassemblyData.subassemblyName());
-        if (subassemblyData.partIds() != null && !subassemblyData.partIds().isEmpty()){
+        if (subassemblyData.getSubassemblyName() != null && !subassemblyData.getSubassemblyName().trim().isEmpty()) subassemblyToUpdate.setSubassemblyName(subassemblyData.getSubassemblyName());
+        if (subassemblyData.getPartIds() != null && !subassemblyData.getPartIds().isEmpty()){
 
-            boolean isInUse = subassemblyData.partIds().stream()
+            boolean isInUse = subassemblyData.getPartIds().stream()
                     .anyMatch(partRepository::isPartInUse);
 
 
@@ -123,7 +122,7 @@ public class SubassemblyService {
                 return new OperationResult<>(false,"Part is in use.", null);
             }
 
-            List<Part> parts = subassemblyData.partIds()
+            List<Part> parts = subassemblyData.getPartIds()
                     .stream()
                     .map(partRepository::findById)
                     .filter(Optional::isPresent)

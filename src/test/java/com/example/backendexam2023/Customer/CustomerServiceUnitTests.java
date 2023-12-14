@@ -47,6 +47,7 @@ public class CustomerServiceUnitTests {
         existingCustomer.setEmail("test@example.com");
 
         Customer newCustomer = new Customer();
+        newCustomer.setCustomerName("test");
         newCustomer.setEmail("test@example.com");
 
         when(customerRepository.findByEmail(newCustomer.getEmail())).thenReturn(Optional.of(existingCustomer));
@@ -61,6 +62,7 @@ public class CustomerServiceUnitTests {
     @Test
     void shouldAddCustomerSuccessfully() {
         Customer newCustomer = new Customer();
+        newCustomer.setCustomerName("newCust");
         newCustomer.setEmail("newcustomer@example.com");
 
         when(customerRepository.findByEmail(newCustomer.getEmail())).thenReturn(Optional.empty());

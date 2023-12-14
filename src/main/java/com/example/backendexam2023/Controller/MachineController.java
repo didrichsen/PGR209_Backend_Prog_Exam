@@ -1,10 +1,9 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.Model.Machine.MachineRequest;
-import com.example.backendexam2023.Records.UpdateRequestMachine;
 import com.example.backendexam2023.Service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +66,7 @@ public class MachineController {
     }
 
     @PutMapping("/update/{machineId}")
-    public ResponseEntity<Object> updateMachine(@PathVariable Long machineId, @RequestBody UpdateRequestMachine machineData){
+    public ResponseEntity<Object> updateMachine(@PathVariable Long machineId, @RequestBody MachineRequest machineData){
 
         OperationResult<Object> operationResult = machineService.updateMachine(machineId,machineData);
 

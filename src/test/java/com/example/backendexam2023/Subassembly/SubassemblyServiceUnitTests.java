@@ -170,7 +170,7 @@ public class SubassemblyServiceUnitTests {
     @Test
     public void should_not_update_subassembly_not_found() {
         Long subassemblyId = 1L;
-        Subassembly subassemblyData = new Subassembly();
+        SubassemblyRequest subassemblyData = new SubassemblyRequest();
         when(subassemblyRepository.findById(subassemblyId)).thenReturn(Optional.empty());
 
         OperationResult<Object> result = subassemblyService.updateSubassembly(subassemblyId, subassemblyData);
@@ -187,7 +187,7 @@ public class SubassemblyServiceUnitTests {
         existingSubassembly.setSubassemblyId(subassemblyId);
         existingSubassembly.setSubassemblyName("Old Subassembly");
 
-        Subassembly subassemblyData = new Subassembly();
+        SubassemblyRequest subassemblyData = new SubassemblyRequest();
         subassemblyData.setSubassemblyName("New Subassembly");
 
         when(subassemblyRepository.findById(subassemblyId)).thenReturn(Optional.of(existingSubassembly));

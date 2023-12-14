@@ -1,13 +1,12 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
-import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.Records.UpdateRequestMachine;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,9 +90,16 @@ public class MachineService {
         if(machineToDelete == null){
             return new DeleteResultIds(false ,"Couldn't find machine with id " + id,null);
         }
+/*
+        Måtte endre til dette for å få testen til å passere. Tror alt skal funke som normalt
 
         Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
         List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.get();
+
+ */
+        Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
+        List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.orElse(Collections.emptyList());
+
         if(!orderLinesRegisteredWithMachine.isEmpty()){
             List<Long> orderLineIds = orderLinesRegisteredWithMachine.stream()
                     .map(OrderLine::getOrderLineId)
@@ -115,7 +122,7 @@ public class MachineService {
         return new DeleteResultIds(true,null,null);
     }
 
-    public OperationResult<Object> updateMachine(Long machineId, UpdateRequestMachine newMachine){
+    public OperationResult<Object> updateMachine(Long machineId, MachineRequest newMachine){
         Machine machineToUpdate = getMachineById(machineId);
 
         if (machineToUpdate == null) {
@@ -123,11 +130,11 @@ public class MachineService {
         }
 
 
-        if (newMachine.machineName() != null && !newMachine.machineName().trim().isEmpty()) machineToUpdate.setMachineName(newMachine.machineName());
-        if (newMachine.price() != 0) machineToUpdate.setPrice(newMachine.price());
-        if (newMachine.subassemblyIds() != null && !newMachine.subassemblyIds().isEmpty()){
+        if (newMachine.getMachineName() != null && !newMachine.getMachineName().trim().isEmpty()) machineToUpdate.setMachineName(newMachine.getMachineName());
+        if (newMachine.getPrice() != 0) machineToUpdate.setPrice(newMachine.getPrice());
+        if (newMachine.getSubassemblyIds() != null && !newMachine.getSubassemblyIds().isEmpty()){
 
-            boolean isInUse = newMachine.subassemblyIds().stream()
+            boolean isInUse = newMachine.getSubassemblyIds().stream()
                     .anyMatch(subassemblyRepository::isSubassemblyInUse);
 
 
@@ -135,7 +142,7 @@ public class MachineService {
                 return new OperationResult<>(false,"Subassembly is in use.", null);
             }
 
-            List<Subassembly> subassemblies = newMachine.subassemblyIds()
+            List<Subassembly> subassemblies = newMachine.getSubassemblyIds()
                     .stream()
                     .map(subassemblyRepository::findById)
                     .filter(Optional::isPresent)

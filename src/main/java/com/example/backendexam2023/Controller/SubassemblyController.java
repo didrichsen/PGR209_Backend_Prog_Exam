@@ -4,7 +4,6 @@ import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
-import com.example.backendexam2023.Records.UpdateRequestSubassembly;
 import com.example.backendexam2023.Service.SubassemblyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,7 +65,7 @@ public class SubassemblyController {
     }
 
     @PutMapping("/{subassemblyId}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable Long subassemblyId, @RequestBody UpdateRequestSubassembly subassemblyData){
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long subassemblyId, @RequestBody SubassemblyRequest subassemblyData){
 
         OperationResult<Object> operationResult = subassemblyService.updateSubassembly(subassemblyId,subassemblyData);
 

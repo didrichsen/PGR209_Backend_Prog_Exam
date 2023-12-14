@@ -77,7 +77,7 @@ public class OrderEndToEndTests {
         mockMvc.perform(delete("/api/order/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Order and Order Lines deleted"))
-                .andExpect(jsonPath("$.deletedObjects").isNotEmpty());
+                .andExpect(jsonPath("$.deletedOrder").isNotEmpty());
     }
 
     @Test
@@ -114,11 +114,11 @@ public class OrderEndToEndTests {
         Order savedOrder = orderRepository.save(order);
 
 
-        Customer newCustomer = new Customer("Updated User", "updated@test.no");
-        customerRepository.save(newCustomer);
+        Customer newCust = new Customer("Updated User", "updated@test.no");
+        Customer newCustomer = customerRepository.save(newCust);
 
-        Order updatedOrder = new Order();
-        updatedOrder.setCustomer(newCustomer);
+        OrderRequest updatedOrder = new OrderRequest();
+        updatedOrder.setCustomerId(newCustomer.getCustomerId());
 
         mockMvc.perform(put("/api/order/update/" + savedOrder.getOrderId())
                         .contentType(MediaType.APPLICATION_JSON)

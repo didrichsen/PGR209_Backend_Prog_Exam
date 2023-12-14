@@ -1,13 +1,11 @@
 package com.example.backendexam2023.Service;
 
-import com.example.backendexam2023.Model.Subassembly.Subassembly;
+import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Records.DeleteResultObject;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Order.Order;
-import com.example.backendexam2023.Records.UpdateRequestOrder;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
@@ -103,7 +101,7 @@ public class OrderService {
         return new OperationResult<>(true, null, createdOrder);
     }
 
-    public OperationResult<Object> updateOrder(Long orderId, UpdateRequestOrder orderData){
+    public OperationResult<Object> updateOrder(Long orderId, OrderRequest orderData){
 
 
         Order orderToUpdate = orderRepository.findById(orderId).orElse(null);
@@ -112,9 +110,9 @@ public class OrderService {
             return new OperationResult<>(false,"Couldn't find any order with id " + orderId, null);
         }
 
-        if (orderData.orderLineIds() != null && !orderData.orderLineIds().isEmpty()) {
+        if (orderData.getOrderLineIds() != null && !orderData.getOrderLineIds().isEmpty()) {
 
-                boolean isInUse = orderData.orderLineIds().stream()
+                boolean isInUse = orderData.getOrderLineIds().stream()
                         .anyMatch(orderLineRepository::isOrderLineRegisteredWithOrder);
 
 
@@ -122,7 +120,7 @@ public class OrderService {
                     return new OperationResult<>(false,"Order Line is registered with another order.", null);
                 }
 
-                List<OrderLine> orderLines = orderData.orderLineIds()
+                List<OrderLine> orderLines = orderData.getOrderLineIds()
                         .stream()
                         .map(orderLineRepository::findById)
                         .filter(Optional::isPresent)
@@ -133,8 +131,8 @@ public class OrderService {
 
         }
 
-        if(orderData.customerId() != null){
-            customerRepository.findById(orderData.customerId()).ifPresent(orderToUpdate::setCustomer);
+        if(orderData.getCustomerId() != null){
+            customerRepository.findById(orderData.getCustomerId()).ifPresent(orderToUpdate::setCustomer);
         }
 
         Order updatedOrder = orderRepository.save(orderToUpdate);

@@ -1,8 +1,8 @@
 package com.example.backendexam2023.Controller;
 
+import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Records.*;
 import com.example.backendexam2023.Model.Order.Order;
-import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class OrderController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Object> createOrder(@RequestBody com.example.backendexam2023.Model.Order.OrderRequest orderRequest) {
 
         OperationResult<Object> operationResult = orderService.createOrder(orderRequest);
 
@@ -51,7 +51,7 @@ public class OrderController {
     }
 
     @PutMapping("/update/{orderId}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable Long orderId, @RequestBody UpdateRequestOrder orderData){
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long orderId, @RequestBody OrderRequest orderData){
 
         OperationResult<Object> operationResult = orderService.updateOrder(orderId, orderData);
 

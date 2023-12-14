@@ -46,14 +46,16 @@ public class OrderServiceUnitTests {
     void Should_Not_Create_Order_Because_Customer_Is_Null_AKA_Invalid_ID(){
 
         OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setCustomerId(1L);
 
         when(customerRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
         OperationResult operationResult = orderService.createOrder(orderRequest);
 
-        assert !operationResult.success();
-        assert operationResult.errorMessage().equals("Customer not found");
-        assert operationResult.createdObject() == null;
+        assertFalse(operationResult.success());
+        assertEquals(operationResult.errorMessage(), "Customer not found");
+        assertNull(operationResult.createdObject());
+
 
     }
 
@@ -138,9 +140,12 @@ public class OrderServiceUnitTests {
         Order order = new Order();
         order.setOrderId(1L);
 
+        OrderRequest orderRequest = new OrderRequest();
+
+
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
 
-        OperationResult operationResult = orderService.updateOrder(1L, order);
+        OperationResult operationResult = orderService.updateOrder(1L, orderRequest);
 
         assertFalse(operationResult.success());
         assertEquals("Couldn't find any order with id " + order.getOrderId(), operationResult.errorMessage());
@@ -156,10 +161,13 @@ public class OrderServiceUnitTests {
 
         when(orderRepository.findById(1L)).thenReturn(Optional.of(existingOrder));
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.findById(2L)).thenReturn(Optional.of(new Order()));
+        when(orderRepository.findById(3L)).thenReturn(Optional.of(new Order()));
+        when(orderRepository.findById(4L)).thenReturn(Optional.of(new Order()));
 
-        Order newOrderInfo = new Order();
-        newOrderInfo.setOrderLines(List.of(new OrderLine(), new OrderLine(), new OrderLine()));
-        newOrderInfo.setCustomer(new Customer("Updated Customer", "update@update.no"));
+        OrderRequest newOrderInfo = new OrderRequest();
+        newOrderInfo.setOrderLineIds(List.of(2L, 3L, 4L));
+        newOrderInfo.setCustomerId(1L);
 
 
         OperationResult operationResult = orderService.updateOrder(1L, newOrderInfo);

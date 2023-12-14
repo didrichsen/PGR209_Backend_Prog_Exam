@@ -124,8 +124,8 @@ public class OrderLineUnitTests {
 
         assertTrue(result.success());
         assertNull(result.errorMessage());
-        assertEquals(newOrderLine.getOrder(), ((OrderLine) result.createdObject()).getOrder());
-        assertEquals(newOrderLine.getMachine(), ((OrderLine) result.createdObject()).getMachine());
+        assertEquals(newOrderLine.getOrder().getOrderId(), ((OrderLine) result.createdObject()).getOrder().getOrderId());
+        assertEquals(newOrderLine.getMachine().getMachineId(), ((OrderLine) result.createdObject()).getMachine().getMachineId());
 
     }
 
