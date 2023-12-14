@@ -36,6 +36,14 @@ public class CustomerService {
 
     public OperationResult<Object> addCustomer(Customer newCustomer){
 
+        if(newCustomer.getCustomerName() == null || newCustomer.getCustomerName().trim().isEmpty()){
+            return new OperationResult<>(false, "Customer has to have a name.", null);
+        }
+
+        if(newCustomer.getEmail() == null || newCustomer.getEmail().trim().isEmpty()){
+            return new OperationResult<>(false, "Customer has to have an email.", null);
+        }
+
         Optional<Customer> existingCustomer = customerRepository.findByEmail(newCustomer.getEmail());
 
         if(existingCustomer.isPresent()) return new OperationResult<>(false, "Customer already exists with id " +  existingCustomer.get().getCustomerId(), null);
@@ -122,8 +130,8 @@ public class CustomerService {
             return new OperationResult<>(false,"Couldn't find customer with id " + customerId, null);
         }
 
-        if (newCustomer.getCustomerName() != null) customerToUpdate.setCustomerName(newCustomer.getCustomerName());
-        if (newCustomer.getEmail() != null) customerToUpdate.setEmail(newCustomer.getEmail());
+        if (newCustomer.getCustomerName() != null && !newCustomer.getCustomerName().trim().isEmpty()) customerToUpdate.setCustomerName(newCustomer.getCustomerName());
+        if (newCustomer.getEmail() != null && !newCustomer.getEmail().trim().isEmpty()) customerToUpdate.setEmail(newCustomer.getEmail());
 
         return new OperationResult<>(true, null,customerRepository.save(customerToUpdate));
     }

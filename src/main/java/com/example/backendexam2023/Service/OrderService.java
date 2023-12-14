@@ -1,11 +1,13 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Records.DeleteResultObject;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Model.Order.Order;
+import com.example.backendexam2023.Records.UpdateRequestOrder;
 import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.OrderRepository;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -43,6 +47,15 @@ public class OrderService {
     }
 
     public OperationResult<Object> createOrder(OrderRequest orderRequest) {
+
+        if(orderRequest.getCustomerId() == null){
+            return new OperationResult<>(false,"Customer Id has to be valid", null);
+        }
+
+        if(orderRequest.getOrderLineIds() == null){
+            return new OperationResult<>(false,"Order Line Ids has to be included", null);
+        }
+
         Customer customer = customerRepository.findById(orderRequest.getCustomerId()).orElse(null);
 
         if (customer == null) {
@@ -67,7 +80,7 @@ public class OrderService {
                 return new OperationResult<>(false, "OrderLine not found", null);
             }
 
-            if(orderLineRepository.isOrderLineAvailable(orderLineId)){
+            if(orderLineRepository.isOrderLineRegisteredWithOrder(orderLineId)){
                 return new OperationResult<>(false, "Order Line with id " + orderLineId + " is already registered with another order.", null);
             }
 
@@ -90,7 +103,8 @@ public class OrderService {
         return new OperationResult<>(true, null, createdOrder);
     }
 
-    public OperationResult<Object> updateOrder(Long orderId, Order orderData){
+    public OperationResult<Object> updateOrder(Long orderId, UpdateRequestOrder orderData){
+
 
         Order orderToUpdate = orderRepository.findById(orderId).orElse(null);
 
@@ -98,8 +112,30 @@ public class OrderService {
             return new OperationResult<>(false,"Couldn't find any order with id " + orderId, null);
         }
 
-        if (orderData.getOrderLines() != null) orderToUpdate.setOrderLines(orderData.getOrderLines());
-        if (orderData.getCustomer() != null) orderToUpdate.setCustomer(orderData.getCustomer());
+        if (orderData.orderLineIds() != null && !orderData.orderLineIds().isEmpty()) {
+
+                boolean isInUse = orderData.orderLineIds().stream()
+                        .anyMatch(orderLineRepository::isOrderLineRegisteredWithOrder);
+
+
+                if(isInUse){
+                    return new OperationResult<>(false,"Order Line is registered with another order.", null);
+                }
+
+                List<OrderLine> orderLines = orderData.orderLineIds()
+                        .stream()
+                        .map(orderLineRepository::findById)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+                orderToUpdate.setOrderLines(orderLines);
+
+        }
+
+        if(orderData.customerId() != null){
+            customerRepository.findById(orderData.customerId()).ifPresent(orderToUpdate::setCustomer);
+        }
 
         Order updatedOrder = orderRepository.save(orderToUpdate);
 

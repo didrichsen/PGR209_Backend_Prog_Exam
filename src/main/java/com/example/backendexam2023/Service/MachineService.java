@@ -7,6 +7,7 @@ import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
+import com.example.backendexam2023.Records.UpdateRequestMachine;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
@@ -91,9 +92,8 @@ public class MachineService {
         }
 
         Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
-
-        if(orderLinesOptional.isPresent()){
-            List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.get();
+        List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.get();
+        if(!orderLinesRegisteredWithMachine.isEmpty()){
             List<Long> orderLineIds = orderLinesRegisteredWithMachine.stream()
                     .map(OrderLine::getOrderLineId)
                     .collect(Collectors.toList());
@@ -115,16 +115,36 @@ public class MachineService {
         return new DeleteResultIds(true,null,null);
     }
 
-    public OperationResult<Object> updateMachine(Long machineId, Machine newMachine){
+    public OperationResult<Object> updateMachine(Long machineId, UpdateRequestMachine newMachine){
         Machine machineToUpdate = getMachineById(machineId);
 
         if (machineToUpdate == null) {
             return new OperationResult<>(false,"Couldn't find machine with id " + machineId, null);
         }
 
-        if (newMachine.getMachineName() != null) machineToUpdate.setMachineName(newMachine.getMachineName());
-        if (newMachine.getPrice() != null) machineToUpdate.setPrice(newMachine.getPrice());
-        if (!newMachine.getSubassemblies().isEmpty()) machineToUpdate.getSubassemblies().addAll(newMachine.getSubassemblies());
+
+        if (newMachine.machineName() != null && !newMachine.machineName().trim().isEmpty()) machineToUpdate.setMachineName(newMachine.machineName());
+        if (newMachine.price() != 0) machineToUpdate.setPrice(newMachine.price());
+        if (newMachine.subassemblyIds() != null && !newMachine.subassemblyIds().isEmpty()){
+
+            boolean isInUse = newMachine.subassemblyIds().stream()
+                    .anyMatch(subassemblyRepository::isSubassemblyInUse);
+
+
+            if(isInUse){
+                return new OperationResult<>(false,"Subassembly is in use.", null);
+            }
+
+            List<Subassembly> subassemblies = newMachine.subassemblyIds()
+                    .stream()
+                    .map(subassemblyRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            machineToUpdate.setSubassemblies(subassemblies);
+
+        }
 
         return new OperationResult<>(true, null,machineRepository.save(machineToUpdate));
     }

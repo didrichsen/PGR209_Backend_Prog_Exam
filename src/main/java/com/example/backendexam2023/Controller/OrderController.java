@@ -1,8 +1,6 @@
 package com.example.backendexam2023.Controller;
 
-import com.example.backendexam2023.Records.DeleteResponseObject;
-import com.example.backendexam2023.Records.DeleteResultObject;
-import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Records.*;
 import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Model.Order.OrderRequest;
 import com.example.backendexam2023.Service.OrderService;
@@ -53,7 +51,7 @@ public class OrderController {
     }
 
     @PutMapping("/update/{orderId}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable Long orderId, @RequestBody Order orderData){
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long orderId, @RequestBody UpdateRequestOrder orderData){
 
         OperationResult<Object> operationResult = orderService.updateOrder(orderId, orderData);
 

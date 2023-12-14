@@ -6,6 +6,7 @@ import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Part.Part;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
 import com.example.backendexam2023.Model.Subassembly.SubassemblyRequest;
+import com.example.backendexam2023.Records.UpdateRequestSubassembly;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SubassemblyService {
@@ -101,7 +104,7 @@ public class SubassemblyService {
         return new DeleteResultIds(true, null,null);
     }
 
-    public OperationResult<Object> updateSubassembly(Long subassemblyId, Subassembly subassemblyData){
+    public OperationResult<Object> updateSubassembly(Long subassemblyId, UpdateRequestSubassembly subassemblyData){
 
         Subassembly subassemblyToUpdate = getSubassemblyById(subassemblyId);
 
@@ -109,8 +112,27 @@ public class SubassemblyService {
             return new OperationResult<>(false,"Couldn't find any subassembly with id " + subassemblyId, null);
         }
 
-        if (subassemblyData.getSubassemblyName() != null) subassemblyToUpdate.setSubassemblyName(subassemblyData.getSubassemblyName());
-        if(subassemblyData.getParts() != null) subassemblyToUpdate.getParts().addAll(subassemblyData.getParts());
+        if (subassemblyData.subassemblyName() != null && !subassemblyData.subassemblyName().trim().isEmpty()) subassemblyToUpdate.setSubassemblyName(subassemblyData.subassemblyName());
+        if (subassemblyData.partIds() != null && !subassemblyData.partIds().isEmpty()){
+
+            boolean isInUse = subassemblyData.partIds().stream()
+                    .anyMatch(partRepository::isPartInUse);
+
+
+            if(isInUse){
+                return new OperationResult<>(false,"Part is in use.", null);
+            }
+
+            List<Part> parts = subassemblyData.partIds()
+                    .stream()
+                    .map(partRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            subassemblyToUpdate.setParts(parts);
+
+        }
 
         Subassembly updatedSubassembly = subassemblyRepository.save(subassemblyToUpdate);
 

@@ -24,10 +24,10 @@ public class OrderLineController {
         this.orderLineService = orderLineService;
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Object> createOrderLine(@PathVariable Long id) {
+    @PostMapping("/{machineId}")
+    public ResponseEntity<Object> createOrderLine(@PathVariable Long machineId) {
 
-        OperationResult<Object> operationResult = orderLineService.createOrderLine(id);
+        OperationResult<Object> operationResult = orderLineService.createOrderLine(machineId);
 
         if (operationResult.success()) {
             return new ResponseEntity<>(operationResult.createdObject(), HttpStatus.CREATED);

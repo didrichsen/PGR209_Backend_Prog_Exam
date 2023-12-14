@@ -179,6 +179,8 @@ public class MachineServiceUnitTests {
         Machine newMachine = new Machine();
         when(machineRepository.findById(machineId)).thenReturn(Optional.empty());
 
+        MachineRequest machineRequest = new MachineRequest();
+
         OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
 
         assertFalse(result.success());

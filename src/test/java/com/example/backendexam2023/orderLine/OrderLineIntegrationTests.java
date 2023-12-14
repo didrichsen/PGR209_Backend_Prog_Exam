@@ -55,7 +55,7 @@ public class OrderLineIntegrationTests {
         order.getOrderLines().add(orderLineFromDB);
         orderRepository.save(order);
 
-        Boolean isRegisteredWithOrder = orderLineRepository.isOrderLineAvailable(orderLineFromDB.getOrderLineId());
+        Boolean isRegisteredWithOrder = orderLineRepository.isOrderLineRegisteredWithOrder(orderLineFromDB.getOrderLineId());
 
         assertTrue(isRegisteredWithOrder);
 
@@ -69,7 +69,7 @@ public class OrderLineIntegrationTests {
 
         OrderLine orderLineFromDB = orderLineRepository.save(orderLine);
 
-        Boolean isRegisteredWithOrder = orderLineRepository.isOrderLineAvailable(orderLineFromDB.getOrderLineId());
+        Boolean isRegisteredWithOrder = orderLineRepository.isOrderLineRegisteredWithOrder(orderLineFromDB.getOrderLineId());
 
         assertFalse(isRegisteredWithOrder);
 

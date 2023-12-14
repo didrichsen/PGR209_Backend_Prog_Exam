@@ -83,7 +83,7 @@ public class PartService {
             return new OperationResult<>(false,"Couldn't find any part with id " + partId, null);
         }
 
-        if (partData.getPartName() != null) partToUpdate.setPartName(partData.getPartName());
+        if (partData.getPartName() != null && !partData.getPartName().trim().isEmpty()) partToUpdate.setPartName(partData.getPartName());
 
         return new OperationResult<>(true, null,partRepository.save(partToUpdate));
 

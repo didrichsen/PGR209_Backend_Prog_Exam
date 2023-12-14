@@ -33,6 +33,10 @@ public class AddressService {
             return new OperationResult<>(false,"Address has to have a valid zip code", null);
         }
 
+        if(address.getStreetAddress() == null || address.getStreetAddress().trim().isEmpty()){
+            return new OperationResult<>(false,"Address has to have a valid Street Address", null);
+        }
+
         Optional<Address> existingAddress = addressRepository.findByZipCodeAndStreetAddress(address.getZipCode(),address.getStreetAddress());
 
         if(existingAddress.isPresent()){
@@ -79,7 +83,7 @@ public class AddressService {
 
         if (newAddress.getCustomers() != null) addressToUpdate.getCustomers().addAll(newAddress.getCustomers());
         if (newAddress.getZipCode() != null) addressToUpdate.setZipCode(newAddress.getZipCode());
-        if (newAddress.getStreetAddress() != null) addressToUpdate.setStreetAddress(newAddress.getStreetAddress());
+        if (newAddress.getStreetAddress() != null && !newAddress.getStreetAddress().trim().isEmpty()) addressToUpdate.setStreetAddress(newAddress.getStreetAddress());
 
         return new OperationResult<>(true, null, addressRepository.save(addressToUpdate));
     }

@@ -1,11 +1,14 @@
 package com.example.backendexam2023.Service;
 
+import com.example.backendexam2023.Model.Order.Order;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.OrderLine.OrderLine;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
+import com.example.backendexam2023.Repository.OrderRepository;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,11 +20,14 @@ public class OrderLineService {
     private final OrderLineRepository orderLineRepository;
     private final MachineRepository machineRepository;
 
+    private final OrderRepository orderRepository;
+
 
     @Autowired
-    public OrderLineService(OrderLineRepository orderLineRepository, MachineRepository machineRepository){
+    public OrderLineService(OrderLineRepository orderLineRepository, MachineRepository machineRepository, OrderRepository orderRepository){
         this.orderLineRepository = orderLineRepository;
         this.machineRepository = machineRepository;
+        this.orderRepository = orderRepository;
     }
 
     public OrderLine getOrderLineById(Long id){
@@ -68,8 +74,11 @@ public class OrderLineService {
             return new OperationResult<>(false,"Couldn't find any order lines with id " + orderLineId, null);
         }
 
-        if (newOrderLine.getOrder() != null) orderLineToUpdate.setOrder(newOrderLine.getOrder());
-        if (newOrderLine.getMachine() != null) orderLineToUpdate.setMachine(newOrderLine.getMachine());
+        Order order = orderRepository.findById(newOrderLine.getOrder().getOrderId()).orElse(null);
+        Machine machine = machineRepository.findById(newOrderLine.getMachine().getMachineId()).orElse(null);
+
+        if (order != null) orderLineToUpdate.setOrder(order);
+        if (machine != null) orderLineToUpdate.setMachine(machine);
 
         return new OperationResult<>(true, null,orderLineRepository.save(orderLineToUpdate));
     }
