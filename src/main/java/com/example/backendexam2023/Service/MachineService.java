@@ -90,13 +90,7 @@ public class MachineService {
         if(machineToDelete == null){
             return new DeleteResultIds(false ,"Couldn't find machine with id " + id,null);
         }
-/*
-        Måtte endre til dette for å få testen til å passere. Tror alt skal funke som normalt
 
-        Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
-        List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.get();
-
- */
         Optional<List<OrderLine>> orderLinesOptional = orderLineRepository.findByMachine(machineToDelete);
         List<OrderLine> orderLinesRegisteredWithMachine = orderLinesOptional.orElse(Collections.emptyList());
 
