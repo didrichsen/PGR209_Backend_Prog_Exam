@@ -159,15 +159,22 @@ public class OrderServiceUnitTests {
         Order existingOrder = new Order();
         existingOrder.setOrderId(1L);
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(existingOrder));
-        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(orderRepository.findById(2L)).thenReturn(Optional.of(new Order()));
-        when(orderRepository.findById(3L)).thenReturn(Optional.of(new Order()));
-        when(orderRepository.findById(4L)).thenReturn(Optional.of(new Order()));
+        Customer newCustomer = new Customer();
+        newCustomer.setEmail("update@update.no");
+        newCustomer.setCustomerName("Updated Customer");
 
         OrderRequest newOrderInfo = new OrderRequest();
         newOrderInfo.setOrderLineIds(List.of(2L, 3L, 4L));
         newOrderInfo.setCustomerId(1L);
+        newOrderInfo.setCustomerId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(existingOrder));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderLineRepository.findById(2L)).thenReturn(Optional.of(new OrderLine()));
+        when(orderLineRepository.findById(3L)).thenReturn(Optional.of(new OrderLine()));
+        when(orderLineRepository.findById(4L)).thenReturn(Optional.of(new OrderLine()));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(newCustomer));
+
 
 
         OperationResult operationResult = orderService.updateOrder(1L, newOrderInfo);

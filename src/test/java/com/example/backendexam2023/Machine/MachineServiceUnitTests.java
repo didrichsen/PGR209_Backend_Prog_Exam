@@ -205,9 +205,17 @@ public class MachineServiceUnitTests {
         newMachine.setMachineName("New Machine");
         newMachine.setSubassemblyIds(List.of(1L, 2L));
 
+        Subassembly subassembly = new Subassembly();
+        subassembly.setSubassemblyId(1L);
+
+        Subassembly subassembly1 = new Subassembly();
+        subassembly1.setSubassemblyId(2L);
+
 
         when(machineRepository.findById(machineId)).thenReturn(Optional.of(existingMachine));
         when(machineRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(subassemblyRepository.findById(1L)).thenReturn(Optional.of(subassembly));
+        when(subassemblyRepository.findById(2L)).thenReturn(Optional.of(subassembly1));
 
         OperationResult<Object> result = machineService.updateMachine(machineId, newMachine);
 
@@ -216,7 +224,6 @@ public class MachineServiceUnitTests {
         Machine machine = (Machine) result.createdObject();
 
         for (Subassembly s : machine.getSubassemblies()) {
-            System.out.println("in loop");
             subIds.add(s.getSubassemblyId());
         }
 
