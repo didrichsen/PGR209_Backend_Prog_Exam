@@ -146,7 +146,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElse(null);
 
         if(order == null){
-            return new DeleteResultObject(false, Collections.emptyList(), null, "Couldn't find order with id " + orderId);
+            return new DeleteResultObject(false, null, "Couldn't find order with id " + orderId,Collections.emptyList());
         }
 
         List<OrderLine> orderLinesToDelete = order.getOrderLines();
@@ -157,10 +157,7 @@ public class OrderService {
             orderLineRepository.deleteById(orderline.getOrderLineId());
         }
 
-
-        List<Object> customerAndOrderLines = List.of(order.getCustomer(),order.getOrderLines());
-
-        return new DeleteResultObject(true,customerAndOrderLines,"Order and Order Lines deleted",null);
+        return new DeleteResultObject(true,"Order and Order Lines deleted",null,order.getOrderLines());
 
     }
 

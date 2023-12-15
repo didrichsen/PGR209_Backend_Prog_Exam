@@ -131,7 +131,14 @@ public class CustomerService {
         }
 
         if (newCustomer.getCustomerName() != null && !newCustomer.getCustomerName().trim().isEmpty()) customerToUpdate.setCustomerName(newCustomer.getCustomerName());
-        if (newCustomer.getEmail() != null && !newCustomer.getEmail().trim().isEmpty()) customerToUpdate.setEmail(newCustomer.getEmail());
+        if (newCustomer.getEmail() != null && !newCustomer.getEmail().trim().isEmpty()){
+
+            if(customerRepository.existsByEmail(newCustomer.getEmail())){
+                return new OperationResult<>(false,"Email " + newCustomer.getEmail() + " is already in use", null);
+            }
+
+            customerToUpdate.setEmail(newCustomer.getEmail());
+        }
 
         return new OperationResult<>(true, null,customerRepository.save(customerToUpdate));
     }

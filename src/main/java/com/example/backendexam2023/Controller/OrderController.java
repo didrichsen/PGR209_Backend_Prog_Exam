@@ -64,17 +64,12 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Object> deleteCustomerById(@PathVariable Long orderId){
+    public ResponseEntity<Object> deleteOrderById(@PathVariable Long orderId){
 
         DeleteResultObject deletedOrder = orderService.deleteOrderById(orderId);
 
         if(deletedOrder.success()){
-            DeleteResponseObject deletionResponse = new DeleteResponseObject(
-                    deletedOrder.success(),
-                    deletedOrder.message(),
-                    deletedOrder.objects()
-            );
-            return new ResponseEntity<>(deletionResponse,HttpStatus.OK);
+            return new ResponseEntity<>(deletedOrder,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Map.of("error",deletedOrder.errorMessage()),HttpStatus.BAD_REQUEST);
         }
