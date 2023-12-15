@@ -2,7 +2,6 @@ package com.example.backendexam2023.Machine;
 
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -28,9 +27,6 @@ public class MachineEndToEndTests {
 
     @Autowired
     private SubassemblyRepository subassemblyRepository;
-
-    @Autowired
-    private MachineRepository machineRepository;
 
 
     @Test

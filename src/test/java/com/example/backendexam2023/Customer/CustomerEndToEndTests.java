@@ -4,7 +4,6 @@ import com.example.backendexam2023.Model.Address.Address;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
-import com.example.backendexam2023.Service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,6 @@ public class CustomerEndToEndTests {
 
     @Autowired
     private CustomerRepository customerRepository;
-    @Autowired
-    private CustomerService customerService;
 
     @Autowired
     private AddressRepository addressRepository;

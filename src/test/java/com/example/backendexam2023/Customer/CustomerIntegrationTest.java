@@ -3,6 +3,7 @@ package com.example.backendexam2023.Customer;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
+import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class CustomerIntegrationTest {
 
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Test
     void should_delete_customer_from_db(){
@@ -49,6 +53,30 @@ public class CustomerIntegrationTest {
         assertNull(result.createdObject());
         assertEquals(result.errorMessage(), "Customer already exists with id " + cust.getCustomerId());
 
+
+    }
+
+    @Test
+    void should_return_true_when_checking_if_email_is_in_use(){
+
+        Customer customer = new Customer("loyd","loyd@bb.no");
+
+        customerRepository.save(customer);
+
+        Boolean isInUse = customerRepository.existsByEmail(customer.getEmail());
+
+        assertTrue(isInUse);
+
+    }
+
+    @Test
+    void should_return_false_when_checking_if_email_is_in_use(){
+
+        Customer customer = new Customer("loyd","loyd@bb.no");
+
+        Boolean isInUse = customerRepository.existsByEmail(customer.getEmail());
+
+        assertFalse(isInUse);
 
     }
 

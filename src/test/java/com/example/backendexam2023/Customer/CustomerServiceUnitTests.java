@@ -7,7 +7,6 @@ import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.example.backendexam2023.Repository.CustomerRepository;
-import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class CustomerServiceUnitTests {
 
     @MockBean
     private AddressRepository addressRepository;
-
-    @MockBean
-    private OrderRepository orderRepository;
 
     @Autowired
     private CustomerService customerService;

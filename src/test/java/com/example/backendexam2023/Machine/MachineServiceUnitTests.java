@@ -8,7 +8,6 @@ import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.OrderLineRepository;
-import com.example.backendexam2023.Repository.PartRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.example.backendexam2023.Service.MachineService;
 import org.junit.jupiter.api.Test;
@@ -34,9 +33,6 @@ public class MachineServiceUnitTests {
 
     @MockBean
     private SubassemblyRepository subassemblyRepository;
-
-    @MockBean
-    private PartRepository partRepository;
 
     @MockBean
     private OrderLineRepository orderLineRepository;
