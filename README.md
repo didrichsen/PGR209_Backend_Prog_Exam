@@ -47,49 +47,55 @@ Service layer is to a great extent making use of records when sending result to 
 
 OperationResult is used whenever an endpoint listens for POST or PUT: 
 
+```json
 {
 "success": true,
 "errorMessage": null,
 "createdObject": {Updated/Created Object}
 }
-
+```
+```json
 {
 "success": false,
 "errorMessage": "A machine needs to at least have one subassembly",
 "createdObject": null
 }
+```
 
 -----------------------------------------Record: DeleteResultIds----------------------------------------------------
 
 DeleteResultIds is used by all delete operations except from Order. Our API returns a list of related ids if an object
 can't be deleted because of its relations. 
 
+```json
 {
 "success": false,
 "error": "Can't delete machine. Machine placed in order lines.",
 "related_ids": [1,2,3]
 }
+```
 
 -----------------------------------------Record: DeleteResultObject----------------------------------------------------
 
 DeleteResultObject is used when deleting an order. We wanted to return deleted order lines instead of only returning its ids. 
-
+```json
 {
 "success": true,
 "message": "Order and Order Lines deleted",
 "errorMessage": null,
 "deletedOrderLines": [{}]
 {
-
+```
 -----------------------------------------Record: TopCustomerResponseObject----------------------------------------------------
 
 TopCustomerResponseObject is used when returning an array of x number of customers sorted by highest total order value
-
+```json
 {
 "id": 2,
 "name": "Kelle Walsh",
 "totalOrderValue": 30323
 }
+```
 
 
 ## Endpoints documentation
@@ -111,21 +117,23 @@ All endpoints expect Json Request Body and all endpoints return Json objects.
 #### Request Body
 
 Address object: 
-
+```json
 {
 "streetAddress": "New Address",
 "zipCode": "0655"
 }
+```
 
 ### Error Response
 
 Error response deletion:
-
+```json
 {
 "success": false,
 "error": "Address has active customers.",
 "related_ids": [1]
 }
+```
 
 ## CustomerController
 
@@ -145,16 +153,17 @@ Error response deletion:
 #### Request Body
 
 Customer object: 
-
+```json
 {
 "customerName":"Customer Name",
 "email":"customer@customer.no"
 }
+```
 
 ### Success Response
 
 Success Response created customer: 
-
+```json
 {
 "customerId": 51,
 "customerName": "Customer Name",
@@ -162,23 +171,26 @@ Success Response created customer:
 "orders": [],
 "addresses": []
 }
+```
 
 
 ### Error Response
 
 Trying to delete customer with active order: 
-
+```json
 {
 "success": false,
 "error": "Customer has active orders.",
 "related_ids": [1, 2]
 }
+```
 
 Trying to update customer with email that already exist:
-
+```json
 {
 "error:": "Email marylin.maggio@gmail.com is already in use.",
 }
+```
 
 ## MachineController
 
@@ -195,23 +207,23 @@ Trying to update customer with email that already exist:
 #### Request Body
 
 MachineRequest object: 
-
+```json
 {
 "machineName": "your_machine_name",
 "price": 1000,
 "subassemblyIds": [1, 2, 3]
 }
-
+```
 ### Error Response
 
 Trying to delete a machine with active orders:
-
+```json
 {
 "success": false,
 "error": "Can't delete machine. Machine placed in order lines.",
 "related_ids": [1, 2, 3]
 }
-
+```
 
 ## OrderController
 
@@ -228,12 +240,12 @@ Trying to delete a machine with active orders:
 #### Request Body
 
 OrderRequest Object:
-
+```json
 {
 "customerId": 1,
 "orderLineIds": [1,2,3,4]
 }
-
+```
 
 ## OrderLineController
 
@@ -261,22 +273,22 @@ OrderRequest Object:
 #### Request Body
 
 Part Object:
-
+```json
 {
   "partName": "name goes here"
 }
-
+```
 
 ### Error Response
 
 Trying to delete a part that's in use:
-
+```json
 {
 "success": false,
 "error": "Part in use. Can't delete part.",
 "related_ids": [1]
 }
-
+```
 
 ## SubassemblyController
 
@@ -293,22 +305,22 @@ Trying to delete a part that's in use:
 #### Request Body
 
 SubassemblyRequest object:
-
+```json
 {
 "subassemblyName": "Your subassembly Name",
 "partIds": [123, 456, 789]
 }
-
+```
 ### Deleting subassembly
 
 Trying to dele a subassembly that's in use:
-
+```json
 {
 "success": false,
 "error": "Subassembly is in use. Can't delete.",
 "related_ids": [1]
 }
-
+```
 ## Testing 
 
 #### DataJPA:
