@@ -1,10 +1,7 @@
 package com.example.backendexam2023.Machine;
 
-import com.example.backendexam2023.Model.Customer.Customer;
-import com.example.backendexam2023.Model.Machine.Machine;
 import com.example.backendexam2023.Model.Machine.MachineRequest;
 import com.example.backendexam2023.Model.Subassembly.Subassembly;
-import com.example.backendexam2023.Repository.CustomerRepository;
 import com.example.backendexam2023.Repository.MachineRepository;
 import com.example.backendexam2023.Repository.SubassemblyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

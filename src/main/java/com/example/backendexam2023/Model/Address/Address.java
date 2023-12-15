@@ -1,7 +1,6 @@
 package com.example.backendexam2023.Model.Address;
 
 import com.example.backendexam2023.Model.Customer.Customer;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;

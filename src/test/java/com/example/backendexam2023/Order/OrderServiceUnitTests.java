@@ -198,7 +198,7 @@ public class OrderServiceUnitTests {
 
         assertFalse(result.success());
         assertEquals("Couldn't find order with id " + orderId, result.errorMessage());
-        assertTrue(result.objects().isEmpty());
+        assertTrue(result.deletedOrderLines().isEmpty());
     }
 
     @Test
@@ -224,7 +224,7 @@ public class OrderServiceUnitTests {
 
         assertTrue(result.success());
         assertEquals("Order and Order Lines deleted", result.message());
-        assertFalse(result.objects().isEmpty());
+        assertFalse(result.deletedOrderLines().isEmpty());
 
     }
 

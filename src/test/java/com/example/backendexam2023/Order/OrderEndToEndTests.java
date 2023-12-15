@@ -17,8 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.crypto.Mac;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,7 +75,7 @@ public class OrderEndToEndTests {
         mockMvc.perform(delete("/api/order/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Order and Order Lines deleted"))
-                .andExpect(jsonPath("$.deletedOrder").isNotEmpty());
+                .andExpect(jsonPath("$.deletedOrderLines").isNotEmpty());
     }
 
     @Test

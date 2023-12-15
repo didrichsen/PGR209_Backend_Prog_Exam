@@ -1,7 +1,6 @@
 package com.example.backendexam2023.Address;
 
 import com.example.backendexam2023.Model.Address.Address;
-import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

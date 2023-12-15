@@ -3,7 +3,6 @@ package com.example.backendexam2023.Customer;
 import com.example.backendexam2023.Model.Customer.Customer;
 import com.example.backendexam2023.Records.DeleteResultIds;
 import com.example.backendexam2023.Records.OperationResult;
-import com.example.backendexam2023.Repository.OrderRepository;
 import com.example.backendexam2023.Service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
