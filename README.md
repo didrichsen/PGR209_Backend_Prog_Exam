@@ -235,7 +235,7 @@ Trying to delete a machine with active orders:
 | Update Order            | PUT /api/order/update/{orderId} | Update order details.                         | Path Parameters: {orderId}, OrderRequest Object | 200 OK with updated object                       | 400 Bad Request with an error message.        |
 | Delete Order            | DELETE /api/order/{orderId}  | Delete an order by its ID.                      | Path Parameters: {orderId}                      | 20O OK with the deleted Object and it's details. | 400 Bad Request with an error message.        |
 
-### MachineController Objects
+### OrderController Objects
 
 #### Request Body
 
