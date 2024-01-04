@@ -1,3 +1,18 @@
+# Assignment
+
+You will build a rest Api using Java and Spring Boot.
+You must use Spring Data JPA and H2 in-memory database to persist all data.
+You must use Repositories, Services, and RestControllers
+You should implement pagination for all endpoints that return lists
+You may implement Flyway, but it is not required
+You should have the following tests, making use of @SpringBootTest, @DataJpaTest where necessary:
+Unit tests of services and business logic using MockBean
+Integrations tests
+End-to-end tests using MockMvc
+
+You are building an order system for a factory that sells machines.
+
+---
 # Backend Exam 2023 API Documentation
 
 Welcome to our REST API documentation for our order system for managing orders. 
